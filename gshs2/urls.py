@@ -1,8 +1,8 @@
 from django.contrib import admin
-from django.urls import path
-import gshsapp.views
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', gshsapp.views.home, name='home'),
+    path('', include('gshsapp.urls')),
+    path('auth/', include('login.urls')),
 ]
