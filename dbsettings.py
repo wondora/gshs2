@@ -1,7 +1,7 @@
 DATABASES = {
     'default' : {
         'ENGINE': 'django.db.backends.mysql',    
-        'NAME': 'django_insta',                  
+        'NAME': 'django',                  
         'USER': 'root',                          
         'PASSWORD': '3895',                  
         'HOST': 'localhost',                     
