@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 class Gubun(models.Model):
     tablename = models.CharField(max_length=20, default='')
@@ -9,14 +10,14 @@ class Gubun(models.Model):
         return self.gubun
 
 class Buyproduct(models.Model):
-    buydate = models.DateField
+    buydate = models.DateField(default=timezone.now)
     gubun = models.ForeignKey(Gubun, on_delete=models.CASCADE, related_name='buyproduct')
     company = models.CharField(max_length=20)
     model = models.CharField(max_length=30)    
     bigo = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return self.model
+        return f'[{self.gubun.gubun}] {self.model}'
 
 class User(AbstractUser):
     first_name = None
@@ -32,25 +33,37 @@ class User(AbstractUser):
         return self.name
 
 class Location(models.Model):
+    LGUBUN = (
+        ('강의실','강의실'),
+        ('실험실','실험실'),
+        ('협의회실','협의회실'),
+        ('강당','강당'),
+        ('기타','기타'),
+    )
     building = models.CharField(max_length=50)
-    hosil = models.CharField(max_length=20)    
+    hosil = models.CharField(max_length=20) 
+    locationgubun = models.CharField(max_length=20, default='기타', choices=LGUBUN)   
     bigo = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return self.hosil
+        return f'[{self.building}] {self.hosil}'
 
 class Gigiinfo(models.Model):
+    COLOR_SELECT = (
+        ('블랙','블랙'),
+        ('컬러','컬러'),
+    )
     buyproduct = models.ForeignKey(Buyproduct, on_delete=models.CASCADE, related_name='gigiinfo')
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='gigiinfo')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='gigiinfo', null=True, blank=True)
     ip = models.CharField(max_length=20, null=True, blank=True)
-    color = models.BooleanField(default=False)
+    color = models.CharField(max_length=10, choices=COLOR_SELECT, default="블랙", blank=True)
     jaego = models.BooleanField(default=False)
     notuse = models.BooleanField(default=False)
     bigo = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return self.location.hosil
+        return f'{self.location} / {self.buyproduct} / {self.user}'
 
 class Repair(models.Model):
     date = models.DateField(auto_now_add=True)
@@ -58,11 +71,10 @@ class Repair(models.Model):
     problem = models.CharField(max_length=50)
     result = models.CharField(max_length=50)
     cost = models.PositiveIntegerField(default=0)
-    image = models.ImageField(upload_to='repair/', null=True, blank=True)
     bigo = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return self.gigiinfo
+        return str(self.gigiinfo)
 
 class Replacement(models.Model):
     date = models.DateField(auto_now_add=True)
@@ -70,11 +82,30 @@ class Replacement(models.Model):
     gubun = models.ForeignKey(Gubun, on_delete=models.CASCADE, related_name='replacement')
     count = models.PositiveSmallIntegerField(default=1)
     cost = models.PositiveIntegerField(default=0)
-    image = models.ImageField(upload_to='replacement/', null=True, blank=True)
     bigo = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return self.gigiinfo
+        return str(self.gigiinfo)
+
+# def get_image_filename(instance, filename):
+#     id = instance.repair.id
+#     return "images/%Y/%m/%d/%s" % (id)  
+
+class Repair_Photo(models.Model):
+    repair = models.ForeignKey(Repair, default=None, on_delete=models.CASCADE, related_name="repair_photo")
+    image = models.ImageField(upload_to="images/%Y/%m/%d/")
+
+    def __str__(self):
+        return str(self.repair)
+
+
+class Change_Photo(models.Model):
+    replacement = models.ForeignKey(Replacement, default=None, on_delete=models.CASCADE, related_name="change_photo")
+    image = models.ImageField(upload_to="images/%Y/%m/%d/")
+
+    def __str__(self):
+        return str(self.replacement)
+
 
 class Memo(models.Model):
     pass

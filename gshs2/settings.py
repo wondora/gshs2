@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'gshsapp',
     'login',
-    'bootstrap4',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -112,7 +112,7 @@ TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 AUTH_USER_MODEL = 'gshsapp.User'
 # Static files (CSS, JavaScript, Images)

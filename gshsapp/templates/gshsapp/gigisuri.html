@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="box_shadow">
+    <div class="gigi-update1">물품수리</div>
+    <div class="gigi-update2">
+        <form method="POST" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row mb-2">
+                <label class="col-form-label col-md-2" for="id_gigiinfo">물품정보</label>
+                <div class="col-md-10">{{ form.gigiinfo }}</div>
+            </div>   
+            <div class="row mb-2">
+                <label class="col-form-label col-md-2" for="id_problem">문제</label>
+                <div class="col-md-10">{{ form.problem }}</div>
+            </div>    
+            <div class="row mb-2">
+                <label class="col-form-label col-md-2" for="id_result">해결</label>
+                <div class="col-md-10">{{ form.result }}</div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-form-label col-md-2" for="id_cost">비용</label>
+                <div class="col-md-10">{{ form.cost }}</div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-form-label col-md-2" for="id_image">사진</label>
+                <div class="col-md-10"><input type="file" name="imgs" multiple></div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-form-label col-md-2" for="id_bigo">비고</label>
+                <div class="col-md-10">{{ form.bigo }}</div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-6 offset-md-6">
+                    <button class="btn btn-primary" type="submit">저장</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

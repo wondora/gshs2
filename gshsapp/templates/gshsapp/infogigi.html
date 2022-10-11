@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<table class="table text-center">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">구매일</th>
+        <th scope="col">구분</th>
+        {% if gigigubun == 'notebook' or gigigubun == 'desktop' %}
+          <th scope="col">성명</th>
+        {% endif %}  
+        <th scope="col">위치</th>
+        <th scope="col">제조사</th>
+        <th scope="col">모델명</th>
+        <th scope="col">IP</th>
+        {% if gigigubun == 'printer' %}
+          <th scope="col">색상</th>
+        {% endif %}
+        <th scope="col">비고</th>    
+        <th scope="col"></th>    
+      </tr>
+    </thead>
+    <tbody class="table-group-divider">
+      {% for gigi in gigis %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
+        <td>{{ gigi.buyproduct.gubun }}</td>
+        {% if gigigubun == 'notebook' or gigigubun == 'desktop' %}
+          <td>{{ gigi.user.name }}</td>
+        {% endif %}        
+        <td>{{ gigi.location }}</td>        
+        <td>{{ gigi.buyproduct.company }}</td>
+        <td>{{ gigi.buyproduct.model }}</td>
+        <td>{{ gigi.ip }}</td>
+        {% if gigigubun == 'printer' %}
+          <td>{{ gigi.color }}</td>
+        {% endif %}
+        <td>{{ gigi.bigo }}</td>
+        <td>
+          <a href="{% url 'gshsapp:gigi_update' pk=gigi.id %} ">
+            <span class="gitamenu badge bg-secondary">수정</span>
+          </a>
+          <a href="{% url 'gshsapp:gigi_change' pk=gigi.id %} ">
+            <span class="gitamenu badge bg-secondary">교체</span>
+          </a>
+          <a href="{% url 'gshsapp:gigi_suri' pk=gigi.id %} ">
+            <span class="gitamenu badge bg-secondary">수리</span>
+          </a>          
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- bootstrap style을 적용한다. -->
+{% if is_paginated %}
+<ul class="pagination">
+  {% if page_obj.has_previous %}
+    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+  {% else %}
+    <li class="disabled"><span>&laquo;</span></li>
+  {% endif %}
+  {% for i in paginator.page_range %}
+    {% if page_obj.number == i %}
+      <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+    {% else %}
+      <li><a href="?page={{ i }}">{{ i }}</a></li>
+    {% endif %}
+  {% endfor %}
+  {% if page_obj.has_next %}
+    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+  {% else %}
+    <li class="disabled"><span>&raquo;</span></li>
+  {% endif %}
+</ul>
+{% endif %}
+
+{% endblock %}

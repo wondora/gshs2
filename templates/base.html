@@ -1,5 +1,4 @@
 {% load static %}
-{% load bootstrap4 %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +8,6 @@
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" integrity="sha384-X8QTME3FCg1DLb58++lPvsjbQoCT9bp3MsUU3grbIny/3ZwUJkRNO8NPW6zqzuW9" crossorigin="anonymous">
-    <!-- {% bootstrap_css %} -->
     <script src="https://kit.fontawesome.com/806a9436db.js" crossorigin="anonymous"></script>    
     <style>
         @font-face {
@@ -23,34 +21,83 @@
         } 
 
         html, body {
+            background-color: #eee;
+            color: #495057;
             font-family: "NotoSansKR-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         }
 
+        a {
+            text-decoration: none;
+        }
+
+        nav {
+            background-color: rgb(251, 251, 251);
+        }
+
        .navbar-brand {
-            color: #ffc107;
+            color: #495057;
             font-size: 1.5rem;
             margin-left: 15px;
-            font-weight: 400;
+            font-weight: 500;
             letter-spacing: 1px;
             word-spacing: 2px;
        }
 
-       .nav-item > a {
-            color:aliceblue;
+       .navbar-brand:hover {
+            color: #495057;
+            transform: translateX(5px);
+            transition-duration: 0.5s;
+       }
+
+       .navbar-nav {
+            --bs-nav-link-hover-color:#495057;
+       }
+
+       .nav-item a {
+            color:#495057;
             font-size: 1.2rem;
             font-weight: 400;
        }
 
+       .nav-item a:hover {
+            color: white;
+            background-color: #0d6efd;
+       }
+
        .fa-explosion {
-            color:aliceblue;
+            color:black;
             font-size: 1.7rem;            
        }
 
        section {
-            margin-top: 300px;
-       } 
+            margin-top: 9%;
+       }
+
+       .table {
+            --bs-table-color: #495057;
+            color: #495057;
+       }
+       .gitamenu { 
+            margin-left: 7px;           
+            padding: 6px 12px;            
+       }
+
+       .gigi-update2 {
+            background-color: white;
+            padding: 50px;
+       }
+       .gigi-update1 {
+            width: 100%;
+            color: white;
+            padding: 20px;
+            font-size: 1.3rem;
+            text-align : center;
+            background-color: rgb(62, 62, 62);
+            
+       }
 
        footer {
+            margin-top: 100px;
             text-align: center;
             padding: 10px;
             font-size: 0.8rem;
@@ -59,11 +106,19 @@
        address {
             margin-bottom: 0.2rem;
        } 
+
+       .box_shadow {
+            box-shadow: 0 2px 2px 0 rgb(0 0 0 / 12%), 0 3px 1px -2px rgb(0 0 0 / 6%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+       }   
+       
+       input[type=checkbox] {
+            transform : scale(1.5);
+       }
     </style>
 </head>
 <body>    
     <!-- Navigation-->
-    <nav class="navbar navbar-dark navbar-expand-lg bg-dark bg-gradient fixed-top" id="mainNav">
+    <nav class="navbar navbar-dark navbar-expand-lg shadow fixed-top" id="mainNav">
         <div class="container">
             {% if user.is_authenticated %}
                 <i class="fa-solid fa-explosion"></i><a class="navbar-brand" href="{% url 'gshsapp:home' %}">Hello GSHS</a>
@@ -77,42 +132,53 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mx-0 mx-lg-1 dropdown">
-                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#portfolio"  role="button" data-bs-toggle="dropdown" aria-expanded="false">Portfolio</a>
+                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#InfoDevices"  role="button" data-bs-toggle="dropdown" aria-expanded="false">InfoDevices</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='notebook' %}">notebook</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='desktop' %}">desktop</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='printer' %}">printer</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about">About</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact">Contact</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about">Buseo</a></li>
+                    <li class="nav-item mx-0 mx-lg-1 dropdown">
+                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#jobs"  role="button" data-bs-toggle="dropdown" aria-expanded="false">Jobs</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">changes</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">repair</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">stock</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">unusable</a></li>                        
+                        </ul>
+                    </li>
                     {% if user.is_authenticated %}
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'login:logout' %}"><i class="fa-solid fa-power-off"></i></a></li>
+                        <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'login:logout' %}"><i class="fa-solid fa-power-off"></i></a></li>
                     {% else %}
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'login:login' %}"><i class="fa-regular fa-user"></i></a></li>
+                        <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'login:login' %}"><i class="fa-regular fa-user"></i></a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
     
-    <section class="container-fluid">
-        {% block content %}
-        {% endblock %}
+    <section>
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>        
     </section>
-
-    <footer class="fixed-bottom">
+  
+    <footer>
         <address>  
           <!-- 연락처 : <a href="mailto:webmaster@somedomain.com">help@example.com</a>.<br>   -->
           (16297) 경기도 수원시 장안구 수일로 135 (송죽동) 
         </address>
         <small>Copyright &copy; 2022 Choi Chang Won</small>
     </footer>
-    {% bootstrap_jquery %}
-    {% bootstrap_javascript %}
     <!-- JavaScript Bundle with Popper -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
