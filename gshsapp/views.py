@@ -1,35 +1,81 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, UpdateView
+from django.views.generic import UpdateView, CreateView
 from .models import *
 from django.shortcuts import get_object_or_404
 from .forms import *
 from django.urls import reverse
 from django.forms import modelformset_factory
+from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 def home(request):
     return render(request, 'gshsapp/home.html')
 
-class InfogigiLV(ListView):
+# class InfogigiLV(ListView):
+#     model = Gigiinfo
+#     paginate_by = 10 # 한 페이지에 보여줄 오브젝트의 갯수
+#     template_name = 'gshsapp/infogigi.html'
+#     # context_object_name = 'gigis'
+#     # queryset = Gigiinfo.objects.filter(jaego=False, notuse=False).order_by('buyproduct__buydate')
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['gigigubun'] = self.kwargs['gigigubun']
+#         context['gigis'] = Gigiinfo.objects.filter(buyproduct__gubun__gubun=self.kwargs['gigigubun'], jaego=False, notuse=False).order_by('buyproduct__buydate')
+#         return context
+
+def InfogigiList(request, gigigubun):
+    context={}
+    if gigigubun == 'notebook' or gigigubun == 'desktop':
+        gigis = Gigiinfo.objects.filter(buyproduct__gubun__gubun=gigigubun, user__is_active =True, jaego=False, notuse=False).order_by('buyproduct__buydate')
+    else:
+        gigis = Gigiinfo.objects.filter(buyproduct__gubun__gubun=gigigubun, jaego=False, notuse=False).order_by('buyproduct__buydate')
+
+    context['gigigubun'] = gigigubun 
+    context['infocount'] = gigis.count()    
+    page = request.GET.get('page', '1')  # 페이지    
+    paginator = Paginator(gigis, 10)  # 페이지당 10개씩 보여주기    
+    page_obj = paginator.get_page(page) 
+    context ['page_obj'] = page_obj
+
+    return render(request, 'gshsapp/infogigi.html', context)
+
+def InfogigiSearch(request, gigigubun):
+    if 'q' in request.GET:
+        if gigigubun == 'notebook' or gigigubun == 'desktop':            
+            infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, user__is_active =True, jaego=False, notuse=False).order_by('buyproduct__buydate')
+        else:
+            infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, jaego=False, notuse=False).order_by('buyproduct__buydate')
+        context={}
+        query = request.GET.get('q','')        
+        
+    gigis = infogigis.filter(Q(user__name__icontains=query) | Q(buyproduct__model__icontains=query) | Q(location__hosil__icontains=query))
+    context['gigigubun'] = gigigubun    
+    page = request.GET.get('page', '1')  # 페이지    
+    paginator = Paginator(gigis, 10)  # 페이지당 10개씩 보여주기    
+    page_obj = paginator.get_page(page)    
+    context ['page_obj'] = page_obj
+    context ['query'] = query
+    
+    return render(request, 'gshsapp/infogigisearch.html', context)
+
+class InfogigiCV(CreateView):
     model = Gigiinfo
-    paginate_by = 10 # 한 페이지에 보여줄 오브젝트의 갯수
-    template_name = 'gshsapp/infogigi.html'
-    # context_object_name = 'gigis'
-    # queryset = Gigiinfo.objects.filter(jaego=False, notuse=False).order_by('buyproduct__buydate')
+    template_name = 'gshsapp/create.html'
+    form_class = GigiinfoForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['gigigubun'] = self.kwargs['gigigubun']
-        context['gigis'] = Gigiinfo.objects.filter(buyproduct__gubun__gubun=self.kwargs['gigigubun'], jaego=False, notuse=False).order_by('buyproduct__buydate')
-        return context
-
+    def get_success_url(self):
+        return reverse('gshsapp:gigi_gubun', kwargs={'gigigubun': self.object.buyproduct.gubun.gubun})
+   
 
 class InfogigiUV(UpdateView):
     model = Gigiinfo
     template_name = 'gshsapp/update.html'
     form_class = GigiinfoForm
     context_object_name = 'gigis'
-    success_url = '/' 
+    # success_url = '/' 
     
     def get_object(self): 
         review = get_object_or_404(Gigiinfo, pk=self.kwargs['pk'])         
@@ -55,7 +101,8 @@ def InfogigiChange(request, pk):
                     # print(form)
                     # print(form['image'])
                     photo = Change_Photo(replacement=change, image=image) 
-                    photo.save()     
+                    photo.save()   
+            # messages.success(request, "Posted!")
             # Replacement.objects.create(gubun=gubun, count=count, cost=cost, image=image, bigo=bigo, gigiinfo=gigiinfo2)
             return redirect('gshsapp:gigi_gubun', gigiinfo2.buyproduct.gubun.gubun)
     else:
@@ -86,8 +133,18 @@ def InfogigiSuri(request, pk):
             # bigo = form.cleaned_data['bigo']    
            
             # Repair.objects.create(problem=problem, result=result, cost=cost, image=image, bigo=bigo, gigiinfo=gigiinfo2)
+            # messages.success(request, "Posted!")
             return redirect('gshsapp:gigi_gubun', gigiinfo2.buyproduct.gubun.gubun)
     else:
-        form = InfogigiSuriForm(initial={'gigiinfo':gigiinfo2})
-        
+        form = InfogigiSuriForm(initial={'gigiinfo':gigiinfo2}) 
+
     return render(request, 'gshsapp/gigisuri.html', {'form': form})
+
+
+def InfogigiBuseo(request, buseogubun):
+    buseos = Location.objects.filter(locationgubun='부서')
+    buseo_name = Location.objects.get(hosil='교육정보부')
+    members = buseo_name.gigiinfo.filter(Q(user__is_active =True) | Q(jaego=False) & Q(notuse=False))    
+    print(members)
+    return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'buseogubun':buseogubun})
+

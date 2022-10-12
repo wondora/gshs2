@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-2">
+        <div class="card box_shadow">
+            <div class="card-header bg-secondary text-light text-center">
+              <h6>부서별</h6>  
+            </div>
+            <div class="card-body">
+                <ul>
+                {% for buseo in buseos %}
+                    <li>{{ buseo.hosil }}</li>
+                {% endfor %}
+                </ul>            
+            </div>
+        </div>       
+    </div>
+    
+    <div class="col-md-10">      
+      <table class="table text-center">
+          <thead class="table-secondary">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">구매일</th>
+              <th scope="col">구분</th>
+              <th scope="col">성명</th>                 
+              <th scope="col">위치</th>
+              <th scope="col">제조사</th>
+              <th scope="col">모델명</th>
+              <th scope="col">IP</th>
+              <th scope="col">비고</th>                    
+            </tr>
+          </thead>
+          <!-- <tbody class="table-group-divider"> -->
+            {% for gigi in members %}
+            {% if gigi.buyproduct.gubun.gubun == 'notebook' or gigi.buyproduct.gubun.gubun == 'desktop' %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
+              <td>{{ gigi.buyproduct.gubun }}</td>
+              <td>{{ gigi.user.name }}</td>                        
+              <td>{{ gigi.location }}</td>        
+              <td>{{ gigi.buyproduct.company }}</td>
+              <td>{{ gigi.buyproduct.model }}</td>
+              <td>{{ gigi.ip }}</td>
+              <td>{{ gigi.bigo }}</td>                
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="mt-5">
+          <span style="font-size: 1.1rem; font-weight: bold; padding-left: 20px;">--= 정보기자재 =--<span>
+        </div>
+        <table class="table text-center mt-2">
+          <thead class="table-secondary">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">구매일</th>
+              <th scope="col">구분</th>                 
+              <th scope="col">위치</th>
+              <th scope="col">제조사</th>
+              <th scope="col">모델명</th>
+              <th scope="col">색상</th>
+              <th scope="col">IP</th>
+              <th scope="col">비고</th>                    
+            </tr>
+          </thead>
+          <!-- <tbody class="table-group-divider"> -->
+            {% for gigi in members %}
+            {% if gigi.buyproduct.gubun.gubun != 'notebook' and gigi.buyproduct.gubun.gubun != 'desktop' %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
+              <td>{{ gigi.buyproduct.gubun }}</td>                        
+              <td>{{ gigi.location }}</td>        
+              <td>{{ gigi.buyproduct.company }}</td>
+              <td>{{ gigi.buyproduct.model }}</td>
+              <td>{{ gigi.color }}</td>
+              <td>{{ gigi.ip }}</td>
+              <td>{{ gigi.bigo }}</td>                
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}

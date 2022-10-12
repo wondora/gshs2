@@ -15,10 +15,23 @@ class ReplacementAdmin(admin.ModelAdmin):
     inlines = [Change_PhotoInline, ]
 
 admin.site.register(User)
-admin.site.register(Buyproduct)
-admin.site.register(Location)
-admin.site.register(Gigiinfo)
-admin.site.register(Gubun)
+
+class BuyproductAdmin(admin.ModelAdmin):
+    list_display = ['id', 'buydate', 'company', 'model', 'bigo']
+
+admin.site.register(Buyproduct, BuyproductAdmin)
+
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ['id', 'building', 'hosil', 'locationgubun', 'bigo']
+admin.site.register(Location, LocationAdmin)
+
+class GigiinfoAdmin(admin.ModelAdmin):
+    list_display = ['id', 'buyproduct', 'location', 'user', 'ip', 'color', 'jaego', 'notuse', 'bigo']
+admin.site.register(Gigiinfo, GigiinfoAdmin)
+
+class GubunAdmin(admin.ModelAdmin):
+    list_display = ['id', 'tablename', 'gubun']
+admin.site.register(Gubun, GubunAdmin)
 admin.site.register(Repair, RepairAdmin)
 admin.site.register(Replacement, ReplacementAdmin)
 admin.site.register(Change_Photo)

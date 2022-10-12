@@ -21,9 +21,14 @@
         } 
 
         html, body {
+            -ms-overflow-style: none;
             background-color: #eee;
             color: #495057;
             font-family: "NotoSansKR-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
         }
 
         a {
@@ -50,7 +55,7 @@
        }
 
        .navbar-nav {
-            --bs-nav-link-hover-color:#495057;
+            --bs-nav-link-hover-color:#8f8780;
        }
 
        .nav-item a {
@@ -61,7 +66,7 @@
 
        .nav-item a:hover {
             color: white;
-            background-color: #0d6efd;
+            background-color: #495057;
        }
 
        .fa-explosion {
@@ -70,7 +75,7 @@
        }
 
        section {
-            margin-top: 9%;
+            margin-top: 8%;
        }
 
        .table {
@@ -92,7 +97,7 @@
             padding: 20px;
             font-size: 1.3rem;
             text-align : center;
-            background-color: rgb(62, 62, 62);
+            background-color: #495057;
             
        }
 
@@ -114,6 +119,43 @@
        input[type=checkbox] {
             transform : scale(1.5);
        }
+
+       a.page-link {
+            color: #495057;
+       }
+
+       .active >.page-link, .page-link.active {
+            background-color: #495057;
+            border-color: white;
+       }
+
+       .card-body {
+            padding: 0;
+       }
+
+       .card-body ul {
+            padding: 0;
+       }
+
+       .card-body li {
+            list-style-type: none;
+            letter-spacing: 0.3px;
+            padding: 11px;   
+            margin: 0;    
+            text-align: center; 
+            border-bottom: 1px solid #d0d0d0; 
+            font-size: 0.9rem;   
+       }
+
+       .card-body li:hover {
+            color :white;
+            background-color: #495057;
+       } 
+
+       .card-body li:last-child {           
+            border-bottom: 0;
+       }
+
     </style>
 </head>
 <body>    
@@ -141,7 +183,7 @@
                             <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='printer' %}">printer</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about">Buseo</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'gshsapp:gigi_buseo' buseogubun='과학창의부'%}">Buseo</a></li>
                     <li class="nav-item mx-0 mx-lg-1 dropdown">
                         <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#jobs"  role="button" data-bs-toggle="dropdown" aria-expanded="false">Jobs</a>
                         <ul class="dropdown-menu">

@@ -34,6 +34,7 @@ class User(AbstractUser):
 
 class Location(models.Model):
     LGUBUN = (
+        ('부서','부서'),
         ('강의실','강의실'),
         ('실험실','실험실'),
         ('협의회실','협의회실'),
@@ -50,6 +51,7 @@ class Location(models.Model):
 
 class Gigiinfo(models.Model):
     COLOR_SELECT = (
+        ('None',None),
         ('블랙','블랙'),
         ('컬러','컬러'),
     )
@@ -57,7 +59,7 @@ class Gigiinfo(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='gigiinfo')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='gigiinfo', null=True, blank=True)
     ip = models.CharField(max_length=20, null=True, blank=True)
-    color = models.CharField(max_length=10, choices=COLOR_SELECT, default="블랙", blank=True)
+    color = models.CharField(max_length=10, choices=COLOR_SELECT, default=None, blank=True)
     jaego = models.BooleanField(default=False)
     notuse = models.BooleanField(default=False)
     bigo = models.CharField(max_length=100, null=True, blank=True)
