@@ -7,8 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" integrity="sha384-X8QTME3FCg1DLb58++lPvsjbQoCT9bp3MsUU3grbIny/3ZwUJkRNO8NPW6zqzuW9" crossorigin="anonymous">
-    <script src="https://kit.fontawesome.com/806a9436db.js" crossorigin="anonymous"></script>    
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" integrity="sha384-X8QTME3FCg1DLb58++lPvsjbQoCT9bp3MsUU3grbIny/3ZwUJkRNO8NPW6zqzuW9" crossorigin="anonymous"> -->
+    <script src="https://kit.fontawesome.com/806a9436db.js" crossorigin="anonymous"></script> 
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!-- jQuery Modal -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" /> -->
     <style>
         @font-face {
             font-family: 'Leorio';
@@ -60,7 +64,7 @@
 
        .nav-item a {
             color:#495057;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 400;
        }
 
@@ -81,7 +85,9 @@
        .table {
             --bs-table-color: #495057;
             color: #495057;
+            font-size: 0.9rem;
        }
+
        .gitamenu { 
             margin-left: 7px;           
             padding: 6px 12px;            
@@ -142,9 +148,11 @@
             letter-spacing: 0.3px;
             padding: 11px;   
             margin: 0;    
+            color: #495057;
             text-align: center; 
             border-bottom: 1px solid #d0d0d0; 
-            font-size: 0.9rem;   
+            font-size: 0.8rem;
+            font-weight: bold;   
        }
 
        .card-body li:hover {
@@ -155,7 +163,70 @@
        .card-body li:last-child {           
             border-bottom: 0;
        }
+/* 모달 시작 */
+        #modal.modal-overlay {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        #modal .modal-window {
+            background: white;
+            box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+            backdrop-filter: blur( 13.5px );
+            -webkit-backdrop-filter: blur( 13.5px );
+            border-radius: 10px;
+            border: 1px solid rgba( 255, 255, 255, 0.18 );
+            width: 700px;
+            height: 800px;
+            position: fixed;
+            top: 100px;
+            padding: 10px;
+        }
+        #modal .title {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 20px;
+            padding-left: 20px;
+            display: inline;
+            color: #495057;
+            
+        }
+        #modal .title{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 20px;
+        }
 
+        #modal .title .title_side{
+            flex: 0 0 40px;
+            text-align: center;
+        }
+
+        #modal .title .title_side span {
+            cursor: pointer;
+        }
+
+        #modal .content {
+            font-size: 0.9rem;
+        }
+
+ /* 모달 끝 */   
     </style>
 </head>
 <body>    
@@ -174,7 +245,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mx-0 mx-lg-1 dropdown">
-                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#InfoDevices"  role="button" data-bs-toggle="dropdown" aria-expanded="false">InfoDevices</a>
+                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#InfoDevices"  role="button" data-bs-toggle="dropdown" aria-expanded="false">INFODS</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='notebook' %}">notebook</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -183,9 +254,9 @@
                             <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='printer' %}">printer</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'gshsapp:gigi_buseo' buseogubun='과학창의부'%}">Buseo</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'gshsapp:gigi_buseo' buseogubun='교육정보부'%}">BUSEO</a></li>
                     <li class="nav-item mx-0 mx-lg-1 dropdown">
-                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#jobs"  role="button" data-bs-toggle="dropdown" aria-expanded="false">Jobs</a>
+                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#jobs"  role="button" data-bs-toggle="dropdown" aria-expanded="false">JOBS</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">changes</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -220,7 +291,5 @@
         </address>
         <small>Copyright &copy; 2022 Choi Chang Won</small>
     </footer>
-    <!-- JavaScript Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

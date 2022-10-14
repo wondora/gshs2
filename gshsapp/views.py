@@ -141,10 +141,15 @@ def InfogigiSuri(request, pk):
     return render(request, 'gshsapp/gigisuri.html', {'form': form})
 
 
-def InfogigiBuseo(request, buseogubun):
+def InfogigiBuseo(request, buseogubun):    
+
     buseos = Location.objects.filter(locationgubun='부서')
-    buseo_name = Location.objects.get(hosil='교육정보부')
+    buseo_name = Location.objects.get(hosil=buseogubun)
+    
+    repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun)
+    changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun)
+
     members = buseo_name.gigiinfo.filter(Q(user__is_active =True) | Q(jaego=False) & Q(notuse=False))    
-    print(members)
-    return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'buseogubun':buseogubun})
+    
+    return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun})
 

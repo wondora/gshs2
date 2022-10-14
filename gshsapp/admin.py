@@ -32,7 +32,14 @@ admin.site.register(Gigiinfo, GigiinfoAdmin)
 class GubunAdmin(admin.ModelAdmin):
     list_display = ['id', 'tablename', 'gubun']
 admin.site.register(Gubun, GubunAdmin)
+
+class RepairAdmin(admin.ModelAdmin):
+    list_display = ['id', 'date', 'gigiinfo', 'problem', 'result', 'cost', 'bigo']
 admin.site.register(Repair, RepairAdmin)
+
+class RepairAdmin(admin.ModelAdmin):
+    list_display = ['id', 'date', 'gigiinfo', 'gubun', 'count', 'cost', 'bigo']
 admin.site.register(Replacement, ReplacementAdmin)
+
 admin.site.register(Change_Photo)
 admin.site.register(Repair_Photo)

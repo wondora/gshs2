@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load humanize %}
 
 <div class="row">
     <div class="col-md-2">
@@ -17,50 +18,48 @@
         </div>       
     </div>
     
-    <div class="col-md-10">      
-      <table class="table text-center">
+    <div class="col-md-10">    
+      <div>
+        <span style="padding-left: 20px;">🙄 부원들 <span>
+      </div>  
+      <table class="table text-center mt-2">
           <thead class="table-secondary">
             <tr>
-              <th scope="col">#</th>
               <th scope="col">구매일</th>
               <th scope="col">구분</th>
-              <th scope="col">성명</th>                 
-              <th scope="col">위치</th>
+              <th scope="col">성명</th>
               <th scope="col">제조사</th>
               <th scope="col">모델명</th>
               <th scope="col">IP</th>
               <th scope="col">비고</th>                    
+              <th scope="col"></th>                    
             </tr>
           </thead>
-          <!-- <tbody class="table-group-divider"> -->
             {% for gigi in members %}
             {% if gigi.buyproduct.gubun.gubun == 'notebook' or gigi.buyproduct.gubun.gubun == 'desktop' %}
             <tr>
-              <th scope="row">{{ forloop.counter }}</th>
               <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
               <td>{{ gigi.buyproduct.gubun }}</td>
-              <td>{{ gigi.user.name }}</td>                        
-              <td>{{ gigi.location }}</td>        
+              <td>{{ gigi.user.name }}</td>       
               <td>{{ gigi.buyproduct.company }}</td>
               <td>{{ gigi.buyproduct.model }}</td>
               <td>{{ gigi.ip }}</td>
               <td>{{ gigi.bigo }}</td>                
+              <td><span class="gigi-update" type="button">🐓</span></td>                
             </tr>
             {% endif %}
             {% endfor %}
           </tbody>
         </table>
-
+        
         <div class="mt-5">
-          <span style="font-size: 1.1rem; font-weight: bold; padding-left: 20px;">--= 정보기자재 =--<span>
+          <span style="padding-left: 20px;">🦉 정보기자재 <span>
         </div>
         <table class="table text-center mt-2">
           <thead class="table-secondary">
             <tr>
-              <th scope="col">#</th>
               <th scope="col">구매일</th>
-              <th scope="col">구분</th>                 
-              <th scope="col">위치</th>
+              <th scope="col">구분</th>
               <th scope="col">제조사</th>
               <th scope="col">모델명</th>
               <th scope="col">색상</th>
@@ -68,14 +67,11 @@
               <th scope="col">비고</th>                    
             </tr>
           </thead>
-          <!-- <tbody class="table-group-divider"> -->
             {% for gigi in members %}
             {% if gigi.buyproduct.gubun.gubun != 'notebook' and gigi.buyproduct.gubun.gubun != 'desktop' %}
             <tr>
-              <th scope="row">{{ forloop.counter }}</th>
               <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
-              <td>{{ gigi.buyproduct.gubun }}</td>                        
-              <td>{{ gigi.location }}</td>        
+              <td>{{ gigi.buyproduct.gubun }}</td>        
               <td>{{ gigi.buyproduct.company }}</td>
               <td>{{ gigi.buyproduct.model }}</td>
               <td>{{ gigi.color }}</td>
@@ -86,8 +82,110 @@
             {% endfor %}
           </tbody>
         </table>
+        <br><br><hr>
+        <div class="mt-5">
+          <span style="padding-left: 20px;">🐷 소모품교체 <span>
+        </div>
+        <table class="table text-center mt-2">
+          <thead class="table-secondary">
+            <tr>
+              <th scope="col">날짜</th> 
+              <th scope="col">제조사</th>
+              <th scope="col">모델명</th>
+              <th scope="col">부품</th>
+              <th scope="col">개수</th>
+              <th scope="col">비용</th>
+              <th scope="col">비고</th>                    
+            </tr>
+          </thead>
+            {% for gigi in changes %}
+            <tr>
+              <td>{{ gigi.date|date:"Y-m-d" }}</td>        
+              <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
+              <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
+              <td>{{ gigi.gubun }}</td>
+              <td>{{ gigi.count }}</td>
+              <td>&#8361;{{ gigi.cost|intcomma }}</td>
+              <td>{{ gigi.bigo }}</td>                
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
 
+        <div class="mt-5">
+          <span style="padding-left: 20px;">🦊 소모품수리 <span>
+        </div>
+        <table class="table text-center mt-2">
+          <thead class="table-secondary">
+            <tr>
+              <th scope="col">구매일</th> 
+              <th scope="col">제조사</th>
+              <th scope="col">모델명</th>
+              <th scope="col">원인</th>
+              <th scope="col">결과</th>
+              <th scope="col">비용</th>
+              <th scope="col">비고</th>                    
+            </tr>
+          </thead>
+            {% for gigi in repairs %}
+            <tr>
+              <td>{{ gigi.date|date:"Y-m-d" }}</td>        
+              <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
+              <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
+              <td>{{ gigi.problem }}</td>
+              <td>{{ gigi.result }}</td>
+              <td>&#8361;{{ gigi.cost|intcomma }}</td>
+              <td>{{ gigi.bigo }}</td>                 
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
     </div>
 </div>
+
+
+<!-- Modal content-->  
+<div id="modal" class="modal-overlay">
+  <div class="modal-window">
+      <div class="title">
+        <div class="title_side"></div>
+        <div> 작업하기 </div>
+        <div class="title_side">
+            <span id="close_modal" class="material-icons-outlined">
+                x
+            </span>
+        </div>
+      </div>
+      <hr>
+      <div class="content">
+          <p>가나다라마바사 아자차카타파하</p>
+          <p>가나다라마바사 아자차카타파하</p>
+          <p>가나다라마바사 아자차카타파하</p>
+          <p>가나다라마바사 아자차카타파하</p>
+      </div>
+  </div>
+</div>   
+
+<script>
+  
+  $(function(){
+    $(document).on("click", ".gigi-update", function(){    
+      $("#modal").css("display", "flex"); // 모달 띄우기 코드.
+    });    
+
+    $("#close_modal").click(function(){
+      $("#modal").css("display", "none"); 
+    });
+    // 외부영역 클릭시 닫기
+    // $(document).mouseup(function (e){
+    //   var LayerPopup = $("#modal");
+    //   if(LayerPopup.has(e.target).length === 0){
+    //     $("#modal").css("display", "none");
+    //   }
+    // });
+  });
+  
+  
+</script>
 
 {% endblock %}
