@@ -35,6 +35,7 @@
               <th scope="col"></th>                    
             </tr>
           </thead>
+          <tbody>
             {% for gigi in members %}
             {% if gigi.buyproduct.gubun.gubun == 'notebook' or gigi.buyproduct.gubun.gubun == 'desktop' %}
             <tr>
@@ -67,6 +68,7 @@
               <th scope="col">비고</th>                    
             </tr>
           </thead>
+          <tbody>
             {% for gigi in members %}
             {% if gigi.buyproduct.gubun.gubun != 'notebook' and gigi.buyproduct.gubun.gubun != 'desktop' %}
             <tr>
@@ -80,7 +82,7 @@
             </tr>
             {% endif %}
             {% endfor %}
-          </tbody>
+          </tbody> 
         </table>
         <br><br><hr>
         <div class="mt-5">
@@ -96,21 +98,41 @@
               <th scope="col">개수</th>
               <th scope="col">비용</th>
               <th scope="col">비고</th>                    
+              <th scope="col">사진</th>                    
             </tr>
-          </thead>
+          </thead>    
+          <tbody>     
             {% for gigi in changes %}
-            <tr>
+            <tr class="gigi-change">
               <td>{{ gigi.date|date:"Y-m-d" }}</td>        
               <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
               <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
               <td>{{ gigi.gubun }}</td>
               <td>{{ gigi.count }}</td>
               <td>&#8361;{{ gigi.cost|intcomma }}</td>
-              <td>{{ gigi.bigo }}</td>                
+              <td>{{ gigi.bigo|truncatewords:10 }}</td>
+              <td>
+                {% if gigi.change_photo.all %}                
+                <span data-gubun="change" data-value="{{ gigi.id }}" style="font-weight: bold;font-size:0.8rem;color:white;background-color:#495057;padding:3px 7px;border-radius: 5px;">보기</span>
+                {% endif %}
+              </td>               
             </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            {% if gigi.repair_photo.all %}
+            <tr class="photoshows">
+              <td colspan="8">
+                <ul class="gallery">   
+                  {% for c in gigi.change_photo.all %}               
+                  <li>
+                    <a class="link-photo lb-initialized" href="{{ c.image.url }}" data-lightbox="img"><img src="{{ c.image.url }}" style="width:auto; max-height:150px;"></a>
+                  </li>
+                  {% endfor %}   
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+          {% endfor %}
+          </tbody> 
+        </table>        
 
         <div class="mt-5">
           <span style="padding-left: 20px;">🦊 소모품수리 <span>
@@ -124,27 +146,48 @@
               <th scope="col">원인</th>
               <th scope="col">결과</th>
               <th scope="col">비용</th>
-              <th scope="col">비고</th>                    
+              <th scope="col">비고</th> 
+              <th scope="col">사진</th>                   
             </tr>
-          </thead>
+          </thead>  
+          <tbody>       
             {% for gigi in repairs %}
-            <tr>
+            <tr class="gigi-repair">
               <td>{{ gigi.date|date:"Y-m-d" }}</td>        
               <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
               <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
-              <td>{{ gigi.problem }}</td>
-              <td>{{ gigi.result }}</td>
+              <td>{{ gigi.problem|truncatewords:10 }}</td>
+              <td>{{ gigi.result|truncatewords:10 }}</td>
               <td>&#8361;{{ gigi.cost|intcomma }}</td>
-              <td>{{ gigi.bigo }}</td>                 
+              <td>{{ gigi.bigo|truncatewords:10 }}</td>    
+              <td>
+                {% if gigi.repair_photo.all %}                
+                <span data-gubun="repair" data-value="{{ gigi.id }}" style="font-weight: bold;font-size:0.8rem;color:white;background-color:#495057;padding:3px 7px;border-radius: 5px;">보기</span>
+                {% endif %}
+              </td>                   
             </tr>
-            {% endfor %}
-          </tbody>
+            {% if gigi.repair_photo.all %}
+            <tr class="photoshows">
+              <td colspan="8">
+                <ul class="gallery">   
+                  {% for r in gigi.repair_photo.all %}               
+                  <li>
+                    <a class="link-photo lb-initialized" href="{{ r.image.url }}" data-lightbox="img"><img src="{{ r.image.url }}" style="width:auto; max-height:150px;"></a>
+                  </li>
+                  {% endfor %}   
+                </ul>
+              </td>
+            </tr>
+            {% endif %}
+            {% endfor %} 
+          </tbody> 
         </table>
     </div>
 </div>
 
 
 <!-- Modal content-->  
+<!-- {% include "gshsapp/change_photo_pop.html" %} -->
 <div id="modal" class="modal-overlay">
   <div class="modal-window">
       <div class="title">
@@ -168,24 +211,89 @@
 
 <script>
   
-  $(function(){
+  $(function(){    
+    const lb = lightbox();        
+    //csrf token
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     $(document).on("click", ".gigi-update", function(){    
       $("#modal").css("display", "flex"); // 모달 띄우기 코드.
-    });    
-
+    }); 
+    
     $("#close_modal").click(function(){
       $("#modal").css("display", "none"); 
     });
-    // 외부영역 클릭시 닫기
+
+    // 사진 보기
+    $('.gigi-repair, .gigi-change').on("click", function(e){    
+      e.preventDefault();
+      e.stopPropagation();
+      let check = $(this).next().css("display") == "none";
+      let except = $(this).next();
+      if(check)// 열릴부분의 display가 none으로 되어있다면, 
+		  {
+        $(this).next().show(); //열릴부분의 display를 block으로 변경해주고,
+        $('.photoshows').not(except).css('display','none'); //그외의 내용부분(.not() 으로 제어함) 은 display를 none으로 안보이게 변경시킵니다.
+      }else {
+        $(this).next().css('display','none');
+      }
+    });
+
+    $().on("click", function(e){    
+      e.preventDefault();
+      e.stopPropagation();
+      let gigiid = $(this).data('value');   
+      let gigigubun = $(this).data('gubun'); 
+      //alert(gigiid);
+      // data = {"data":gigiid, "csrfmiddlewaretoken":  csrftoken,};
+      $.ajax({
+        type:"GET",
+        dataType: "json",
+        url:"{% url 'gshsapp:changephoto_up' %}",
+        data : {"data":gigiid, "gubun":gigigubun},
+        success:function(json){
+            gigi = json['result'];  
+            $(".gallery").empty();
+            gigi.forEach(function(el, index){              
+              $(".gallery").append("<li><a href='#'><img src=" + el + " style='max-width:100%; height: auto;'>" + "</a></li>");
+              $("#phostoshow").css("display", "flex"); 
+            });
+            alert(gigiid);
+        },
+        error : function(xhr,errmsg,err) {
+        console.log(xhr.status + ": " + xhr.responseText); 
+        },
+      });
+      
+      
+    });
+
+    $("#change_close_modal").click(function(){
+      $("#change_modal").css("display", "none"); 
+    });
+   // 외부영역 클릭시 닫기
     // $(document).mouseup(function (e){
-    //   var LayerPopup = $("#modal");
+    //   var LayerPopup = $("#change_modal");
     //   if(LayerPopup.has(e.target).length === 0){
-    //     $("#modal").css("display", "none");
+    //     $("#change_modal").css("display", "none");
     //   }
     // });
-  });
-  
-  
+    
+  });  
 </script>
 
 {% endblock %}

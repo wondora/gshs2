@@ -11,5 +11,7 @@ urlpatterns = [
     path('gigi/change/<int:pk>/', views.InfogigiChange, name='gigi_change'),
     path('gigi/suri/<int:pk>/', views.InfogigiSuri, name='gigi_suri'),  
     path('gigi/search/<str:gigigubun>/', views.InfogigiSearch, name='gigi_search'),  
-    path('gigi/buseo/<str:buseogubun>', views.InfogigiBuseo, name='gigi_buseo'),  
+    path('gigi/buseo/<str:buseogubun>/', views.InfogigiBuseo, name='gigi_buseo'), 
+
+    path('gigi/buseo/change/photo/', views.ChangePhotoAjax, name='changephoto_up'), 
 ]

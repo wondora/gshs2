@@ -8,6 +8,8 @@ from django.forms import modelformset_factory
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import JsonResponse
+import json
 
 
 def home(request):
@@ -150,6 +152,26 @@ def InfogigiBuseo(request, buseogubun):
     changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun)
 
     members = buseo_name.gigiinfo.filter(Q(user__is_active =True) | Q(jaego=False) & Q(notuse=False))    
-    
+
     return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun})
 
+
+def ChangePhotoAjax(request):
+    if request.method == 'GET':
+        data = request.GET.get('data')
+        gubun = request.GET.get('gubun')
+        if gubun == 'change':
+            c_id = Replacement.objects.get(id=data)
+            photos = c_id.change_photo.all()
+        else:
+            r_id = Repair.objects.get(id=data)
+            photos = r_id.repair_photo.all()
+        
+        photo = []
+        for c in photos:
+            photo.append(c.image.url)
+            
+        context = {
+            'result': photo,
+        }
+        return JsonResponse(context)
