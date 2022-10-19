@@ -46,7 +46,7 @@
               <td>{{ gigi.buyproduct.model }}</td>
               <td>{{ gigi.ip }}</td>
               <td>{{ gigi.bigo }}</td>                
-              <td><span class="gigi-update" type="button">🐓</span></td>                
+              <td><span class="buwon-update" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}" title="수정하기">🐓</span></td>                
             </tr>
             {% endif %}
             {% endfor %}
@@ -66,6 +66,7 @@
               <th scope="col">색상</th>
               <th scope="col">IP</th>
               <th scope="col">비고</th>                    
+              <th scope="col"></th>                    
             </tr>
           </thead>
           <tbody>
@@ -78,7 +79,8 @@
               <td>{{ gigi.buyproduct.model }}</td>
               <td>{{ gigi.color }}</td>
               <td>{{ gigi.ip }}</td>
-              <td>{{ gigi.bigo }}</td>                
+              <td>{{ gigi.bigo }}</td>
+              <td><span class="buseogigi-update" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}" title="수정하기">🐵</span></td>                                
             </tr>
             {% endif %}
             {% endfor %}
@@ -103,34 +105,37 @@
           </thead>    
           <tbody>     
             {% for gigi in changes %}
-            <tr class="gigi-change">
+            {% with gubunchange=gigi.change_photo.all %}
+            <tr {% if gubunchange %} class="gigi-change" {% else %} {% endif %}>
               <td>{{ gigi.date|date:"Y-m-d" }}</td>        
               <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
               <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
               <td>{{ gigi.gubun }}</td>
               <td>{{ gigi.count }}</td>
               <td>&#8361;{{ gigi.cost|intcomma }}</td>
-              <td>{{ gigi.bigo|truncatewords:10 }}</td>
+              <td title="{{gigi.bigo}}">{{ gigi.bigo|truncatechars:10 }}</td>
               <td>
-                {% if gigi.change_photo.all %}                
+                {% if gubunchange %}                
                 <span data-gubun="change" data-value="{{ gigi.id }}" style="font-weight: bold;font-size:0.8rem;color:white;background-color:#495057;padding:3px 7px;border-radius: 5px;">보기</span>
                 {% endif %}
               </td>               
             </tr>
-            {% if gigi.repair_photo.all %}
+            
+            {% if gubunchange %}
             <tr class="photoshows">
               <td colspan="8">
-                <ul class="gallery">   
-                  {% for c in gigi.change_photo.all %}               
+                <ul class="gallery"> 
+                  {% for c in gubunchange %}           
                   <li>
                     <a class="link-photo lb-initialized" href="{{ c.image.url }}" data-lightbox="img"><img src="{{ c.image.url }}" style="width:auto; max-height:150px;"></a>
                   </li>
                   {% endfor %}   
-                </ul>
+                </ul>                
               </td>
             </tr>
             {% endif %}
-          {% endfor %}
+          {% endwith %}          
+        {% endfor %}
           </tbody> 
         </table>        
 
@@ -150,27 +155,28 @@
               <th scope="col">사진</th>                   
             </tr>
           </thead>  
-          <tbody>       
+          <tbody>             
             {% for gigi in repairs %}
-            <tr class="gigi-repair">
+            {% with gigi.repair_photo.all as gubunrepair %}
+            <tr {% if gubunrepair %} class="gigi-repair" {% else %} {% endif %}>
               <td>{{ gigi.date|date:"Y-m-d" }}</td>        
               <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
               <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
-              <td>{{ gigi.problem|truncatewords:10 }}</td>
-              <td>{{ gigi.result|truncatewords:10 }}</td>
+              <td title="{{gigi.problem}}">{{ gigi.problem|truncatechars:7 }}</td>
+              <td title="{{gigi.result}}">{{ gigi.result|truncatechars:5 }}</td>
               <td>&#8361;{{ gigi.cost|intcomma }}</td>
-              <td>{{ gigi.bigo|truncatewords:10 }}</td>    
+              <td title="{{gigi.bigo}}">{{ gigi.bigo|truncatechars:5 }}</td>    
               <td>
-                {% if gigi.repair_photo.all %}                
+                {% if gubunrepair %}                
                 <span data-gubun="repair" data-value="{{ gigi.id }}" style="font-weight: bold;font-size:0.8rem;color:white;background-color:#495057;padding:3px 7px;border-radius: 5px;">보기</span>
                 {% endif %}
               </td>                   
             </tr>
-            {% if gigi.repair_photo.all %}
+            {% if gubunrepair %}
             <tr class="photoshows">
               <td colspan="8">
                 <ul class="gallery">   
-                  {% for r in gigi.repair_photo.all %}               
+                  {% for r in gubunrepair %}               
                   <li>
                     <a class="link-photo lb-initialized" href="{{ r.image.url }}" data-lightbox="img"><img src="{{ r.image.url }}" style="width:auto; max-height:150px;"></a>
                   </li>
@@ -179,38 +185,32 @@
               </td>
             </tr>
             {% endif %}
-            {% endfor %} 
+          {% endwith %}
+        {% endfor %} 
           </tbody> 
         </table>
     </div>
 </div>
 
-
-<!-- Modal content-->  
-<!-- {% include "gshsapp/change_photo_pop.html" %} -->
 <div id="modal" class="modal-overlay">
   <div class="modal-window">
-      <div class="title">
-        <div class="title_side"></div>
-        <div> 작업하기 </div>
-        <div class="title_side">
-            <span id="close_modal" class="material-icons-outlined">
-                x
-            </span>
-        </div>
+    <!-- <div class="gigi-update1">수정하기</div> -->
+    <div class="title">
+      <div class="title_side"></div>
+      <div> 수정하기 </div>
+      <div class="title_side">
+          <span id="close_modal" class="material-icons-outlined">x</span>
       </div>
-      <hr>
+    </div>
+    <div class="gigi-update2">
       <div class="content">
-          <p>가나다라마바사 아자차카타파하</p>
-          <p>가나다라마바사 아자차카타파하</p>
-          <p>가나다라마바사 아자차카타파하</p>
-          <p>가나다라마바사 아자차카타파하</p>
-      </div>
-  </div>
-</div>   
 
-<script>
-  
+      </div>
+    </div>
+  </div>
+</div>  
+
+<script>  
   $(function(){    
     const lb = lightbox();        
     //csrf token
@@ -230,16 +230,9 @@
         return cookieValue;
     }
 
-    $(document).on("click", ".gigi-update", function(){    
-      $("#modal").css("display", "flex"); // 모달 띄우기 코드.
-    }); 
-    
-    $("#close_modal").click(function(){
-      $("#modal").css("display", "none"); 
-    });
+    var csrftoken = getCookie('csrftoken');
 
-    // 사진 보기
-    $('.gigi-repair, .gigi-change').on("click", function(e){    
+    let togglebar = function(e){    
       e.preventDefault();
       e.stopPropagation();
       let check = $(this).next().css("display") == "none";
@@ -251,47 +244,65 @@
       }else {
         $(this).next().css('display','none');
       }
-    });
+    };
 
-    $().on("click", function(e){    
-      e.preventDefault();
-      e.stopPropagation();
-      let gigiid = $(this).data('value');   
-      let gigigubun = $(this).data('gubun'); 
-      //alert(gigiid);
-      // data = {"data":gigiid, "csrfmiddlewaretoken":  csrftoken,};
-      $.ajax({
-        type:"GET",
-        dataType: "json",
-        url:"{% url 'gshsapp:changephoto_up' %}",
-        data : {"data":gigiid, "gubun":gigigubun},
-        success:function(json){
-            gigi = json['result'];  
-            $(".gallery").empty();
-            gigi.forEach(function(el, index){              
-              $(".gallery").append("<li><a href='#'><img src=" + el + " style='max-width:100%; height: auto;'>" + "</a></li>");
-              $("#phostoshow").css("display", "flex"); 
-            });
-            alert(gigiid);
-        },
-        error : function(xhr,errmsg,err) {
-        console.log(xhr.status + ": " + xhr.responseText); 
-        },
-      });
-      
-      
-    });
+    $('.gigi-repair, .gigi-change').on("click", togglebar); // 사진보기
 
-    $("#change_close_modal").click(function(){
-      $("#change_modal").css("display", "none"); 
+    // 모달 
+    var LoadbuwonForm = function () {
+        var btn = $(this);
+        $.ajax({
+            url: btn.attr("data-url"),
+            type: 'get',
+            dataType: 'json',
+            processData: false,
+            // contentType: false, //contentType : false 로 선언 시 content-type 헤더가 multipart/form-data로 전송되게 함
+            // processData: false, //processData : false로 선언 시 formData를 string으로 변환하지 않음
+            beforeSend: function () {
+            $("#modal").show();
+            },
+            success: function (data) {
+            $("#modal .content").html(data.html_form);               
+            }
+        });
+    };      
+    
+    var saveForm = function () {
+        var form = $(this);
+        $.ajax({
+        url: form.attr("action"),
+        data: form.serialize(),
+        type: form.attr("method"),
+        dataType: 'json',
+        success: function (data) {
+            if (data.form_is_valid) {  
+                window.location.reload();
+                $("#modal").hide();
+            }
+            else {
+                $("#modal .content").html(data.html_form);
+            }                      
+        }       
+        });
+        return false;
+    };
+
+    // 부원 로드
+    $(".buwon-update").click(LoadbuwonForm);
+    $(".buseogigi-update").click(LoadbuwonForm);
+    $('#modal').on('submit','.buseoupdate', saveForm);
+
+    $("#close_modal").click(function(){
+      $("#modal").css("display", "none"); 
     });
-   // 외부영역 클릭시 닫기
-    // $(document).mouseup(function (e){
-    //   var LayerPopup = $("#change_modal");
-    //   if(LayerPopup.has(e.target).length === 0){
-    //     $("#change_modal").css("display", "none");
-    //   }
-    // });
+   
+// 외부영역 클릭시 닫기
+    $(document).mouseup(function (e){
+      var LayerPopup = $("#modal");
+      if(LayerPopup.has(e.target).length === 0){
+        $("#modal").css("display", "none");
+      }
+    });
     
   });  
 </script>

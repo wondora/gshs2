@@ -10,6 +10,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse
 import json
+from django.template.loader import render_to_string
 
 
 def home(request):
@@ -175,3 +176,21 @@ def ChangePhotoAjax(request):
             'result': photo,
         }
         return JsonResponse(context)
+
+def InfogigiBuseoUpdate(request, pk):
+    data = {}
+    gigiinfo = get_object_or_404(Gigiinfo, pk=pk)    
+
+    if request.method == 'POST':
+        form = GigiinfoForm(request.POST, instance=gigiinfo)
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True  
+        else:
+            data['form_is_valid'] = False
+    else:
+        form = GigiinfoForm(instance=gigiinfo)        
+
+    context = {'form':form}
+    data['html_form'] = render_to_string('gshsapp/snipet/buseo_buwon_update.html', context, request=request)
+    return JsonResponse(data)

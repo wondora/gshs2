@@ -1,0 +1,45 @@
+
+<form method="POST" action="{% url 'gshsapp:gigi_buseo_update' form.instance.pk %}" class="buseoupdate">
+    {% csrf_token %}
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_buyproduct">구매물품</label>
+        <div class="col-md-10">{{ form.buyproduct }}</div>
+    </div>   
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_location">위치</label>
+        <div class="col-md-10">{{ form.location }}</div>
+    </div>   
+    {% if form.instance.buyproduct.gubun.gubun == 'notebook' or form.instance.buyproduct.gubun.gubun == 'desktop' %} 
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_user">성명</label>
+        <div class="col-md-10">{{ form.user }}</div>
+    </div>
+    {% endif %}
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_ip">IP</label>
+        <div class="col-md-10">{{ form.ip }}</div>
+    </div>
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_color">색상</label>
+        <div class="col-md-10">{{ form.color }}</div>
+    </div>
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_jaego">재고</label>
+        <div class="col-md-10">{{ form.jaego }}</div>
+    </div>
+    <div class="row mb-2">   
+        <label class="col-form-label col-md-2" for="id_notuse">불용</label>
+        <div class="col-md-10">{{ form.notuse }}</div>
+    </div>
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_bigo">비고</label>
+        <div class="col-md-10">{{ form.bigo }}</div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-6 offset-md-6">
+            <button class="btn btn-primary" type="submit">저장</button>
+        </div>
+    </div>              
+</form>
+           
+

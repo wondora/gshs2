@@ -14,4 +14,5 @@ urlpatterns = [
     path('gigi/buseo/<str:buseogubun>/', views.InfogigiBuseo, name='gigi_buseo'), 
 
     path('gigi/buseo/change/photo/', views.ChangePhotoAjax, name='changephoto_up'), 
+    path('gigi/buseo/buwon/update/<int:pk>/', views.InfogigiBuseoUpdate, name='gigi_buseo_update'), 
 ]
