@@ -7,9 +7,9 @@ from django.urls import reverse
 from django.forms import modelformset_factory
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, F
 from django.http import JsonResponse
-import json
+from django.db.models import Sum
 from django.template.loader import render_to_string
 
 
@@ -91,11 +91,11 @@ class InfogigiUV(UpdateView):
 def InfogigiChange(request, pk):
     gigiinfo2 = Gigiinfo.objects.get(pk=pk)
     ImageFormSet = modelformset_factory(Change_Photo, form=Change_PhotoForm, extra=3)
-
+    
     if request.method == 'POST':
         changeform = InfogigiChangeForm(request.POST)
         formset = ImageFormSet(request.POST, request.FILES, queryset=Change_Photo.objects.none())
-
+        
         if changeform.is_valid() and formset.is_valid():
             change = changeform.save()      
             for form in formset.cleaned_data:
@@ -111,7 +111,7 @@ def InfogigiChange(request, pk):
     else:
         changeform = InfogigiChangeForm(initial={'gigiinfo':gigiinfo2})
         formset = ImageFormSet(queryset=Change_Photo.objects.none())
-        
+    
     return render(request, 'gshsapp/gigichange.html', {'form': changeform, 'formset': formset})
 
 
@@ -150,11 +150,14 @@ def InfogigiBuseo(request, buseogubun):
     buseo_name = Location.objects.get(hosil=buseogubun)
     
     repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun)
-    changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun)
+    repairTotalCost = repairs.aggregate(Sum('cost'))
+
+    changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun).annotate(changeTotal = F('count') *  F('cost'))
+    changeTotalCost = changes.aggregate(Sum('changeTotal'))
 
     members = buseo_name.gigiinfo.filter(Q(user__is_active =True) | Q(jaego=False) & Q(notuse=False))    
 
-    return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun})
+    return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
 
 
 def ChangePhotoAjax(request):
@@ -177,20 +180,32 @@ def ChangePhotoAjax(request):
         }
         return JsonResponse(context)
 
+# 부서 부원 및 기기 ajax
 def InfogigiBuseoUpdate(request, pk):
     data = {}
     gigiinfo = get_object_or_404(Gigiinfo, pk=pk)    
-
+   
     if request.method == 'POST':
-        form = GigiinfoForm(request.POST, instance=gigiinfo)
+        form = GigiinfoForm(request.POST, instance=gigiinfo)        
+        buseogubun = form.instance.location.hosil
+        buseo_name = Location.objects.get(hosil=buseogubun)
+        members = buseo_name.gigiinfo.filter(Q(user__is_active =True) | Q(jaego=False) & Q(notuse=False)) 
+        
         if form.is_valid():
             form.save()
-            data['form_is_valid'] = True  
+            data['form_is_valid'] = True               
+            
+            if form.instance.user:   
+                data['buwon'] = True              
+                data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_buwon_list.html', {'members':members, 'buseogubun':buseogubun})            
+            else:
+                print(form.instance.user)
+                data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_gigi_list.html', {'members':members, 'buseogubun':buseogubun})            
         else:
             data['form_is_valid'] = False
     else:
-        form = GigiinfoForm(instance=gigiinfo)        
-
+        form = GigiinfoForm(instance=gigiinfo) 
+    
     context = {'form':form}
-    data['html_form'] = render_to_string('gshsapp/snipet/buseo_buwon_update.html', context, request=request)
+    data['html_form'] = render_to_string('gshsapp/snipet/buseo_buwon_form.html', context, request=request)
     return JsonResponse(data)

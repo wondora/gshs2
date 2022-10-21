@@ -3,7 +3,11 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
 class Gubun(models.Model):
-    tablename = models.CharField(max_length=20, default='')
+    GUBUN = (
+        ('Buyproduct', '구매Table'),
+        ('Replacement', '교체Table'),        
+    )
+    tablename = models.CharField(max_length=20, default='', choices=GUBUN)
     gubun = models.CharField(max_length=50)
 
     def __str__(self):

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load humanize %}
+{% load static %}
 
 <div class="row">
     <div class="col-md-2">
@@ -35,9 +36,9 @@
               <th scope="col"></th>                    
             </tr>
           </thead>
-          <tbody>
+          <tbody id="buwonInsert">
             {% for gigi in members %}
-            {% if gigi.buyproduct.gubun.gubun == 'notebook' or gigi.buyproduct.gubun.gubun == 'desktop' %}
+            {% if gigi.user %}
             <tr>
               <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
               <td>{{ gigi.buyproduct.gubun }}</td>
@@ -46,7 +47,7 @@
               <td>{{ gigi.buyproduct.model }}</td>
               <td>{{ gigi.ip }}</td>
               <td>{{ gigi.bigo }}</td>                
-              <td><span class="buwon-update" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}" title="수정하기">🐓</span></td>                
+              <td><span class="buwon-update" data-buseo="{{buseogubun}}" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}" title="수정하기">🐓</span></td>                
             </tr>
             {% endif %}
             {% endfor %}
@@ -69,9 +70,9 @@
               <th scope="col"></th>                    
             </tr>
           </thead>
-          <tbody>
+          <tbody id="gigiInsert">
             {% for gigi in members %}
-            {% if gigi.buyproduct.gubun.gubun != 'notebook' and gigi.buyproduct.gubun.gubun != 'desktop' %}
+            {% if not gigi.user %}
             <tr>
               <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
               <td>{{ gigi.buyproduct.gubun }}</td>        
@@ -80,7 +81,7 @@
               <td>{{ gigi.color }}</td>
               <td>{{ gigi.ip }}</td>
               <td>{{ gigi.bigo }}</td>
-              <td><span class="buseogigi-update" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}" title="수정하기">🐵</span></td>                                
+              <td><span class="buseogigi-update" data-buseo="{{buseogubun}}" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}" title="수정하기">🐵</span></td>                                
             </tr>
             {% endif %}
             {% endfor %}
@@ -88,7 +89,7 @@
         </table>
         <br><br><hr>
         <div class="mt-5">
-          <span style="padding-left: 20px;">🐷 소모품교체 <span>
+          <span style="padding-left: 20px;">🐷 소모품교체 <span><span style="margin-left:20px;font-size: 0.9rem; font-weight: bold;color:orangered;">[ 총액 : &#8361; {{changeTotalCost.changeTotal__sum|intcomma}} ]</span>
         </div>
         <table class="table text-center mt-2">
           <thead class="table-secondary">
@@ -141,6 +142,7 @@
 
         <div class="mt-5">
           <span style="padding-left: 20px;">🦊 소모품수리 <span>
+            <span style="margin-left:20px;font-size: 0.9rem; font-weight: bold;color:orangered;">[ 총액 : &#8361; {{repairTotalCost.cost__sum|intcomma}} ]</span>  
         </div>
         <table class="table text-center mt-2">
           <thead class="table-secondary">
@@ -215,19 +217,19 @@
     const lb = lightbox();        
     //csrf token
     function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+              var cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
     }
 
     var csrftoken = getCookie('csrftoken');
@@ -249,48 +251,50 @@
     $('.gigi-repair, .gigi-change').on("click", togglebar); // 사진보기
 
     // 모달 
-    var LoadbuwonForm = function () {
+    var loadBuwonForm = function () {       
         var btn = $(this);
         $.ajax({
             url: btn.attr("data-url"),
             type: 'get',
             dataType: 'json',
-            processData: false,
             // contentType: false, //contentType : false 로 선언 시 content-type 헤더가 multipart/form-data로 전송되게 함
             // processData: false, //processData : false로 선언 시 formData를 string으로 변환하지 않음
             beforeSend: function () {
-            $("#modal").show();
+              $("#modal").show();
             },
             success: function (data) {
-            $("#modal .content").html(data.html_form);               
+              $("#modal .content").html(data.html_form);               
             }
         });
     };      
     
     var saveForm = function () {
-        var form = $(this);
+        // var form = $(this);
+        var form = $("#form");
         $.ajax({
         url: form.attr("action"),
         data: form.serialize(),
         type: form.attr("method"),
         dataType: 'json',
         success: function (data) {
-            if (data.form_is_valid) {  
-                window.location.reload();
-                $("#modal").hide();
-            }
-            else {
-                $("#modal .content").html(data.html_form);
-            }                      
+          if (data.form_is_valid) {  
+            if (data.buwon) {         
+                $("#buwonInsert").html(data.html_buseo);
+              } else {
+                $("#gigiInsert").html(data.html_buseo);
+              }          
+            $("#modal").hide();
+          } else {
+            $("#modal .content").html(data.html_form);
+          } 
         }       
-        });
-        return false;
+      });
     };
 
     // 부원 로드
-    $(".buwon-update").click(LoadbuwonForm);
-    $(".buseogigi-update").click(LoadbuwonForm);
-    $('#modal').on('submit','.buseoupdate', saveForm);
+    $("#buwonInsert").on('click','.buwon-update',loadBuwonForm);
+    $("#gigiInsert").on('click','.buseogigi-update',loadBuwonForm);
+    $('#modal').on('click','.buseobutton', saveForm);
 
     $("#close_modal").click(function(){
       $("#modal").css("display", "none"); 
@@ -304,7 +308,9 @@
       }
     });
     
-  });  
+});  
 </script>
-
+<!--사진 모달-->
+<script src="{% static 'js/lightbox.min.js' %}"></script>
+<link href="{% static 'css/lightbox.min.css' %}" rel="stylesheet" >
 {% endblock %}
