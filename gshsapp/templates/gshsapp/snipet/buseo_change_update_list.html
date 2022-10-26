@@ -1,0 +1,29 @@
+{% with gubunchange=gigi.change_photo.all %}
+        <td>{{ gigi.date|date:"Y-m-d" }}</td>        
+        <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
+        <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
+        <td>{{ gigi.gubun }}</td>
+        <td>{{ gigi.count }}</td>
+        <td>&#8361;{{ gigi.cost|intcomma }}</td>
+        <td title="{{gigi.bigo}}">{{ gigi.bigo|truncatechars:10 }}</td>
+        <td>
+        {% if gubunchange %}                
+        <span style="font-weight: bold;font-size:0.8rem;color:white;background-color:#495057;padding:3px 7px;border-radius: 5px;">보기</span>
+        {% endif %}
+        </td>  
+        <td><span class="buseo_change_update" data-gubun="change" data-buseo="{{buseogubun}}" type="button" data-url="{% url 'gshsapp:buseo_change_update' pk=gigi.id %}" title="수정하기">🐼</span></td>             
+       
+    {% if gubunchange %}
+    <tr class="photoshows">
+        <td colspan="9">
+        <ul class="gallery"> 
+            {% for c in gubunchange %}           
+            <li>
+            <a class="link-photo lb-initialized" href="{{ c.image.url }}" data-lightbox="img"><img src="{{ c.image.url }}" style="width:auto; max-height:150px;"></a>
+            </li>
+            {% endfor %}   
+        </ul>                
+        </td>
+    </tr>
+    {% endif %}
+{% endwith %}      

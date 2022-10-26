@@ -88,9 +88,23 @@
           </tbody> 
         </table>
         <br><br><hr>
-        <div class="mt-5">
-          <span style="padding-left: 20px;">🐷 소모품교체 <span><span style="margin-left:20px;font-size: 0.9rem; font-weight: bold;color:orangered;">[ 총액 : &#8361; {{changeTotalCost.changeTotal__sum|intcomma}} ]</span>
+
+        <div class="mt-5 row">
+          <div class="col-md-5 pt-1"><span style="padding-left: 20px;">🐷 소모품교체 </span></div>
+          <div class="ms-auto col-md-3" id="changeSelct">
+            <select class="form-select form-select-sm change_year" data-buseo="{{buseogubun}}" data-gubun="change" aria-label=".form-select-sm">
+              <option selected>연도를 선택하세요.</option>
+              <option value=2022>2022년도</option>
+              <option value=2023>2023년도</option>
+              <option value=2024>2024년도</option>
+              <option value=2025>2025년도</option>
+              <option value=2026>2026년도</option>
+              <option value=2027>2027년도</option>
+              <option value=2028>2028년도</option>
+            </select>
+          </div>          
         </div>
+
         <table class="table text-center mt-2">
           <thead class="table-secondary">
             <tr>
@@ -102,12 +116,13 @@
               <th scope="col">비용</th>
               <th scope="col">비고</th>                    
               <th scope="col">사진</th>                    
+              <th scope="col"></th>                    
             </tr>
           </thead>    
-          <tbody>     
+          <tbody id="changes_list">     
             {% for gigi in changes %}
             {% with gubunchange=gigi.change_photo.all %}
-            <tr {% if gubunchange %} class="gigi-change" {% else %} {% endif %}>
+            <tr>
               <td>{{ gigi.date|date:"Y-m-d" }}</td>        
               <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
               <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
@@ -115,16 +130,17 @@
               <td>{{ gigi.count }}</td>
               <td>&#8361;{{ gigi.cost|intcomma }}</td>
               <td title="{{gigi.bigo}}">{{ gigi.bigo|truncatechars:10 }}</td>
-              <td>
+              <td class="gigi-change" style="font-weight: bold;font-size: 0.8rem; padding-top: 10px; color:#d63384;">
                 {% if gubunchange %}                
-                <span data-gubun="change" data-value="{{ gigi.id }}" style="font-weight: bold;font-size:0.8rem;color:white;background-color:#495057;padding:3px 7px;border-radius: 5px;">보기</span>
+                  보기
                 {% endif %}
-              </td>               
+              </td>  
+              <td><span class="buseo_change_update" type="button" data-url="{% url 'gshsapp:buseo_change_update' gigi.id %}" title="수정하기">🐼</span></td>             
             </tr>
             
             {% if gubunchange %}
             <tr class="photoshows">
-              <td colspan="8">
+              <td colspan="9">
                 <ul class="gallery"> 
                   {% for c in gubunchange %}           
                   <li>
@@ -137,13 +153,33 @@
             {% endif %}
           {% endwith %}          
         {% endfor %}
-          </tbody> 
-        </table>        
+          <tr>
+            <td colspan="9">
+              <div style="text-align: center;">
+                <span style="margin-left:20px;font-size: 0.9rem; font-weight: bold;color:olivedrab;"> 총액 : &#8361; {{changeTotalCost.changeTotal__sum|intcomma}} 원</span> 
+              </div>
+            </td>
+          </tr>
 
-        <div class="mt-5">
-          <span style="padding-left: 20px;">🦊 소모품수리 <span>
-            <span style="margin-left:20px;font-size: 0.9rem; font-weight: bold;color:orangered;">[ 총액 : &#8361; {{repairTotalCost.cost__sum|intcomma}} ]</span>  
+          </tbody> 
+        </table> 
+
+        <div class="mt-5 row">
+          <div class="col-md-5 pt-1"><span style="padding-left: 20px;">🦊 소모품수리 </span></div>
+          <div class="ms-auto col-md-3">
+            <select class="form-select form-select-sm change_year" data-buseo="{{buseogubun}}" data-gubun="repair" aria-label=".form-select-sm">
+              <option selected>연도를 선택하세요.</option>
+              <option value=2022>2022년도</option>
+              <option value=2023>2023년도</option>
+              <option value=2024>2024년도</option>
+              <option value=2025>2025년도</option>
+              <option value=2026>2026년도</option>
+              <option value=2027>2027년도</option>
+              <option value=2028>2028년도</option>
+            </select>
+          </div>          
         </div>
+
         <table class="table text-center mt-2">
           <thead class="table-secondary">
             <tr>
@@ -157,10 +193,10 @@
               <th scope="col">사진</th>                   
             </tr>
           </thead>  
-          <tbody>             
+          <tbody id="repairs_list">             
             {% for gigi in repairs %}
             {% with gigi.repair_photo.all as gubunrepair %}
-            <tr {% if gubunrepair %} class="gigi-repair" {% else %} {% endif %}>
+            <tr>
               <td>{{ gigi.date|date:"Y-m-d" }}</td>        
               <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
               <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
@@ -168,9 +204,9 @@
               <td title="{{gigi.result}}">{{ gigi.result|truncatechars:5 }}</td>
               <td>&#8361;{{ gigi.cost|intcomma }}</td>
               <td title="{{gigi.bigo}}">{{ gigi.bigo|truncatechars:5 }}</td>    
-              <td>
+              <td class="gigi-repair" style="font-weight: bold;font-size:0.8rem; padding-top: 10px; color:#d63384;">
                 {% if gubunrepair %}                
-                <span data-gubun="repair" data-value="{{ gigi.id }}" style="font-weight: bold;font-size:0.8rem;color:white;background-color:#495057;padding:3px 7px;border-radius: 5px;">보기</span>
+                 보기
                 {% endif %}
               </td>                   
             </tr>
@@ -189,8 +225,15 @@
             {% endif %}
           {% endwith %}
         {% endfor %} 
+        <tr>
+          <td colspan="8">
+            <div style="text-align: center;">
+              <span style="margin-left:20px;font-size: 0.9rem; font-weight: bold;color:olivedrab;"> 총액 : &#8361; {{repairTotalCost.cost__sum|intcomma}} 원</span> 
+            </div>
+          </td>
+        </tr>
           </tbody> 
-        </table>
+        </table>        
     </div>
 </div>
 
@@ -236,19 +279,20 @@
 
     let togglebar = function(e){    
       e.preventDefault();
-      e.stopPropagation();
-      let check = $(this).next().css("display") == "none";
-      let except = $(this).next();
+      let check = $(this).parent().next().css('display') == 'none';
+      let except = $(this).parent().next();
       if(check)// 열릴부분의 display가 none으로 되어있다면, 
 		  {
-        $(this).next().show(); //열릴부분의 display를 block으로 변경해주고,
+        $(this).parent().next().show(); //열릴부분의 display를 block으로 변경해주고,
         $('.photoshows').not(except).css('display','none'); //그외의 내용부분(.not() 으로 제어함) 은 display를 none으로 안보이게 변경시킵니다.
       }else {
-        $(this).next().css('display','none');
+        $(this).parent().next().css('display','none');
       }
     };
 
-    $('.gigi-repair, .gigi-change').on("click", togglebar); // 사진보기
+    $('.gigi-change').click(togglebar); // 사진보기
+    $('.gigi-repair').click(togglebar); // 사진보기
+    
 
     // 모달 
     var loadBuwonForm = function () {       
@@ -295,6 +339,43 @@
     $("#buwonInsert").on('click','.buwon-update',loadBuwonForm);
     $("#gigiInsert").on('click','.buseogigi-update',loadBuwonForm);
     $('#modal').on('click','.buseobutton', saveForm);
+    // 부원 교체 및 수리 로드
+    $(".buseo_change_update").click(function(e) { 
+        e.preventDefault();      
+        var btn = $(this);
+        $.ajax({
+            url: btn.attr("data-url"),
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function () {
+              $("#modal").show();
+            },
+            success: function (data) {
+              $("#modal .content").html(data.html_form);               
+            }
+        });
+    });   
+
+    // 부원 교체 및 수리 저장    
+    $('#modal').on('click','.buseochnagebutton', function(e){
+        e.preventDefault();
+        var form = $("#buseochangeform");
+          $.ajax({
+          url: form.attr("action"),
+          data: form.serialize(),
+          type: form.attr("method"),
+          dataType: 'json',
+          success: function (data) {
+            $(tbody).find('tr#buseoCRUpdate').removeattr('id');
+            $("#buseoCRUpdate").html(data.html_buseo);            
+            $("#modal").hide();
+          },
+          error:function(request, status, error){
+            alert("code:"+request.status+"\n"+"error:"+error);
+          }
+        });
+    });
+    
 
     $("#close_modal").click(function(){
       $("#modal").css("display", "none"); 
@@ -308,7 +389,37 @@
       }
     });
     
+    // 연도 변경 및 교체 수리 저장
+  var yearAndBupum = function() {
+    buseoyear = $(this).val();
+    buseogubun = $(this).data('buseo');
+    gubun = $(this).data('gubun');
+    $.ajax({
+          url: "{% url 'gshsapp:gigi_buseo' buseogubun %}",
+          data: {"buseoyear":buseoyear, "buseogubun":buseogubun, "gubun":gubun},
+          type: 'get',
+          dataType: 'json',
+          success: function (data) {
+            if (data.gubun == "change") {
+              $("#changes_list").html(data.html_buseo);
+              const lb = lightbox();  
+            } else {
+              $("#repairs_list").html(data.html_buseo);
+              const lb = lightbox();
+            }
+          },
+            error:function(request, status, error){
+              alert("error:"+error)
+            // alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+          }
+    });
+  };
+
+  $("#changeSelct").on("change", ".change_year", yearAndBupum)
+
 });  
+
+
 </script>
 <!--사진 모달-->
 <script src="{% static 'js/lightbox.min.js' %}"></script>

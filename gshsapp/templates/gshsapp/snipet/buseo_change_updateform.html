@@ -1,0 +1,40 @@
+<form id="buseochangeform" method="POST" action="{% url 'gshsapp:buseo_change_update' pk %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_date">날짜</label>
+        <div class="col-md-10">{{ form.date }}</div>
+    </div>
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_gigiinfo">물품정보</label>
+        <div class="col-md-10">{{ form.gigiinfo }}</div>
+    </div>   
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_gubun">부품선택</label>
+        <div class="col-md-10">{{ form.gubun }}</div>
+    </div>    
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_count">개수</label>
+        <div class="col-md-10">{{ form.count }}</div>
+    </div>
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_cost">비용</label>
+        <div class="col-md-10">{{ form.cost }}</div>
+    </div>
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_bigo">비고</label>
+        <div class="col-md-10">{{ form.bigo }}</div>
+    </div>
+    <div class="row mb-2">
+        {{ formset.management_form }}
+            {% for form in formset %}
+                {{ form }}<br />
+            {% endfor %}
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-md-6 offset-md-6">
+            <button class="btn btn-primary buseochnagebutton" type="button">저장</button>
+        </div>
+    </div>
+</form>
+    

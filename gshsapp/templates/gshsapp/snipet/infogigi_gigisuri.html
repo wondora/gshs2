@@ -2,7 +2,9 @@
 {% block content %}
 
 <div class="box_shadow">
-    <div class="gigi-update1">물품수리</div>
+    <div class="gigi-update1">
+        <span>기기수리</span><a href="javascript:history.back();" style="text-decoration: none;color:white;">back</a>  
+    </div>
     <div class="gigi-update2">
         <form method="POST" action="" enctype="multipart/form-data">
             {% csrf_token %}

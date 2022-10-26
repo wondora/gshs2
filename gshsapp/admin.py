@@ -8,6 +8,7 @@ class RepairAdmin(admin.ModelAdmin):
     inlines = [Repair_PhotoInline, ]
     list_display = ['id', 'date', 'gigiinfo', 'problem', 'result', 'cost', 'bigo']
 
+admin.site.register(Repair, RepairAdmin)
 
 class Change_PhotoInline(admin.TabularInline):
     model = Change_Photo
@@ -15,6 +16,8 @@ class Change_PhotoInline(admin.TabularInline):
 class ReplacementAdmin(admin.ModelAdmin):
     inlines = [Change_PhotoInline, ]
     list_display = ['id', 'date', 'gigiinfo', 'gubun', 'count', 'cost', 'bigo']
+
+admin.site.register(Replacement, ReplacementAdmin)
 
 admin.site.register(User)
 
@@ -37,11 +40,10 @@ admin.site.register(Gubun, GubunAdmin)
 
 # class RepairAdmin(admin.ModelAdmin):
 #     list_display = ['id', 'date', 'gigiinfo', 'problem', 'result', 'cost', 'bigo']
-admin.site.register(Repair, RepairAdmin)
 
 # class ReplacementAdmin(admin.ModelAdmin):
 #     list_display = ['id', 'date', 'gigiinfo', 'gubun', 'count', 'cost', 'bigo']
-admin.site.register(Replacement, ReplacementAdmin)
+
 
 class Change_PhototAdmin(admin.ModelAdmin):
     list_display = ['id', 'replacement', 'image']

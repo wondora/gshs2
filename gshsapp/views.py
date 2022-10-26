@@ -11,6 +11,7 @@ from django.db.models import Q, F
 from django.http import JsonResponse
 from django.db.models import Sum
 from django.template.loader import render_to_string
+import datetime
 
 
 def home(request):
@@ -29,40 +30,26 @@ def home(request):
 #         context['gigis'] = Gigiinfo.objects.filter(buyproduct__gubun__gubun=self.kwargs['gigigubun'], jaego=False, notuse=False).order_by('buyproduct__buydate')
 #         return context
 
-def InfogigiList(request, gigigubun):
+def InfogigiList(request, gigigubun):    
     context={}
-    if gigigubun == 'notebook' or gigigubun == 'desktop':
-        gigis = Gigiinfo.objects.filter(buyproduct__gubun__gubun=gigigubun, user__is_active =True, jaego=False, notuse=False).order_by('buyproduct__buydate')
+    query = request.GET.get('q','') 
+
+    if gigigubun == 'notebook' or gigigubun == 'desktop':            
+        infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, user__is_active =True, jaego=False, notuse=False).order_by('-buyproduct__buydate')
     else:
-        gigis = Gigiinfo.objects.filter(buyproduct__gubun__gubun=gigigubun, jaego=False, notuse=False).order_by('buyproduct__buydate')
-
-    context['gigigubun'] = gigigubun 
-    context['infocount'] = gigis.count()    
-    page = request.GET.get('page', '1')  # 페이지    
-    paginator = Paginator(gigis, 10)  # 페이지당 10개씩 보여주기    
-    page_obj = paginator.get_page(page) 
-    context ['page_obj'] = page_obj
-
-    return render(request, 'gshsapp/infogigi.html', context)
-
-def InfogigiSearch(request, gigigubun):
-    if 'q' in request.GET:
-        if gigigubun == 'notebook' or gigigubun == 'desktop':            
-            infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, user__is_active =True, jaego=False, notuse=False).order_by('buyproduct__buydate')
-        else:
-            infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, jaego=False, notuse=False).order_by('buyproduct__buydate')
-        context={}
-        query = request.GET.get('q','')        
+        infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, jaego=False, notuse=False).order_by('-buyproduct__buydate')
+           
         
     gigis = infogigis.filter(Q(user__name__icontains=query) | Q(buyproduct__model__icontains=query) | Q(location__hosil__icontains=query))
-    context['gigigubun'] = gigigubun    
+    context['gigigubun'] = gigigubun 
+    context['q'] = query
     page = request.GET.get('page', '1')  # 페이지    
     paginator = Paginator(gigis, 10)  # 페이지당 10개씩 보여주기    
     page_obj = paginator.get_page(page)    
     context ['page_obj'] = page_obj
     context ['query'] = query
     
-    return render(request, 'gshsapp/infogigisearch.html', context)
+    return render(request, 'gshsapp/infogigi.html', context)
 
 class InfogigiCV(CreateView):
     model = Gigiinfo
@@ -75,18 +62,23 @@ class InfogigiCV(CreateView):
 
 class InfogigiUV(UpdateView):
     model = Gigiinfo
-    template_name = 'gshsapp/update.html'
+    template_name = 'gshsapp/snipet/infogigi_update.html'
     form_class = GigiinfoForm
-    context_object_name = 'gigis'
+    # context_object_name = 'buydate'
     # success_url = '/' 
     
-    def get_object(self): 
-        review = get_object_or_404(Gigiinfo, pk=self.kwargs['pk'])         
-        return review
+    # def get_object(self): 
+    #     review = get_object_or_404(Gigiinfo, pk=self.kwargs['pk']) 
+    #     buydate = review.buyproduct.buydate        
+    #     return buydate
 
     def get_success_url(self):
         return reverse('gshsapp:gigi_gubun', kwargs={'gigigubun': self.object.buyproduct.gubun.gubun})
     
+    # def form_valid(self, form):
+    #     instance = form.save()       
+    #     instance.buyproduct.buydate = timezone.now()
+    #     return super().form_valid(form)
 
 def InfogigiChange(request, pk):
     gigiinfo2 = Gigiinfo.objects.get(pk=pk)
@@ -101,8 +93,6 @@ def InfogigiChange(request, pk):
             for form in formset.cleaned_data:
                 if form:
                     image = form['image']
-                    # print(form)
-                    # print(form['image'])
                     photo = Change_Photo(replacement=change, image=image) 
                     photo.save()   
             # messages.success(request, "Posted!")
@@ -112,7 +102,7 @@ def InfogigiChange(request, pk):
         changeform = InfogigiChangeForm(initial={'gigiinfo':gigiinfo2})
         formset = ImageFormSet(queryset=Change_Photo.objects.none())
     
-    return render(request, 'gshsapp/gigichange.html', {'form': changeform, 'formset': formset})
+    return render(request, 'gshsapp/snipet/infogigi_gigichange.html', {'form': changeform, 'formset': formset})
 
 
 def InfogigiSuri(request, pk):
@@ -141,23 +131,49 @@ def InfogigiSuri(request, pk):
     else:
         form = InfogigiSuriForm(initial={'gigiinfo':gigiinfo2}) 
 
-    return render(request, 'gshsapp/gigisuri.html', {'form': form})
+    return render(request, 'gshsapp/snipet/infogigi_gigisuri.html', {'form': form})
 
+# 부서전체 로딩 및 연도 선택시 뷰
+def InfogigiBuseo(request, buseogubun):
+    gubun = request.GET.get('gubun',False)    
+    if gubun:
+        data = {}
+        data['gubun'] = gubun
+        changeyear = request.GET.get('buseoyear','')
+        buseogubun = request.GET.get('buseogubun','')        
 
-def InfogigiBuseo(request, buseogubun):    
-
-    buseos = Location.objects.filter(locationgubun='부서')
-    buseo_name = Location.objects.get(hosil=buseogubun)
+        a_date = changeyear +"-3-1"
+        start_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
+        end_date = start_date+ datetime.timedelta(days=364)  
+        
+        
+        if gubun == 'change':
+            changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date]).annotate(changeTotal = F('count') *  F('cost'))
+            changeTotalCost = changes.aggregate(Sum('changeTotal'))
+            data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_change_list.html', {"changeyear":changeyear, "changes":changes, "changeTotalCost":changeTotalCost})
+        else:
+            repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date])
+            repairTotalCost = repairs.aggregate(Sum('cost'))
+            data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_repair_list.html', {"changeyear":changeyear, "repairs":repairs, "repairTotalCost":repairTotalCost})
     
-    repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun)
-    repairTotalCost = repairs.aggregate(Sum('cost'))
+        return JsonResponse(data)
+    else:
+        buseos = Location.objects.filter(locationgubun='부서')
+        buseo_name = Location.objects.get(hosil=buseogubun)
 
-    changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun).annotate(changeTotal = F('count') *  F('cost'))
-    changeTotalCost = changes.aggregate(Sum('changeTotal'))
+        a_date = str(datetime.datetime.today().year) +"-3-1"
+        start_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
+        end_date = start_date+ datetime.timedelta(days=364)  
+        
+        repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date])
+        repairTotalCost = repairs.aggregate(Sum('cost'))
+        
+        changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date]).annotate(changeTotal = F('count') *  F('cost'))
+        changeTotalCost = changes.aggregate(Sum('changeTotal'))
 
-    members = buseo_name.gigiinfo.filter(Q(user__is_active =True) | Q(jaego=False) & Q(notuse=False))    
+        members = buseo_name.gigiinfo.filter(Q(user__is_active =True) | Q(jaego=False) & Q(notuse=False))    
 
-    return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
+        return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
 
 
 def ChangePhotoAjax(request):
@@ -209,3 +225,62 @@ def InfogigiBuseoUpdate(request, pk):
     context = {'form':form}
     data['html_form'] = render_to_string('gshsapp/snipet/buseo_buwon_form.html', context, request=request)
     return JsonResponse(data)
+
+# 부서내 소모품교체 업데이트
+def buseoChangeUpdate(request, pk):
+    data = {}
+    change = Replacement.objects.get(pk=pk)
+    changephoto = change.change_photo.all()
+    if changephoto:
+        extracount = 0
+    else:
+        extracount = 3
+
+    ImageFormSet = modelformset_factory(Change_Photo, form=Change_PhotoForm, extra=extracount)
+    
+    if request.method == 'POST':
+        changeform = BuseoChangeForm(request.POST)
+        formset = ImageFormSet(request.POST, request.FILES, queryset=Change_Photo.objects.none())
+        
+        if changeform.is_valid() and formset.is_valid():
+            change = changeform.save()      
+            for form in formset.cleaned_data:
+                if form:
+                    image = form['image']
+                    photo = Change_Photo(replacement=change, image=image) 
+                    photo.save()   
+            # messages.success(request, "Posted!")
+            # Replacement.objects.create(gubun=gubun, count=count, cost=cost, image=image, bigo=bigo, gigiinfo=gigiinfo2)
+            data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_change_update_list.html', {'gigi': change})
+    else:
+        changeform = BuseoChangeForm(instance=change)
+        formset = ImageFormSet(queryset=changephoto)
+        data['html_form'] = render_to_string('gshsapp/snipet/buseo_change_updateform.html', {'form': changeform, 'formset': formset, 'pk':pk})
+    
+    return JsonResponse(data)
+
+
+
+
+
+# def buseoChangeYear(request):
+#     data = {}
+#     changeyear = request.GET.get('buseoyear','')
+#     buseogubun = request.GET.get('buseogubun','')
+#     gubun = request.GET.get('gubun','')
+
+#     a_date = changeyear +"-3-1"
+#     start_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
+#     end_date = start_date+ datetime.timedelta(days=364)  
+#     data['gubun'] = gubun 
+    
+#     if gubun == 'change':
+#         changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date]).annotate(changeTotal = F('count') *  F('cost'))
+#         changeTotalCost = changes.aggregate(Sum('changeTotal'))
+#         data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_change_list.html', {"changeyear":changeyear, "changes":changes, "changeTotalCost":changeTotalCost})
+#     else:
+#         repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date])
+#         repairTotalCost = repairs.aggregate(Sum('cost'))
+#         data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_repair_list.html', {"changeyear":changeyear, "repairs":repairs, "repairTotalCost":repairTotalCost})
+  
+#     return JsonResponse(data)

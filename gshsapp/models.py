@@ -72,7 +72,7 @@ class Gigiinfo(models.Model):
         return f'{self.location} / {self.buyproduct} / {self.user}'
 
 class Repair(models.Model):
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField(default=timezone.now)
     gigiinfo = models.ForeignKey(Gigiinfo, on_delete=models.CASCADE, related_name='repair')
     problem = models.CharField(max_length=50)
     result = models.CharField(max_length=50)
@@ -83,7 +83,7 @@ class Repair(models.Model):
         return str(self.gigiinfo)
 
 class Replacement(models.Model):
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField(default=timezone.now)
     gigiinfo = models.ForeignKey(Gigiinfo, on_delete=models.CASCADE, related_name='replacement')
     gubun = models.ForeignKey(Gubun, on_delete=models.CASCADE, related_name='replacement')
     count = models.PositiveSmallIntegerField(default=1)
