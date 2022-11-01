@@ -8,6 +8,20 @@
     <div class="gigi-update2">
         <form method="POST" action="" enctype="multipart/form-data">
             {% csrf_token %}
+            <!-- 오류표시 Start -->
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for field in form %}
+                {% if field.errors %}
+                <div>
+                    <strong>{{ field.label }}</strong>
+                    {{ field.errors }}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        <!-- 오류표시 End -->            
             <div class="row mb-2">
                 <label class="col-form-label col-md-2" for="id_gigiinfo">물품정보</label>
                 <div class="col-md-10">{{ form.gigiinfo }}</div>
@@ -33,8 +47,6 @@
                     {% for form in formset %}
                         {{ form }}<br />
                     {% endfor %}
-                <!-- <label class="col-form-label col-md-2" for="id_image">사진</label>
-                <div class="col-md-10"><input type="file" name="imgs" multiple></div> -->
             </div>
             
             <div class="row mt-5">

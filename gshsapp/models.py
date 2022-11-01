@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+import os
+from django.conf import settings
 
 class Gubun(models.Model):
     GUBUN = (
@@ -82,6 +84,14 @@ class Repair(models.Model):
     def __str__(self):
         return str(self.gigiinfo)
 
+    def delete(self, *args, **kargs):
+        rep = Repair.objects.get(id=self.id)
+        this = rep.change_photo.all()
+        for i in this:
+            i.delete()
+
+        return super().delete(*args, **kargs)
+
 class Replacement(models.Model):
     date = models.DateField(default=timezone.now)
     gigiinfo = models.ForeignKey(Gigiinfo, on_delete=models.CASCADE, related_name='replacement')
@@ -93,6 +103,13 @@ class Replacement(models.Model):
     def __str__(self):
         return str(self.gigiinfo)
 
+    def delete(self, *args, **kargs):
+        rep = Replacement.objects.get(id=self.id)
+        this = rep.change_photo.all()
+        for i in this:
+            i.delete()
+
+        return super().delete(*args, **kargs)
 # def get_image_filename(instance, filename):
 #     id = instance.repair.id
 #     return "images/%Y/%m/%d/%s" % (id)  
@@ -104,6 +121,11 @@ class Repair_Photo(models.Model):
     def __str__(self):
         return str(self.repair)
 
+    def delete(self, *args, **kargs):
+        if self.image:
+            os.remove(os.path.join(settings.MEDIA_ROOT, self.image.path))
+            super().delete(*args, **kargs)
+
 
 class Change_Photo(models.Model):
     replacement = models.ForeignKey(Replacement, default=None, on_delete=models.CASCADE, related_name="change_photo")
@@ -112,7 +134,12 @@ class Change_Photo(models.Model):
     def __str__(self):
         return str(self.replacement)
 
+    def delete(self, *args, **kargs):
+        if self.image:
+            os.remove(os.path.join(settings.MEDIA_ROOT, self.image.path))
+            super().delete(*args, **kargs)
 
+    
 class Memo(models.Model):
     pass
 

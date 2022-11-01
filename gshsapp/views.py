@@ -95,42 +95,34 @@ def InfogigiChange(request, pk):
                     image = form['image']
                     photo = Change_Photo(replacement=change, image=image) 
                     photo.save()   
-            # messages.success(request, "Posted!")
-            # Replacement.objects.create(gubun=gubun, count=count, cost=cost, image=image, bigo=bigo, gigiinfo=gigiinfo2)
+            
             return redirect('gshsapp:gigi_gubun', gigiinfo2.buyproduct.gubun.gubun)
     else:
         changeform = InfogigiChangeForm(initial={'gigiinfo':gigiinfo2})
         formset = ImageFormSet(queryset=Change_Photo.objects.none())
-    
+        
     return render(request, 'gshsapp/snipet/infogigi_gigichange.html', {'form': changeform, 'formset': formset})
 
 
 def InfogigiSuri(request, pk):
     gigiinfo2 = Gigiinfo.objects.get(pk=pk)
-
+   
     if request.method == 'POST':
         suriform = InfogigiSuriForm(request.POST)
-        
+       
         if suriform.is_valid():
             suri = suriform.save()
+            
             for img in request.FILES.getlist('imgs'):
                 repair_Photo = Repair_Photo()
                 repair_Photo.repair = suri
                 repair_Photo.image = img
                 repair_Photo.save()
 
-            # problem = form.cleaned_data['problem']
-            # result = form.cleaned_data['result']
-            # cost = form.cleaned_data['cost']
-            # image = form.cleaned_data['image']
-            # bigo = form.cleaned_data['bigo']    
-           
-            # Repair.objects.create(problem=problem, result=result, cost=cost, image=image, bigo=bigo, gigiinfo=gigiinfo2)
-            # messages.success(request, "Posted!")
             return redirect('gshsapp:gigi_gubun', gigiinfo2.buyproduct.gubun.gubun)
     else:
         form = InfogigiSuriForm(initial={'gigiinfo':gigiinfo2}) 
-
+       
     return render(request, 'gshsapp/snipet/infogigi_gigisuri.html', {'form': form})
 
 # 부서전체 로딩 및 연도 선택시 뷰
@@ -176,25 +168,25 @@ def InfogigiBuseo(request, buseogubun):
         return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
 
 
-def ChangePhotoAjax(request):
-    if request.method == 'GET':
-        data = request.GET.get('data')
-        gubun = request.GET.get('gubun')
-        if gubun == 'change':
-            c_id = Replacement.objects.get(id=data)
-            photos = c_id.change_photo.all()
-        else:
-            r_id = Repair.objects.get(id=data)
-            photos = r_id.repair_photo.all()
+# def ChangePhotoAjax(request):
+#     if request.method == 'GET':
+#         data = request.GET.get('data')
+#         gubun = request.GET.get('gubun')
+#         if gubun == 'change':
+#             c_id = Replacement.objects.get(id=data)
+#             photos = c_id.change_photo.all()
+#         else:
+#             r_id = Repair.objects.get(id=data)
+#             photos = r_id.repair_photo.all()
         
-        photo = []
-        for c in photos:
-            photo.append(c.image.url)
+#         photo = []
+#         for c in photos:
+#             photo.append(c.image.url)
             
-        context = {
-            'result': photo,
-        }
-        return JsonResponse(context)
+#         context = {
+#             'result': photo,
+#         }
+#         return JsonResponse(context)
 
 # 부서 부원 및 기기 ajax
 def InfogigiBuseoUpdate(request, pk):
@@ -227,43 +219,94 @@ def InfogigiBuseoUpdate(request, pk):
     return JsonResponse(data)
 
 # 부서내 소모품교체 업데이트
-def buseoChangeUpdate(request, pk):
+def buseoCRUpdate(request, pk):
     data = {}
-    change = Replacement.objects.get(pk=pk)
-    changephoto = change.change_photo.all()
-    if changephoto:
-        extracount = 0
-    else:
-        extracount = 3
+    gubun =  request.GET.get('crgubun')
+    gubun2 =  request.POST.get('crgubun')
 
-    ImageFormSet = modelformset_factory(Change_Photo, form=Change_PhotoForm, extra=extracount)
+    if gubun == 'change' or gubun2 == 'change':
+        change = Replacement.objects.get(pk=pk)     
+        changePhotos = change.change_photo.all()
+        changePhotoCount = changePhotos.count()
+
+        if request.method == 'POST':
+            changeform = BuseoChangeForm(request.POST, instance=change)
+            
+            for i in range(1, changePhotoCount + 1):
+                changephotoid = request.POST.get('crPhoto-' + str(i), False)
+                deleteid = request.POST.get('deletePhoto-' + str(i), False)            
+
+                if deleteid:         
+                    cdphoto = Change_Photo.objects.get(id=changephotoid)
+                    cdphoto.delete()
+                
+                cimg = request.FILES.get('img-' + str(i), False)
+                if cimg:
+                    cphoto = Change_Photo.objects.get(id=changephotoid)                    
+                    cphoto.image = cimg
+                    cphoto.save()
+                            
+            if changeform.is_valid():
+                changes = changeform.save() 
+                imgs = request.FILES.getlist('imgs')
+                
+                if imgs:
+                    for img in imgs:
+                        changephoto = Change_Photo()
+                        changephoto.replacement = change
+                        changephoto.image = img
+                        changephoto.save()
+
+                data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_change_update_list.html', {'gigi': changes})
+        else:
+            changeform = BuseoChangeForm(instance=change)
+            data['html_form'] = render_to_string('gshsapp/snipet/buseo_change_updateform.html', {'form': changeform, 'pk':pk, 'changePhotos':changePhotos}, request=request)
     
-    if request.method == 'POST':
-        changeform = BuseoChangeForm(request.POST)
-        formset = ImageFormSet(request.POST, request.FILES, queryset=Change_Photo.objects.none())
-        
-        if changeform.is_valid() and formset.is_valid():
-            change = changeform.save()      
-            for form in formset.cleaned_data:
-                if form:
-                    image = form['image']
-                    photo = Change_Photo(replacement=change, image=image) 
-                    photo.save()   
-            # messages.success(request, "Posted!")
-            # Replacement.objects.create(gubun=gubun, count=count, cost=cost, image=image, bigo=bigo, gigiinfo=gigiinfo2)
-            data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_change_update_list.html', {'gigi': change})
     else:
-        changeform = BuseoChangeForm(instance=change)
-        formset = ImageFormSet(queryset=changephoto)
-        data['html_form'] = render_to_string('gshsapp/snipet/buseo_change_updateform.html', {'form': changeform, 'formset': formset, 'pk':pk})
-    
+        repair = Repair.objects.get(pk=pk)     
+        repairPhotos = repair.repair_photo.all()
+        repairPhotoCount = repairPhotos.count()
+
+        if request.method == 'POST':
+            repairform = InfogigiSuriForm(request.POST, instance=repair)
+            
+            for i in range(1, repairPhotoCount + 1):
+                repairphotoid = request.POST.get('crPhoto-' + str(i), False)
+                deleteid = request.POST.get('deletePhoto-' + str(i), False)            
+
+                if deleteid:         
+                    rdphoto = Repair_Photo.objects.get(id=repairphotoid)
+                    rdphoto.delete()
+                
+                rimg = request.FILES.get('img-' + str(i), False)
+                if rimg:
+                    rphoto = Repair_Photo.objects.get(id=repairphotoid)                    
+                    rphoto.image = rimg
+                    rphoto.save()
+                            
+            if repairform.is_valid():
+                repairs = repairform.save() 
+                imgs = request.FILES.getlist('imgs')
+                
+                if imgs:
+                    for img in imgs:
+                        repairphoto = Repair_Photo()
+                        repairphoto.repair = repair
+                        repairphoto.image = img
+                        repairphoto.save()
+
+                data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_repair_update_list.html', {'gigi': repairs})
+        else:
+            repairform = InfogigiSuriForm(instance=repair)
+            data['html_form'] = render_to_string('gshsapp/snipet/buseo_repair_updateform.html', {'form': repairform, 'pk':pk, 'repairPhotos':repairPhotos}, request=request)
+
     return JsonResponse(data)
 
 
 
 
 
-# def buseoChangeYear(request):
+# def buseorepairYear(request):
 #     data = {}
 #     changeyear = request.GET.get('buseoyear','')
 #     buseogubun = request.GET.get('buseogubun','')

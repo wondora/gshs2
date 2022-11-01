@@ -1,40 +1,42 @@
 {% load humanize %}
 {% for gigi in changes %}
     {% with gubunchange=gigi.change_photo.all %}
-        <tr {% if gubunchange %} class="gigi-change" {% else %} {% endif %}>
-            <td>{{ gigi.date|date:"Y-m-d" }}</td>        
+        <tr>
+            <td>{{ gigi.date|date:"Y-m-d" }}</td>
+            <td>{{ gigi.gigiinfo.user }}</td>        
             <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
             <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
             <td>{{ gigi.gubun }}</td>
             <td>{{ gigi.count }}</td>
             <td>&#8361;{{ gigi.cost|intcomma }}</td>
             <td title="{{gigi.bigo}}">{{ gigi.bigo|truncatechars:10 }}</td>
-            <td>
-            {% if gubunchange %}                
-            <span style="font-weight: bold;font-size:0.8rem;color:white;background-color:#495057;padding:3px 7px;border-radius: 5px;">보기</span>
-            {% endif %}
-            </td>               
+            <td class="gigi-change" style="font-weight: bold;font-size: 0.8rem; padding-top: 10px; color:#d63384;">
+                {% if gubunchange %}                
+                  보기
+                {% endif %}
+            </td>   
+            <td class="buseo_change_update" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}" title="수정하기">🐼</td>              
         </tr>
-        
-        {% if gubunchange %}
+                
         <tr class="photoshows">
-            <td colspan="8">
-            <ul class="gallery"> 
-                {% for c in gubunchange %}           
-                <li>
-                <a class="link-photo lb-initialized" href="{{ c.image.url }}" data-lightbox="img"><img src="{{ c.image.url }}" style="width:auto; max-height:150px;"></a>
-                </li>
-                {% endfor %}   
-            </ul>                
+            <td colspan="10">
+                <ul class="gallery"> 
+                    {% if gubunchange %}
+                    {% for c in gubunchange %}           
+                    <li>
+                    <a class="link-photo lb-initialized" href="{{ c.image.url }}" data-lightbox="img"><img src="{{ c.image.url }}" style="width:auto; max-height:150px;"></a>
+                    </li>
+                    {% endfor %}   
+                    {% endif %}
+                </ul>                
             </td>
         </tr>
-        {% endif %}
     {% endwith %}          
 {% endfor %}
     <tr>
-        <td colspan="8">
+        <td colspan="9">
         <div style="text-align: left;">
-            <span style="margin-left:20px;font-size: 0.9rem; font-weight: bold;color:olivedrab;"> 총액 : &#8361; {{changeTotalCost.changeTotal__sum|intcomma}} </span> 
+            <span style="margin-left:20px;font-size: 0.9rem; font-weight: bold;color:olivedrab;"> 총액 : &#8361; {{changeTotalCost.changeTotal__sum|intcomma}} 원</span> 
         </div>
         </td>
     </tr>

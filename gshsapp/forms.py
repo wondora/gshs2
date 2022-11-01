@@ -23,7 +23,8 @@ class GigiinfoForm(forms.ModelForm):
         fields = '__all__'   
 
 
-class InfogigiChangeForm(forms.ModelForm):    
+class InfogigiChangeForm(forms.ModelForm):
+    date = forms.CharField(required=False)    
     bigo = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))    
 
     def __init__(self, *args, **kwargs):
@@ -44,8 +45,9 @@ class BuseoChangeForm(forms.ModelForm):
 
 
 class InfogigiSuriForm(forms.ModelForm):    
-    problem = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))    
-    result = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))    
+    date = forms.CharField(required=False)
+    problem = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))    
+    result = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))    
     bigo = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))    
     
     class Meta:
@@ -54,7 +56,6 @@ class InfogigiSuriForm(forms.ModelForm):
 
 
 class Change_PhotoForm(forms.ModelForm):
-    
     class Meta:
         model = Change_Photo
         fields = ('image', )

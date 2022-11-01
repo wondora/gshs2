@@ -60,13 +60,13 @@
         {% endif %}
         <td>{{ gigi.bigo }}</td>
         <td>
-          <a href="{% url 'gshsapp:gigi_update' pk=gigi.id %} ">
+          <a href="{% url 'gshsapp:gigi_update' gigi.id %} ">
             <span class="gitamenu badge bg-secondary">수정</span>
           </a>
-          <a href="{% url 'gshsapp:gigi_change' pk=gigi.id %} ">
+          <a href="{% url 'gshsapp:gigi_change' gigi.id %} ">
             <span class="gitamenu badge bg-secondary">교체</span>
           </a>
-          <a href="{% url 'gshsapp:gigi_suri' pk=gigi.id %} ">
+          <a href="{% url 'gshsapp:gigi_suri' gigi.id %} ">
             <span class="gitamenu badge bg-secondary">수리</span>
           </a>          
         </td>

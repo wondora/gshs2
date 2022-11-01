@@ -1,5 +1,5 @@
 {% load humanize %}
-{% with gubunchange=gigi.change_photo.all %}
+{% with gubunchange=gigi.repair_photo.all %}
     <tr>
         <td>{{ gigi.date|date:"Y-m-d" }}</td>  
         <td>{{ gigi.gigiinfo.user }}</td>       
@@ -9,12 +9,12 @@
         <td>{{ gigi.count }}</td>
         <td>&#8361;{{ gigi.cost|intcomma }}</td>
         <td title="{{gigi.bigo}}">{{ gigi.bigo|truncatechars:10 }}</td>
-        <td class="gigi-change" data-gubun="change" style="font-weight: bold;font-size: 0.8rem; padding-top: 10px; color:#d63384;">
+        <td class="gigi-repair" style="font-weight: bold;font-size: 0.8rem; padding-top: 10px; color:#d63384;">
             {% if gubunchange %}                
               보기
             {% endif %}
         </td>
-        <td class="buseo_CR_update" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}" title="수정하기">🐼</td>              
+        <td class="buseo_CR_update" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}" title="수정하기">🐼</td>
     </tr>
     
     <tr class="photoshows">

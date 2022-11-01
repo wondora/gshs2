@@ -13,8 +13,12 @@
         <div class="col-md-10">{{ form.gubun }}</div>
     </div>    
     <div class="row mb-2">
-        <label class="col-form-label col-md-2" for="id_count">개수</label>
-        <div class="col-md-10">{{ form.count }}</div>
+        <label class="col-form-label col-md-2" for="id_problem">문제</label>
+        <div class="col-md-10">{{ form.problem }}</div>
+    </div>
+    <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_result">결과</label>
+        <div class="col-md-10">{{ form.result }}</div>
     </div>
     <div class="row mb-2">
         <label class="col-form-label col-md-2" for="id_cost">비용</label>
@@ -25,17 +29,17 @@
         <div class="col-md-10">{{ form.bigo }}</div>
     </div>
     <div class="row mb-2"> 
-        {% if changePhotos %}
-            {% for changePhoto in changePhotos %}              
+        {% if repairPhotos %}
+            {% for repairPhoto in repairPhotos %}              
             <div class="col-md-10">
                 <div>
-                    <span style="color: green;">현재:&nbsp;{{ changePhoto.image.url }}</span>    
+                    <span style="color: green;">현재:&nbsp;{{ repairPhoto.image.url }}</span>    
                     <span style="color: red;" class="mx-1">
                     <label for="deletePhoto-{{ forloop.counter }}"> 삭제: </label> <input type="checkbox" name="deletePhoto-{{ forloop.counter }}" id="deletePhoto-{{ forloop.counter }}">
                     </span>
                 </div>
                 <input type="file" name="img-{{ forloop.counter }}" id="img-{{ forloop.counter }}" accept="image/*">
-                <input type="hidden" name="crPhoto-{{ forloop.counter }}" value="{{ changePhoto.id }}">
+                <input type="hidden" name="crPhoto-{{ forloop.counter }}" value="{{ repairPhoto.id }}">
             </div>            
             {% endfor %}  
         {% endif %}
@@ -50,7 +54,7 @@
     
     <div class="row mt-5">
         <div class="col-md-6 offset-md-6">
-            <button class="btn btn-primary buseocrbutton" data-gubun="change" type="button">저장</button>
+            <button class="btn btn-primary buseocrbutton" data-gubun="repair" type="button">저장</button>
         </div>
     </div>
 </form>
