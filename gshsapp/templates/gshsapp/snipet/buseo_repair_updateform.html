@@ -7,13 +7,9 @@
     <div class="row mb-2">
         <label class="col-form-label col-md-2" for="id_gigiinfo">물품정보</label>
         <div class="col-md-10">{{ form.gigiinfo }}</div>
-    </div>   
+    </div>  
     <div class="row mb-2">
-        <label class="col-form-label col-md-2" for="id_gubun">부품선택</label>
-        <div class="col-md-10">{{ form.gubun }}</div>
-    </div>    
-    <div class="row mb-2">
-        <label class="col-form-label col-md-2" for="id_problem">문제</label>
+        <label class="col-form-label col-md-2" for="id_problem">원인</label>
         <div class="col-md-10">{{ form.problem }}</div>
     </div>
     <div class="row mb-2">
@@ -59,3 +55,17 @@
     </div>
 </form>
     
+<!-- <script>
+    // 천단위 마다 콤마
+    function inputNumberFormat(obj) {
+     obj.value = comma(uncomma(obj.value));
+    }
+    function comma(str) {
+        str = String(str);
+        return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+    }
+    function uncomma(str) {
+        str = String(str);
+        return str.replace(/[^\d]+/g, '');
+    }
+</script> -->

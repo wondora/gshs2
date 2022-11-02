@@ -118,6 +118,7 @@
               <th scope="col">비고</th>                    
               <th scope="col">사진</th>                    
               <th scope="col"></th>                    
+              <th scope="col"></th>                    
             </tr>
           </thead>    
           <tbody id="changes_list">     
@@ -131,22 +132,23 @@
               <td>{{ gigi.gubun }}</td>
               <td>{{ gigi.count }}</td>
               <td>&#8361;{{ gigi.cost|intcomma }}</td>
-              <td title="{{gigi.bigo}}">{{ gigi.bigo|truncatechars:10 }}</td>
+              <td title="{{gigi.bigo}}">{{ gigi.bigo|truncatechars:7 }}</td>
               <td class="gigi-change" style="font-weight: bold;font-size: 0.8rem; padding-top: 10px; color:#d63384;">
                 {% if gubunchange %}                
                   보기
                 {% endif %}
               </td>  
               <td class="buseo_CR_update" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}" title="수정하기">🐼</td>             
+              <td class="buseo_CR_delete" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}" title="삭제하기" onclick="return confirm('정말로 삭제 하시겠습니까 ?');">👹</td>             
             </tr>
                         
             <tr class="photoshows">
-              <td colspan="10">
-                <ul class="gallery"> 
+              <td colspan="11">
+                <ul class="gallery" style="max-width: 900px;"> 
                   {% if gubunchange %}
                   {% for c in gubunchange %}           
                   <li>
-                    <a class="link-photo lb-initialized" href="{{ c.image.url }}" data-lightbox="img"><img src="{{ c.image.url }}" style="width:auto; max-height:150px;"></a>
+                    <a class="link-photo lb-initialized" href="{{ c.image.url }}" data-lightbox="img"><img src="{{ c.image.url }}" style="width:auto; max-height:100px;"></a>
                   </li>
                   {% endfor %} 
                   {% endif %}  
@@ -156,7 +158,7 @@
           {% endwith %}          
         {% endfor %}
           <tr>
-            <td colspan="10">
+            <td colspan="11">
               <div style="text-align: left;">
                 <span style="margin-left:20px;font-size: 0.9rem; font-weight: bold;color:olivedrab;"> 총액 : &#8361; {{changeTotalCost.changeTotal__sum|intcomma}} 원</span> 
               </div>
@@ -195,6 +197,7 @@
               <th scope="col">비고</th> 
               <th scope="col">사진</th>                   
               <th scope="col"></th>                   
+              <th scope="col"></th>                   
             </tr>
           </thead>  
           <tbody id="repairs_list">             
@@ -215,15 +218,16 @@
                 {% endif %}
               </td>   
               <td class="buseo_CR_update" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}" title="수정하기">🐼</td>             
+              <td class="buseo_CR_delete" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}" title="삭제하기" onclick="return confirm('정말로 삭제 하시겠습니까 ?');">👹</td>             
             </tr>
             
             <tr class="photoshows">
-              <td colspan="10">
-                <ul class="gallery">   
+              <td colspan="11">
+                <ul class="gallery" style="max-width: 900px;">   
                   {% if gubunrepair %}
                   {% for r in gubunrepair %}               
                   <li>
-                    <a class="link-photo lb-initialized" href="{{ r.image.url }}" data-lightbox="img"><img src="{{ r.image.url }}" style="width:auto; max-height:150px;"></a>
+                    <a class="link-photo lb-initialized" href="{{ r.image.url }}" data-lightbox="img"><img src="{{ r.image.url }}" style="width:auto; max-height:100px;"></a>
                   </li>
                   {% endfor %} 
                   {% endif %}  
@@ -233,7 +237,7 @@
           {% endwith %}
         {% endfor %} 
         <tr>
-          <td colspan="9">
+          <td colspan="11">
             <div style="text-align: left;">
               <span style="margin-left:20px;font-size: 0.9rem; font-weight: bold;color:olivedrab;"> 총액 : &#8361; {{repairTotalCost.cost__sum|intcomma}} 원</span> 
             </div>
@@ -264,7 +268,7 @@
 
 <script>  
   $(function(){    
-    const lb = lightbox();        
+    const lb = lightbox(); 
     //csrf token
     function getCookie(name) {
       var cookieValue = null;
@@ -368,7 +372,7 @@
         });
     });   
 
-  // 부원 교체 및 수리 저장    
+  // 부원 교체 및 수리 업데이트 저장    
     $('#modal').on('click','.buseocrbutton', function(e){
         e.preventDefault();
         var crgubun = $(this).data('gubun');
@@ -402,6 +406,26 @@
       $("#modal").css("display", "none"); 
     });
    
+// 수리 및 교체 삭제
+    $(document).on('click','.buseo_CR_delete', function(e) { 
+        e.preventDefault();  
+        var btn = $(this);
+        var crgubun = btn.data('gubun');
+        $.ajax({
+            url: btn.attr("data-url"),
+            type: 'get',
+            dataType: 'json',
+            data: {'crgubun': crgubun},
+            beforeSend: function () {
+              btn.parent().attr('id','buseoCRdelete');
+            },            
+            success: function (data) {
+              $("#buseoCRdelete").remove();
+              $("#buseoCRdelete").next().remove();               
+            }
+        });
+    });
+
 // 외부영역 클릭시 닫기
     // $(document).mouseup(function (e){
     //   var LayerPopup = $("#modal");

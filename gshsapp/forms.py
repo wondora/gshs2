@@ -3,10 +3,10 @@ from .models import *
 
 
 class GigiinfoForm(forms.ModelForm):   
-    ip = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'})) 
+    # ip = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'})) 
     jaego = forms.CheckboxInput()
     notuse = forms.CheckboxInput()
-    bigo = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))
+    # bigo = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        
@@ -25,7 +25,7 @@ class GigiinfoForm(forms.ModelForm):
 
 class InfogigiChangeForm(forms.ModelForm):
     date = forms.CharField(required=False)    
-    bigo = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))    
+    # bigo = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))    
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -37,8 +37,13 @@ class InfogigiChangeForm(forms.ModelForm):
 
 class BuseoChangeForm(forms.ModelForm): 
     date = forms.CharField(required=False, widget=forms.DateInput(attrs={'type':'date'}))   
-    bigo = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))    
+    #bigo = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))    
+    # cost = forms.CharField(widget=forms.TextInput(attrs={'onkeyup':'inputNumberFormat(this)'}))
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['gubun']=forms.ModelChoiceField(queryset=Gubun.objects.filter(tablename='replacement'))
+        
     class Meta:
         model = Replacement
         fields = '__all__'
@@ -47,8 +52,9 @@ class BuseoChangeForm(forms.ModelForm):
 class InfogigiSuriForm(forms.ModelForm):    
     date = forms.CharField(required=False)
     problem = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))    
-    result = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))    
-    bigo = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))    
+    result = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'})) 
+    # cost = forms.CharField(widget=forms.TextInput(attrs={'onkeyup':'inputNumberFormat(this)'}))   
+    # bigo = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))    
     
     class Meta:
         model = Repair

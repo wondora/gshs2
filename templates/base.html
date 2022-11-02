@@ -43,7 +43,7 @@
 
        .navbar-brand {
             color: #495057;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-left: 15px;
             font-weight: 500;
             letter-spacing: 1px;
@@ -62,7 +62,7 @@
 
        .nav-item a {
             color:#495057;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 400;
        }
 
@@ -234,6 +234,7 @@
             cursor: pointer;
         }
  /* 모달 끝 */   
+
     </style>
 </head>
 <body>    
@@ -272,6 +273,16 @@
                             <li><a class="dropdown-item" href="#">stock</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="#">unusable</a></li>                        
+                        </ul>
+                    </li>
+                    <li class="nav-item mx-0 mx-lg-1 dropdown">
+                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="excelExport"  role="button" data-bs-toggle="dropdown" aria-expanded="false">EXCEL</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'gshsapp:excelExport' gubun='notebook' %}">notebook</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'gshsapp:excelExport' gubun='printer' %}">printer</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'gshsapp:excelExport' gubun='desktop' %}">desktop</a></li>                       
                         </ul>
                     </li>
                     {% if user.is_authenticated %}

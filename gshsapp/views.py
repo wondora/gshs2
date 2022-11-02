@@ -8,27 +8,16 @@ from django.forms import modelformset_factory
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, F
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.db.models import Sum
 from django.template.loader import render_to_string
 import datetime
+import xlwt
 
 
 def home(request):
     return render(request, 'gshsapp/home.html')
 
-# class InfogigiLV(ListView):
-#     model = Gigiinfo
-#     paginate_by = 10 # 한 페이지에 보여줄 오브젝트의 갯수
-#     template_name = 'gshsapp/infogigi.html'
-#     # context_object_name = 'gigis'
-#     # queryset = Gigiinfo.objects.filter(jaego=False, notuse=False).order_by('buyproduct__buydate')
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['gigigubun'] = self.kwargs['gigigubun']
-#         context['gigis'] = Gigiinfo.objects.filter(buyproduct__gubun__gubun=self.kwargs['gigigubun'], jaego=False, notuse=False).order_by('buyproduct__buydate')
-#         return context
 
 def InfogigiList(request, gigigubun):    
     context={}
@@ -51,6 +40,7 @@ def InfogigiList(request, gigigubun):
     
     return render(request, 'gshsapp/infogigi.html', context)
 
+
 class InfogigiCV(CreateView):
     model = Gigiinfo
     template_name = 'gshsapp/create.html'
@@ -64,21 +54,10 @@ class InfogigiUV(UpdateView):
     model = Gigiinfo
     template_name = 'gshsapp/snipet/infogigi_update.html'
     form_class = GigiinfoForm
-    # context_object_name = 'buydate'
-    # success_url = '/' 
-    
-    # def get_object(self): 
-    #     review = get_object_or_404(Gigiinfo, pk=self.kwargs['pk']) 
-    #     buydate = review.buyproduct.buydate        
-    #     return buydate
 
     def get_success_url(self):
         return reverse('gshsapp:gigi_gubun', kwargs={'gigigubun': self.object.buyproduct.gubun.gubun})
     
-    # def form_valid(self, form):
-    #     instance = form.save()       
-    #     instance.buyproduct.buydate = timezone.now()
-    #     return super().form_valid(form)
 
 def InfogigiChange(request, pk):
     gigiinfo2 = Gigiinfo.objects.get(pk=pk)
@@ -167,27 +146,6 @@ def InfogigiBuseo(request, buseogubun):
 
         return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
 
-
-# def ChangePhotoAjax(request):
-#     if request.method == 'GET':
-#         data = request.GET.get('data')
-#         gubun = request.GET.get('gubun')
-#         if gubun == 'change':
-#             c_id = Replacement.objects.get(id=data)
-#             photos = c_id.change_photo.all()
-#         else:
-#             r_id = Repair.objects.get(id=data)
-#             photos = r_id.repair_photo.all()
-        
-#         photo = []
-#         for c in photos:
-#             photo.append(c.image.url)
-            
-#         context = {
-#             'result': photo,
-#         }
-#         return JsonResponse(context)
-
 # 부서 부원 및 기기 ajax
 def InfogigiBuseoUpdate(request, pk):
     data = {}
@@ -222,7 +180,7 @@ def InfogigiBuseoUpdate(request, pk):
 def buseoCRUpdate(request, pk):
     data = {}
     gubun =  request.GET.get('crgubun')
-    gubun2 =  request.POST.get('crgubun')
+    gubun2 =  request.POST.get('crgubun')  
 
     if gubun == 'change' or gubun2 == 'change':
         change = Replacement.objects.get(pk=pk)     
@@ -299,8 +257,66 @@ def buseoCRUpdate(request, pk):
         else:
             repairform = InfogigiSuriForm(instance=repair)
             data['html_form'] = render_to_string('gshsapp/snipet/buseo_repair_updateform.html', {'form': repairform, 'pk':pk, 'repairPhotos':repairPhotos}, request=request)
-
+    
     return JsonResponse(data)
+
+# 교체 수리 삭제
+def buseoCRUdelete(request, pk):
+    crgubun = request.GET.get('crgubun')
+    if crgubun == 'change':
+        changes = Replacement.objects.get(id=pk)
+        cphotos = changes.change_photo.all()
+        changes.delete()
+        for cphoto in cphotos:
+            cphoto.delete()
+    else:
+        repairs = Repair.objects.get(id=pk)
+        rphotos = repairs.repair_photo.all()
+        repairs.delete()
+        for rphoto in rphotos:
+            rphoto.delete()   
+
+    return JsonResponse({'data':True}, status=200)    
+
+# 엑셀 보내기
+def excelExport(request, gubun):
+    response = HttpResponse(content_type="application/vnd.ms-excel")
+    response["Content-Disposition"] = 'attachment;filename=' + gubun +'.xls' 
+    wb = xlwt.Workbook(encoding='ansi') #encoding은 ansi로 해준다.
+    ws = wb.add_sheet(gubun) #시트 추가
+    
+    row_num = 0
+    col_names = ['구매일', '성명', '건물', '부서(호실)', '제조사', '모델명', 'IP', '비고']
+    pcol_names = ['구매일', '건물', '부서(호실)', '제조사', '모델명', 'IP', '색상','비고']
+    
+    if gubun == 'printer':
+        colNames = pcol_names
+    else:
+        colNames = col_names
+    #열이름을 첫번째 행에 추가 시켜준다.
+    for idx, col_name in enumerate(colNames):
+        ws.write(row_num, idx, col_name)        
+    
+    #데이터 베이스에서 유저 정보를 불러온다
+    if gubun == 'notebook' or gubun == 'desktop': 
+        infogigis = Gigiinfo.objects.filter(buyproduct__gubun__gubun=gubun, user__is_active =True, jaego=False, notuse=False)\
+            .order_by('-buyproduct__buydate').values_list('buyproduct__buydate','user__name','location__building','location__hosil','buyproduct__company', 'buyproduct__model', 'ip','bigo')
+    else:
+        infogigis = Gigiinfo.objects.filter(buyproduct__gubun__gubun=gubun, jaego=False, notuse=False)\
+            .order_by('-buyproduct__buydate').values_list('buyproduct__buydate','location__building','location__hosil','buyproduct__company', 'buyproduct__model', 'ip','color', 'bigo')
+    
+    #유저정보를 한줄씩 작성한다.
+    for row in infogigis:
+        row_num +=1
+        for col_num, attr in enumerate(row):      
+            if isinstance(attr, datetime.date):
+                date_time = attr.strftime('%Y-%m-%d')
+                ws.write(row_num, col_num, date_time)
+            else:
+                ws.write(row_num, col_num, attr)
+            
+    wb.save(response)
+    return response
 
 
 

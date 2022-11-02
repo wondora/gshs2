@@ -15,4 +15,6 @@ urlpatterns = [
     # path('gigi/buseo/change/photo/', views.ChangePhotoAjax, name='changephoto_up'), 
     path('gigi/buseo/update/<int:pk>/', views.InfogigiBuseoUpdate, name='gigi_buseo_update'), 
     path('gigi/buseo/cr/update/<int:pk>/', views.buseoCRUpdate, name='buseo_CR_update'), 
+    path('gigi/buseo/cr/delete/<int:pk>/', views.buseoCRUdelete, name='buseo_CR_delete'), 
+    path('gigi/excel/<str:gubun>/', views.excelExport, name='excelExport'), 
 ]
