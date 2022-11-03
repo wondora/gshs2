@@ -13,6 +13,8 @@ from django.db.models import Sum
 from django.template.loader import render_to_string
 import datetime
 import xlwt
+from login.decorators import *
+from django.utils.decorators import method_decorator
 
 
 def home(request):
@@ -41,6 +43,7 @@ def InfogigiList(request, gigigubun):
     return render(request, 'gshsapp/infogigi.html', context)
 
 
+@method_decorator(login_message_required, name='dispatch')
 class InfogigiCV(CreateView):
     model = Gigiinfo
     template_name = 'gshsapp/create.html'
@@ -50,6 +53,21 @@ class InfogigiCV(CreateView):
         return reverse('gshsapp:gigi_gubun', kwargs={'gigigubun': self.object.buyproduct.gubun.gubun})
    
 
+@login_message_required
+def InfogigiDel(request, pk):
+    gigiinfo= get_object_or_404(Gigiinfo, pk=pk)
+    repairs = gigiinfo.repair.all()
+    for i in repairs:
+        i.delete()
+    changes = gigiinfo.replacement.all()
+    for i in changes:
+        i.delete()    
+    
+    gigiinfo.delete()
+    
+    return JsonResponse({'data':True}, status=200)
+
+@method_decorator(login_message_required, name='dispatch')
 class InfogigiUV(UpdateView):
     model = Gigiinfo
     template_name = 'gshsapp/snipet/infogigi_update.html'
@@ -58,9 +76,9 @@ class InfogigiUV(UpdateView):
     def get_success_url(self):
         return reverse('gshsapp:gigi_gubun', kwargs={'gigigubun': self.object.buyproduct.gubun.gubun})
     
-
+@login_message_required
 def InfogigiChange(request, pk):
-    gigiinfo2 = Gigiinfo.objects.get(pk=pk)
+    gigiinfo2 = get_object_or_404(Gigiinfo, pk=pk)    
     ImageFormSet = modelformset_factory(Change_Photo, form=Change_PhotoForm, extra=3)
     
     if request.method == 'POST':
@@ -83,8 +101,9 @@ def InfogigiChange(request, pk):
     return render(request, 'gshsapp/snipet/infogigi_gigichange.html', {'form': changeform, 'formset': formset})
 
 
+@login_message_required
 def InfogigiSuri(request, pk):
-    gigiinfo2 = Gigiinfo.objects.get(pk=pk)
+    gigiinfo2 = get_object_or_404(Gigiinfo, pk=pk)
    
     if request.method == 'POST':
         suriform = InfogigiSuriForm(request.POST)
@@ -147,6 +166,7 @@ def InfogigiBuseo(request, buseogubun):
         return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
 
 # 부서 부원 및 기기 ajax
+@login_message_required
 def InfogigiBuseoUpdate(request, pk):
     data = {}
     gigiinfo = get_object_or_404(Gigiinfo, pk=pk)    
@@ -177,6 +197,7 @@ def InfogigiBuseoUpdate(request, pk):
     return JsonResponse(data)
 
 # 부서내 소모품교체 업데이트
+@login_message_required
 def buseoCRUpdate(request, pk):
     data = {}
     gubun =  request.GET.get('crgubun')
@@ -261,24 +282,20 @@ def buseoCRUpdate(request, pk):
     return JsonResponse(data)
 
 # 교체 수리 삭제
+@login_message_required
 def buseoCRUdelete(request, pk):
     crgubun = request.GET.get('crgubun')
     if crgubun == 'change':
         changes = Replacement.objects.get(id=pk)
-        cphotos = changes.change_photo.all()
         changes.delete()
-        for cphoto in cphotos:
-            cphoto.delete()
-    else:
+    elif crgubun == 'repair':
         repairs = Repair.objects.get(id=pk)
-        rphotos = repairs.repair_photo.all()
-        repairs.delete()
-        for rphoto in rphotos:
-            rphoto.delete()   
+        repairs.delete()  
 
     return JsonResponse({'data':True}, status=200)    
 
 # 엑셀 보내기
+@login_message_required
 def excelExport(request, gubun):
     response = HttpResponse(content_type="application/vnd.ms-excel")
     response["Content-Disposition"] = 'attachment;filename=' + gubun +'.xls' 
@@ -317,29 +334,3 @@ def excelExport(request, gubun):
             
     wb.save(response)
     return response
-
-
-
-
-
-# def buseorepairYear(request):
-#     data = {}
-#     changeyear = request.GET.get('buseoyear','')
-#     buseogubun = request.GET.get('buseogubun','')
-#     gubun = request.GET.get('gubun','')
-
-#     a_date = changeyear +"-3-1"
-#     start_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
-#     end_date = start_date+ datetime.timedelta(days=364)  
-#     data['gubun'] = gubun 
-    
-#     if gubun == 'change':
-#         changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date]).annotate(changeTotal = F('count') *  F('cost'))
-#         changeTotalCost = changes.aggregate(Sum('changeTotal'))
-#         data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_change_list.html', {"changeyear":changeyear, "changes":changes, "changeTotalCost":changeTotalCost})
-#     else:
-#         repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date])
-#         repairTotalCost = repairs.aggregate(Sum('cost'))
-#         data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_repair_list.html', {"changeyear":changeyear, "repairs":repairs, "repairTotalCost":repairTotalCost})
-  
-#     return JsonResponse(data)

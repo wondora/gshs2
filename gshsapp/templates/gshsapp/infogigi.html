@@ -68,7 +68,8 @@
           </a>
           <a href="{% url 'gshsapp:gigi_suri' gigi.id %} ">
             <span class="gitamenu badge bg-secondary">수리</span>
-          </a>          
+          </a>   
+          <span class="gigidelete gitamenu badge bg-danger" data-url="{% url 'gshsapp:gigi_delete' gigi.id %}" onclick="return confirm('정말로 삭제 하시겠습니까 ?');">삭제</span>
         </td>
       </tr>
       {% endfor %}
@@ -81,4 +82,23 @@
     </div>
   </div>
 
+  <script>
+    $(function(){
+      $(document).on('click','.gigidelete', function(e) { 
+        e.preventDefault();  
+        var btn = $(this);
+        $.ajax({
+            url: btn.attr("data-url"),
+            type: 'get',
+            dataType: 'json',          
+            success: function (data) {
+              location.reload();               
+            }
+        });
+      });
+    });
+  </script>
+  
   {% endblock %}
+  
+  

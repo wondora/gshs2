@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os, dbsettings
+import json
+from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,9 +22,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_$%^u09t=rl9k-$$=f*)bx9$=4#5jack5lml)t7c87w8q8tv6-'
+secret_file = os.path.join(BASE_DIR, 'secrets.json')
 
-# SECURITY WARNING: don't run with debug turned on in production!
+with open(secret_file) as f:
+    secrets = json.loads(f.read())
+
+def get_secret(setting, secrets=secrets):
+    try:
+        return secrets[setting]
+    except KeyError:
+        error_msg = " Set the {0} environment variable".format(setting)
+        raise ImproperlyConfigured(error_msg)
+
+SECRET_KEY = get_secret("SECRET_KEY")
+
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -114,15 +127,19 @@ USE_I18N = True
 
 USE_TZ = False
 
-AUTH_USER_MODEL = 'gshsapp.User'
+LOGIN_URL = 'login/'          # 로그인 URL
+# LOGIN_REDIRECT_URL = '/'  # 로그인 후 URL
+LOGOUT_REDIRECT_URL = '/'            # 로그아웃 후 URL
+AUTH_USER_MODEL = 'login.User'# 커스텀 인증 모델
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, '.static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -1,8 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 import os
 from django.conf import settings
+from login.models import User
+
 
 class Gubun(models.Model):
     GUBUN = (
@@ -15,7 +16,10 @@ class Gubun(models.Model):
     def __str__(self):
         return self.gubun
 
-class Buyproduct(models.Model):
+    class Meta:
+        db_table = "gubun"
+
+class Buyproduct(models.Model):    
     buydate = models.DateField(default=timezone.now)
     gubun = models.ForeignKey(Gubun, on_delete=models.CASCADE, related_name='buyproduct')
     company = models.CharField(max_length=20)
@@ -25,18 +29,8 @@ class Buyproduct(models.Model):
     def __str__(self):
         return f'[{self.gubun.gubun}] {self.model}'
 
-class User(AbstractUser):
-    first_name = None
-    last_name = None
-    password = models.CharField(max_length=100, null=True, blank=True)
-    username = models.CharField(max_length=100, null=True, unique=True, blank=True)
-    email = models.CharField(max_length=50, null=True, blank=True)  
-    is_active = models.BooleanField(default=True)
-    name = models.CharField(max_length=50)
-    subject = models.CharField(max_length=50, null=True)
-
-    def __str__(self):
-        return self.name
+    class Meta:
+        db_table = "buyproduct"
 
 class Location(models.Model):
     LGUBUN = (
@@ -47,13 +41,29 @@ class Location(models.Model):
         ('강당','강당'),
         ('기타','기타'),
     )
-    building = models.CharField(max_length=50)
+    BGUBUN = (
+        ('본관','본관'),
+        ('SRC','SRC'),
+        ('학술정보관','학술정보관'),
+        ('학습관','학습관'),
+        ('자치관','자치관'),
+        ('창조관','창조관'),
+        ('급식소','급식소'),
+        ('우정1관','우정1관'),
+        ('우정2관','우정2관'),
+        ('아름관','아름관'),
+    )
+    building = models.CharField(max_length=50, choices=BGUBUN)
     hosil = models.CharField(max_length=20) 
     locationgubun = models.CharField(max_length=20, default='기타', choices=LGUBUN)   
     bigo = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f'[{self.building}] {self.hosil}'
+
+    class Meta:
+        db_table = "location"
+
 
 class Gigiinfo(models.Model):
     COLOR_SELECT = (
@@ -73,6 +83,10 @@ class Gigiinfo(models.Model):
     def __str__(self):
         return f'{self.location} / {self.buyproduct} / {self.user}'
 
+    class Meta:
+        db_table = "gigiinfo"
+
+
 class Repair(models.Model):
     date = models.DateField(default=timezone.now)
     gigiinfo = models.ForeignKey(Gigiinfo, on_delete=models.CASCADE, related_name='repair')
@@ -86,11 +100,14 @@ class Repair(models.Model):
 
     def delete(self, *args, **kargs):
         rep = Repair.objects.get(id=self.id)
-        this = rep.change_photo.all()
+        this = rep.repair_photo.all()
         for i in this:
             i.delete()
-
         return super().delete(*args, **kargs)
+
+    class Meta:
+        db_table = "repair"
+
 
 class Replacement(models.Model):
     date = models.DateField(default=timezone.now)
@@ -108,8 +125,11 @@ class Replacement(models.Model):
         this = rep.change_photo.all()
         for i in this:
             i.delete()
-
         return super().delete(*args, **kargs)
+
+    class Meta:
+        db_table = "replacement"
+
 # def get_image_filename(instance, filename):
 #     id = instance.repair.id
 #     return "images/%Y/%m/%d/%s" % (id)  
@@ -126,6 +146,9 @@ class Repair_Photo(models.Model):
             os.remove(os.path.join(settings.MEDIA_ROOT, self.image.path))
             super().delete(*args, **kargs)
 
+    class Meta:
+        db_table = "repair_Photo"
+
 
 class Change_Photo(models.Model):
     replacement = models.ForeignKey(Replacement, default=None, on_delete=models.CASCADE, related_name="change_photo")
@@ -139,9 +162,5 @@ class Change_Photo(models.Model):
             os.remove(os.path.join(settings.MEDIA_ROOT, self.image.path))
             super().delete(*args, **kargs)
 
-    
-class Memo(models.Model):
-    pass
-
-class Freeboard(models.Model):
-    pass
+    class Meta:
+        db_table = "change_Photo"

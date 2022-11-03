@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('gigi/<str:gigigubun>/', views.InfogigiList, name='gigi_gubun'),
     path('gigi/create/<str:gigigubun>/', views.InfogigiCV.as_view(), name='gigi_create'),
+    path('gigi/delete/<int:pk>/', views.InfogigiDel, name='gigi_delete'),
     path('gigi/update/<int:pk>/', views.InfogigiUV.as_view(), name='gigi_update'),
     path('gigi/change/<int:pk>/', views.InfogigiChange, name='gigi_change'),
     path('gigi/suri/<int:pk>/', views.InfogigiSuri, name='gigi_suri'),  
