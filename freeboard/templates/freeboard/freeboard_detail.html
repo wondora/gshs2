@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="card">
+    <!--제목,분류,작성일-->
+    <div class="card-header">
+        <strong>{{ freeboard.title }}</strong><span>[자유게시판]</span>
+        <span>{{ freeboard.registered_date|date:'Y.m.d.' }}</span>
+    </div>
+    <div class="card-body">
+        <!--작성자, 조회수-->
+        <div>
+            <span>작성자 : {{ freeboard.writer }}</span>
+            <span>조회수 : {{ freeboard.hits }}</span>
+        </div>
+        <!--내용-->
+        <div>
+            {{ freeboard.content | safe }}
+        </div>
+    </div>
+</div>
+
+<div>
+    <button onclick="location.href='/freeboard/'">목록으로</button>
+    <div>
+        {% if freeboard_auth%}
+        <button class="btn btn-sm" onclick="location.href='/freeboard/{{ freeboard.id }}/edit/'">수정</button>
+        <button class="btn btn-sm" data-toggle="modal" data-target="#delete_modal">삭제</button>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="delete_modal" aria-hidden="true" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">삭제경고</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>게시글을 삭제하시겠습니까?</p>
+            </div>
+            <div class="modal-footer">
+                <button onclick="delete_modal()" type="button" class="btn btn-dark">삭제하기</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">취소하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function delete_modal() {
+        location.replace('/freeboard/{{ freeboard.id }}/delete/');
+    }
+    // $("#fb_delete").click(function() {
+	// 	$("#delete_modal").modal("show");
+	// });
+</script>
+
+{% endblock %}

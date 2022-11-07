@@ -27,7 +27,7 @@ class Buyproduct(models.Model):
     bigo = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return f'[{self.gubun.gubun}] {self.model}'
+        return f'[{self.gubun}] {self.model}'
 
     class Meta:
         db_table = "buyproduct"

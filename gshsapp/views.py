@@ -56,12 +56,16 @@ class InfogigiCV(CreateView):
 @login_message_required
 def InfogigiDel(request, pk):
     gigiinfo= get_object_or_404(Gigiinfo, pk=pk)
+    
     repairs = gigiinfo.repair.all()
-    for i in repairs:
-        i.delete()
+    if repairs:
+        for i in repairs:
+            i.delete()
+
     changes = gigiinfo.replacement.all()
-    for i in changes:
-        i.delete()    
+    if changes:
+        for i in changes:
+            i.delete()    
     
     gigiinfo.delete()
     

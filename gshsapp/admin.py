@@ -19,7 +19,6 @@ class ReplacementAdmin(admin.ModelAdmin):
 
 admin.site.register(Replacement, ReplacementAdmin)
 
-admin.site.register(User)
 
 class BuyproductAdmin(admin.ModelAdmin):
     list_display = ['id', 'buydate', 'company', 'model', 'bigo']

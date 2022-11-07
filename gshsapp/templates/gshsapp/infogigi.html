@@ -18,7 +18,7 @@
     <a href="{% url 'gshsapp:gigi_create' gigigubun=gigigubun %}">
       <i style="font-size: 38px; color:#3892d4;" class="fas fa-plus-square"></i>
     </a>
-  </div>  
+  </div>    
 </div>
 
 
@@ -69,7 +69,7 @@
           <a href="{% url 'gshsapp:gigi_suri' gigi.id %} ">
             <span class="gitamenu badge bg-secondary">수리</span>
           </a>   
-          <span class="gigidelete gitamenu badge bg-danger" data-url="{% url 'gshsapp:gigi_delete' gigi.id %}" onclick="return confirm('정말로 삭제 하시겠습니까 ?');">삭제</span>
+          <span class="gigidelete gitamenu badge bg-danger" data-url="{% url 'gshsapp:gigi_delete' gigi.id %}">삭제</span>
         </td>
       </tr>
       {% endfor %}
@@ -82,19 +82,42 @@
     </div>
   </div>
 
+  <!-- Modal -->
+<div id="delete_modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">삭제경고</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <p>게시글을 삭제하시겠습니까?</p>
+          </div>
+          <div class="modal-footer">
+              <button onclick="delete_modal()" type="button" class="btn btn-dark">삭제하기</button>
+              <button type="button" class="btn btn-light" data-dismiss="modal">취소하기</button>
+          </div>
+      </div>
+  </div>
+</div>
+
   <script>
     $(function(){
       $(document).on('click','.gigidelete', function(e) { 
         e.preventDefault();  
-        var btn = $(this);
-        $.ajax({
-            url: btn.attr("data-url"),
-            type: 'get',
-            dataType: 'json',          
-            success: function (data) {
-              location.reload();               
-            }
-        });
+        if(confirm('정말로 삭제 하시겠습니까 ?')) {
+          var btn = $(this);
+          $.ajax({
+              url: btn.attr("data-url"),
+              type: 'get',
+              dataType: 'json',          
+              success: function (data) {
+                location.reload();               
+              }
+          });
+        }        
       });
     });
   </script>

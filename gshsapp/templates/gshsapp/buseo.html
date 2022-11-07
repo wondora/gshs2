@@ -42,7 +42,7 @@
             <tr>
               <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
               <td>{{ gigi.buyproduct.gubun }}</td>
-              <td>{{ gigi.user.name }}</td>       
+              <td>{{ gigi.user }}</td>       
               <td>{{ gigi.buyproduct.company }}</td>
               <td>{{ gigi.buyproduct.model }}</td>
               <td>{{ gigi.ip }}</td>
@@ -126,7 +126,7 @@
             {% with gubunchange=gigi.change_photo.all %}
             <tr>
               <td>{{ gigi.date|date:"Y-m-d" }}</td>        
-              <td>{{ gigi.gigiinfo.user }}</td>        
+              <td>{{ gigi.gigiinfo.user.name }}</td>        
               <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
               <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
               <td>{{ gigi.gubun }}</td>
@@ -139,7 +139,7 @@
                 {% endif %}
               </td>  
               <td class="buseo_CR_update" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}" title="수정하기">🐼</td>             
-              <td class="buseo_CR_delete" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}" title="삭제하기" onclick="return confirm('정말로 삭제 하시겠습니까 ?');">👹</td>             
+              <td class="buseo_CR_delete" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}" title="삭제하기">👹</td>             
             </tr>
                         
             <tr class="photoshows">
@@ -205,7 +205,7 @@
             {% with gigi.repair_photo.all as gubunrepair %}
             <tr>
               <td>{{ gigi.date|date:"Y-m-d" }}</td>    
-              <td>{{ gigi.gigiinfo.user }}</td>     
+              <td>{{ gigi.gigiinfo.user.name }}</td>     
               <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
               <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
               <td title="{{gigi.problem}}">{{ gigi.problem|truncatechars:7 }}</td>
@@ -218,7 +218,7 @@
                 {% endif %}
               </td>   
               <td class="buseo_CR_update" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}" title="수정하기">🐼</td>             
-              <td class="buseo_CR_delete" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}" title="삭제하기" onclick="return confirm('정말로 삭제 하시겠습니까 ?');">👹</td>             
+              <td class="buseo_CR_delete" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}" title="삭제하기">👹</td>             
             </tr>
             
             <tr class="photoshows">
@@ -408,22 +408,24 @@
    
 // 수리 및 교체 삭제
     $(document).on('click','.buseo_CR_delete', function(e) { 
-        e.preventDefault();  
-        var btn = $(this);
-        var crgubun = btn.data('gubun');
-        $.ajax({
-            url: btn.attr("data-url"),
-            type: 'get',
-            dataType: 'json',
-            data: {'crgubun': crgubun},
-            beforeSend: function () {
-              btn.parent().attr('id','buseoCRdelete');
-            },            
-            success: function (data) {
-              $("#buseoCRdelete").remove();
-              $("#buseoCRdelete").next().remove();               
-            }
-        });
+        e.preventDefault();
+          if(confirm('정말로 삭제 하시겠습니까 ?')) {  
+          var btn = $(this);
+          var crgubun = btn.data('gubun');
+          $.ajax({
+              url: btn.attr("data-url"),
+              type: 'get',
+              dataType: 'json',
+              data: {'crgubun': crgubun},
+              beforeSend: function () {
+                btn.parent().attr('id','buseoCRdelete');
+              },            
+              success: function (data) {
+                $("#buseoCRdelete").next().remove();  
+                $("#buseoCRdelete").remove();                             
+              }
+          });
+        }
     });
 
 // 외부영역 클릭시 닫기

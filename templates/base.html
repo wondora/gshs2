@@ -6,11 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">     
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">    
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script> 
-    <script src="https://kit.fontawesome.com/806a9436db.js"></script> 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/806a9436db.js"></script> 
+    
     <style>
         @font-face {
             font-family: 'Leorio';
@@ -56,10 +57,13 @@
             transition-duration: 0.5s;
        }
 
-       .navbar-nav {
+       /* .navbar-nav {
             --bs-nav-link-hover-color:#8f8780;
+       } */
+       .navbar-nav .show>.nav-link {
+            color: #495057;
        }
-
+       
        .nav-item a {
             color:#495057;
             font-size: 1rem;
@@ -77,7 +81,7 @@
        }
 
        section {
-            margin-top: 8%;
+            margin-top: 9%;
        }
 
        .table {
@@ -215,7 +219,7 @@
         #modal .content {            
             font-size: 0.9rem;
         }
-
+/* 모달 끝 */ 
         .photoshows {
             display: none;
         }
@@ -236,27 +240,64 @@
         .gigi-repair, .gigi-change {
             cursor: pointer;
         }
- /* 모달 끝 */   
+   
+ .custom-table {
+    font-size: 0.85rem;
+    width: 100%;
+    margin-bottom: 30px;
+    min-width: 400px;
+    text-align: center;
+    line-height: 1.8;
+    }
 
+    .custom-table thead tr {
+        border-top:1px solid #e44444;    
+        border-bottom: 1px solid #ddd;
+    }
+
+    .custom-table th,
+    .custom-table td {
+        padding: 10px 12px;    
+    }
+    .custom-table tbody tr {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: #d1d2d4;
+    }
+
+    .custom-table tbody button {
+        margin-right: 5px;
+    }
+    .custom-table tbody button:last-child {
+        margin-right: 0;
+    }
+
+    /* ul.pagination {
+        width: 90%;
+        text-align: center;
+    }
+
+    ul.pagination > li {
+        display: inline-block;
+        background-color: #495057;
+    } */
     </style>
 </head>
 <body>    
     <!-- Navigation-->
     <nav class="navbar navbar-dark navbar-expand-lg shadow fixed-top" id="mainNav">
         <div class="container">
-            {% if user.is_authenticated %}
                 <i class="fa-solid fa-explosion"></i><a class="navbar-brand" href="{% url 'gshsapp:home' %}">Hello GSHS</a>
-            {% else %}
-                <i class="fa-solid fa-explosion"></i><a class="navbar-brand" href="{% url 'login:login' %}">Hello GSHS</a>
-            {% endif %}
-            <button class="navbar-toggler text-uppercase font-weight-bold bg-success text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler text-uppercase font-weight-bold bg-success text-white rounded" type="button" data-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 Menu
                 <i class="fas fa-bars"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mx-0 mx-lg-1 dropdown">
-                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#InfoDevices"  role="button" data-bs-toggle="dropdown" aria-expanded="false">INFODS</a>
+                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">INFODS</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='notebook' %}">notebook</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -267,11 +308,9 @@
                     </li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'gshsapp:gigi_buseo' buseogubun='교육정보부'%}">BUSEO</a></li>
                     <li class="nav-item mx-0 mx-lg-1 dropdown">
-                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#jobs"  role="button" data-bs-toggle="dropdown" aria-expanded="false">JOBS</a>
+                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">JOBS</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">changes</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">repair</a></li>
+                            <li><a class="dropdown-item" href="{% url 'freeboard:freeboard_list' %}">freeboard</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="#">stock</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -279,7 +318,7 @@
                         </ul>
                     </li>
                     <li class="nav-item mx-0 mx-lg-1 dropdown">
-                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="excelExport"  role="button" data-bs-toggle="dropdown" aria-expanded="false">EXCEL</a>
+                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">EXCEL</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'gshsapp:excelExport' gubun='notebook' %}">notebook</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -293,6 +332,8 @@
                     {% else %}
                         <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'login:login' %}"><i class="fa-regular fa-user"></i></a></li>
                     {% endif %}
+                    
+                    <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-3 px-0 px-lg-3 rounded"  href="{% url 'login:csregister' %}">가입</a></li>
                 </ul>
             </div>
         </div>
