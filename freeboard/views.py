@@ -7,6 +7,9 @@ from django.contrib import messages
 from django.db.models import Q
 from login.decorators import *
 from .forms import FreeboardWriteForm
+import os
+from django.http import HttpResponse, Http404
+import mimetypes
 
 
 class FreeboardListView(ListView):
@@ -70,23 +73,25 @@ class FreeboardListView(ListView):
 
 @login_message_required
 def freeboard_detail_view(request, pk):
-    freeboard = get_object_or_404(Freeboard, pk=pk)
+    freeboard = get_object_or_404(Freeboard, pk=pk)    
     if request.user == freeboard.writer:
         freeboard_auth = True
     else:
         freeboard_auth = False
     session_cookie = request.session['username']
-    cookie_name = F'notice_hits:{session_cookie}'
+    cookie_name = F'freeboard_hits:{session_cookie}'
+
     context = {
         'freeboard': freeboard,
         'freeboard_auth': freeboard_auth,
     }
 
     response = render(request, 'freeboard/freeboard_detail.html', context)
-
+   
     if request.COOKIES.get(cookie_name) is not None:
         cookies = request.COOKIES.get(cookie_name)
         cookies_list = cookies.split('|')
+
         if str(pk) not in cookies_list:
             response.set_cookie(cookie_name, cookies + f'|{pk}', expires=None)
             freeboard.hits += 1
@@ -104,19 +109,21 @@ def freeboard_detail_view(request, pk):
 @login_message_required
 def freeboard_write_view(request):
     if request.method == "POST":
-        form = FreeboardWriteForm(request.POST)
+        form = FreeboardWriteForm(request.POST, request.FILES)
         user = request.user.username
-        print(request)
         username = User.objects.get(username = user)
-
+        
         if form.is_valid():
             freeboard = form.save(commit = False)
             freeboard.writer = username
+            if request.FILES:
+                if 'upload_files' in request.FILES.keys():
+                    freeboard.filename = request.FILES['upload_files'].name                    
             freeboard.save()
             return redirect('freeboard:freeboard_list')
     else:
         form = FreeboardWriteForm()
-        print(request.session['username'])
+
     return render(request, "freeboard/freeboard_write.html", {'form': form})
 
 
@@ -156,3 +163,18 @@ def freeboard_delete_view(request, pk):
     else:
         messages.error(request, "본인 게시글이 아닙니다.")
         return redirect('/freeboard/'+str(pk))
+
+
+@login_message_required
+def freeboard_download_view(request, pk):
+    freeboard = get_object_or_404(Freeboard, pk=pk)
+    url = freeboard.upload_files.url[1:]
+    file_url = urllib.parse.unquote(url)
+    
+    if os.path.exists(file_url):
+        with open(file_url, 'rb') as fh:
+            quote_file_url = urllib.parse.quote(freeboard.filename.encode('utf-8'))
+            response = HttpResponse(fh.read(), content_type=mimetypes.guess_type(file_url)[0])
+            response['Content-Disposition'] = 'attachment;filename*=UTF-8\'\'%s' % quote_file_url
+            return response
+        raise Http404
