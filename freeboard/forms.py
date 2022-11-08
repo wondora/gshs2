@@ -13,4 +13,4 @@ class FreeboardWriteForm(forms.ModelForm):
 
     class Meta:
         model = Freeboard
-        fields = ['title', 'content', 'top_fixed']
+        fields = ['title', 'content', 'top_fixed', 'upload_files']

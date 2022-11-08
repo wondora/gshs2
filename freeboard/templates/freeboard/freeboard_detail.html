@@ -14,6 +14,12 @@
             <span>조회수 : {{ freeboard.hits }}</span>
         </div>
         <!--내용-->
+        {% if freeboard.upload_files %}
+        <div class="col-12 text-right">
+            <span>첨부파일 :&nbsp;</span>
+            <a href="{% url 'freeboard:freeboard_download' freeboard.id %}" >{{ freeboard.filename|truncatechars:25 }}</a>
+        </div>
+        {% endif %}
         <div>
             {{ freeboard.content | safe }}
         </div>
@@ -55,9 +61,6 @@
     function delete_modal() {
         location.replace('/freeboard/{{ freeboard.id }}/delete/');
     }
-    // $("#fb_delete").click(function() {
-	// 	$("#delete_modal").modal("show");
-	// });
 </script>
 
 {% endblock %}
