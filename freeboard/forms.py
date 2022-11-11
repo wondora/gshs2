@@ -9,8 +9,12 @@ class FreeboardWriteForm(forms.ModelForm):
             'placeholder': '제목을 입력해주세요.',
             'class': 'form-control',
             'autofocus': True,
+            'style': 'background-color: #eee;'
+        }),
+        self.fields['content'].label = '내용'
+        self.fields['content'].widget.attrs.update({
+            'style': 'background-color: #eee;padding: 30px;'
         })
-
     class Meta:
         model = Freeboard
         fields = ['title', 'content', 'top_fixed', 'upload_files']

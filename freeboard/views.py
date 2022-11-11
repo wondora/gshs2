@@ -14,7 +14,7 @@ import mimetypes
 
 class FreeboardListView(ListView):
     model = Freeboard
-    paginate_by = 5
+    paginate_by = 10
     template_name = 'freeboard/freeboard_list.html'  #DEFAULT : <app_label>/<model_name>_list.html
     context_object_name = 'freeboard_list'        #DEFAULT : <model_name>_list
 
@@ -71,15 +71,15 @@ class FreeboardListView(ListView):
         return freeboard_list
 
 
-@login_message_required
 def freeboard_detail_view(request, pk):
-    freeboard = get_object_or_404(Freeboard, pk=pk)    
+    freeboard = get_object_or_404(Freeboard, pk=pk)   
+    session_cookie = request.session.get('username', False)
+    cookie_name = F'freeboard_hits:{session_cookie}'
+
     if request.user == freeboard.writer:
         freeboard_auth = True
     else:
-        freeboard_auth = False
-    session_cookie = request.session['username']
-    cookie_name = F'freeboard_hits:{session_cookie}'
+        freeboard_auth = False    
 
     context = {
         'freeboard': freeboard,
@@ -133,9 +133,18 @@ def freeboard_edit_view(request, pk):
     
     if request.method == "POST":
         if freeboard.writer == request.user: #or request.user.level == '0'
-            form = FreeboardWriteForm(request.POST, instance=freeboard)
+            file_change_check = request.POST.get('fileChange', False)
+            file_check = request.POST.get('upload_files-clear', False)
+
+            if file_check or file_change_check:
+                os.remove(os.path.join(settings.MEDIA_ROOT, freeboard.upload_files.path))
+
+            form = FreeboardWriteForm(request.POST, request.FILES, instance=freeboard)
             if form.is_valid():
                 freeboard = form.save(commit = False)
+                if request.FILES:
+                    if 'upload_files' in request.FILES.keys():
+                        freeboard.filename = request.FILES['upload_files'].name
                 freeboard.save()
                 messages.success(request, "수정되었습니다.")
                 return redirect('/freeboard/'+str(pk))
@@ -147,6 +156,10 @@ def freeboard_edit_view(request, pk):
                 'form': form,
                 'edit': '수정하기',
             }
+            if freeboard.filename and freeboard.upload_files:
+                context['filename'] = freeboard.filename
+                context['file_url'] = freeboard.upload_files.url
+                
             return render(request, "freeboard/freeboard_write.html", context)
         else:
             messages.error(request, "본인 게시글이 아닙니다.")

@@ -25,13 +25,14 @@
             ]
         });
         $('p').css('margin-bottom','0')
+        $('.note-editable').css('padding','20')
         $('.note-resizebar').css('display','none');
     });
 </script>
 
 <div class="row">
     <div class="col-12 text-center">
-        <h5 style="font-weight: bold;">Freeboard</h4>
+        <h5 style="font-weight: bold;color: #495057;">Freeboard</h4>
     </div>
 </div>
 
@@ -39,38 +40,42 @@
     <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="card" style="width: 100%;">
-            <div class="card-header" style="padding: 0rem 0.8rem">
-                <div class="md-form form-group" style="margin-top: 8.5px;">
-                    <div style="padding: 0 5.5px;">
+            <div class="card-header" style="background-color: #eee;border: var(--bs-card-border-width) solid var(--bs-card-border-color)">
+                <div class="form-group">
+                    <div">
                         <!-- <label for="form_title" class="control-label">{{ form.title.label }}</label> -->
                         {{ form.title }}
                     </div>
                 </div>
             </div>
-            <div>
+            <div class="card-body">
                 {{ form.content }}
             </div>        
         </div>
 
         <div class="card-footer" style="padding-left: 0px; margin-top:18px;">
             <div class="form-group">
-                {{ form.upload_files }}
-                <small id="help" class="form-text text-muted">
-                    [파일 업로드]&nbsp;첨부할 파일을 업로드해주세요. 여러 파일은 압축해서 업로드해주세요.
-                </small>
+                <div class="col-12">
+                    {{ form.upload_files }}                    
+                    <small id="help" class="form-text text-muted">
+                        [파일 업로드]&nbsp;첨부할 파일을 업로드해주세요. 여러 파일은 압축해서 업로드해주세요.
+                    </small>
+                </div>
             </div>
         </div>
-        <div class="row text-right" style="margin-top: 10px;">
-            <label>
-                {{ form.top_fixed }}
-                <span style="padding-bottom: 25px; color:black; font-weight: bold;">상단에 표시하기</span>
-            </label>
-            {% if edit %}
-            <button type="submit" id="write" class="btn btn-sm">{{ edit }}</button>
-            {% else %}
-            <button type="submit" id="write" class="btn btn-sm">작성하기</button>
-            {% endif %}
-            <input type="checkbox" id="fileChangeCheck" name="fileChange" style="display: none;">
+        <div class="row">
+            <div class="col-12 text-lg-end">
+                <label>
+                    {{ form.top_fixed }}
+                    <span style="padding-bottom: 25px; color:#495057; font-weight: bold;">상단에 표시하기</span>
+                </label>
+                {% if edit %}
+                <button type="submit" id="write" class="custom-btn">{{ edit }}</button>
+                {% else %}
+                <button type="submit" id="write" class="custom-btn">작성하기</button>
+                {% endif %}
+                <input type="checkbox" id="fileChangeCheck" name="fileChange" style="display: none;">
+            </div>
         </div>
     </form>
 </div>
@@ -84,5 +89,40 @@
         checkUnload = false;
         $("submit").submit();
     });
+
 </script>
+
+{% if filename %}
+<script type="text/javascript">
+    $('[href="{{ file_url }}"]').html("{{ filename }}");
+    $('#upload_files-clear_id').css({opacity:'100', position:'relative', 'pointer-events':'auto'})
+
+    $("#id_upload_files").change(function() {
+        if ($('#id_upload_files').get(0).files.length == 1) {  
+            $(".col-sm-12").contents().get(0).nodeValue = '[첨부파일 변경 시 기존 파일은 삭제됩니다.]'            
+            $('#upload_files-clear_id').attr("checked", false)
+            $('#upload_files-clear_id').prev().hide()
+            $('#upload_files-clear_id').next().hide()
+            $('#upload_files-clear_id').hide()            
+        }        
+    });
+    
+    $('#upload_files-clear_id').on('click', function(){
+        if($(this).prop('checked')){
+            $('#id_upload_files').hide()
+            document.getElementById('id_upload_files').previousSibling.nodeValue = '[업로드 된 첨부파일을 삭제합니다.]'
+        } else{
+            $('#id_upload_files').show()
+            document.getElementById('id_upload_files').previousSibling.nodeValue = '변경: '
+        }
+    });
+
+    $('#write').click( function() {
+        if($('#id_upload_files').get(0).files.length == 1){
+            $('#fileChangeCheck').attr("checked",true)
+        }
+    });
+
+</script>
+{% endif %}
 {% endblock %}

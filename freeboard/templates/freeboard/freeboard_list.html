@@ -1,53 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div style="display: inline-block; text-align:center;">
-    <form class="form-inline center" action="" method="GET">
-                    
-        <select style="width: 5.7rem; font-size: 0.85rem;" class="form-select form-select-sm" name="type">
-            <option value="all">전체</option>
-            <option value="title_content">제목+내용</option>
-            <option value="title">제목</option>
-            <option value="content">내용</option>
-            <option value="writer">작성자</option>
-        </select>
-    
-    
-        <input type="text" name="q" value="{{ q }}" class="form-control form-control-sm"
-            style="width: 13rem; font-size: 0.85rem;" placeholder="검색어를 입력해주세요.">
-    
-    
-        <!-- <button class="btn btn-md btn-outline-dark" type="submit">검색</button> -->
-        <button style="font-size: 0.85rem;" class="btn btn-sm btn-outline-dark" type="submit" id="search_btn">검색</button>
-                    
-               
-    </form>
-    {% if user.is_authenticated %}
-    <div>
-        <a href="{% url 'freeboard:freeboard_write' %}" class="btn btn-sm">글쓰기</a>
-    </div>
-    {% endif %}    
-    
+<div class="row" style="padding: 0px 10px 7px;">
+        <div class="col-md-8 text-lg-start">
+            <h5>Freeboard</h5>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="col-md-4 text-lg-end">
+            <a href="{% url 'freeboard:freeboard_write' %}" title="글쓰기">
+                <i style="font-size: 38px; color:#3892d4;" class="fas fa-plus-square"></i>
+            </a>
+        </div>
+        {% endif %}  
 </div>
 
 <div>
     <table class="custom-table">
         <thead>
             <tr class="text-center">                
-                <th>제목</th>
-                <th>작성자</th>
-                <th>등록일</th>
-                <th>조회수</th>
+                <th class="title">제목</th>
+                <th class="writer">작성자</th>
+                <th class="regdate">등록일</th>
+                <th class="hit">조회수</th>
             </tr>
             {% if q %}
             {% else %}
             {% if freeboard_fixed %}
             {% for freeboard in freeboard_fixed %}
             <tr class="text-center" style="background-color: #495057; color:whitesmoke;cursor: pointer;" onclick="location.href='/freeboard/{{ freeboard.id }}/'">                
-                <td>{{ freeboard.title|truncatechars:30 }}</td>
-                <td>{{ freeboard.writer }}</td>
-                <td>{{ freeboard.registered_date|date:'Y. m. d' }}</td>
-                <td>{{ freeboard.hits }}</td>
+                <td class="title">{{ freeboard.title|truncatechars:30 }}</td>
+                <td class="writer">{{ freeboard.writer.username }}</td>
+                <td class="regdate">{{ freeboard.registered_date|date:'Y. m. d' }}</td>
+                <td class="hit">{{ freeboard.hits }}</td>
             </tr>
             {% endfor %}
             {% endif %}
@@ -57,10 +41,10 @@
             {% if freeboard_list %}
             {% for freeboard in freeboard_list %}
             <tr class="text-center" style="cursor: pointer;" onclick="location.href='/freeboard/{{ freeboard.id }}/'">                
-                <td>{{ freeboard.title|truncatechars:20 }}</td>
-                <td>{{ freeboard.writer }}</td>
-                <td>{{ freeboard.registered_date|date:'Y. m. d' }}</td>
-                <td>{{ freeboard.hits }}</td>
+                <td class="title">{{ freeboard.title|truncatechars:20 }}</td>
+                <td class="writer">{{ freeboard.writer.username }}</td>
+                <td class="regdate">{{ freeboard.registered_date|date:'Y. m. d' }}</td>
+                <td class="hit">{{ freeboard.hits }}</td>
             </tr>
             {% endfor %}
             {% else %}
@@ -115,5 +99,20 @@
     </ul>
 {% endif %}
 </div>
-
+<div class="row">
+    <div class="col-md-8 offset-md-4">
+        <form style="display: flex;" action="" method="GET">  
+            <select style="width: 5.7rem; font-size: 0.85rem;" class="form-select form-select-sm" name="type">
+                <option value="all">전체</option>
+                <option value="title_content">제목+내용</option>
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="writer">작성자</option>
+            </select>   
+            <input type="text" name="q" value="{{ q }}" class="form-control form-control-sm"
+                style="width: 13rem; font-size: 0.85rem;" placeholder="검색어를 입력해주세요."> 
+            <button style="font-size: 0.85rem;" class="custom-btn" type="submit" id="search_btn">검색</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

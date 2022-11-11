@@ -25,3 +25,8 @@ class Freeboard(models.Model):
 
     class Meta:
         db_table = 'freeboard'
+
+    def delete(self, *args, **kargs):
+        if self.upload_files:
+            os.remove(os.path.join(settings.MEDIA_ROOT, self.upload_files.path))
+        super().delete(*args, **kargs)

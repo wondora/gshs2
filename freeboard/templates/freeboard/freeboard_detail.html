@@ -1,41 +1,45 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="card">
-    <!--제목,분류,작성일-->
-    <div class="card-header">
-        <strong>{{ freeboard.title }}</strong><span>[자유게시판]</span>
-        <span>{{ freeboard.registered_date|date:'Y.m.d.' }}</span>
-    </div>
-    <div class="card-body">
-        <!--작성자, 조회수-->
-        <div>
-            <span>작성자 : {{ freeboard.writer }}</span>
-            <span>조회수 : {{ freeboard.hits }}</span>
+<div style="max-width: 87%; margin:0 auto;">
+    <div class="row">
+        <div class="col-12 text-center" style="border-bottom: 1px solid #e44444; padding-bottom: 10px;">
+            <span style="font-size:1.3rem;font-weight:bold;">{{ freeboard.title }}</span>            
+        </div>
+        <div class="col-md-3" style="font-size: 0.85rem;padding: 15px 30px 0;">
+            <span style="font-size:0.85rem;">{{ freeboard.registered_date|date:'Y.m.d.' }}</span>
+        </div>
+            <!--작성자, 조회수-->        
+        <div class="col-md-5 offset-md-4 text-lg-end" style="font-size: 0.85rem;padding: 15px 30px 0;">
+            <span>{{ freeboard.writer.username }}&nbsp;|&nbsp;조회수 : {{ freeboard.hits }}</span>
         </div>
         <!--내용-->
         {% if freeboard.upload_files %}
-        <div class="col-12 text-right">
-            <span>첨부파일 :&nbsp;</span>
-            <a href="{% url 'freeboard:freeboard_download' freeboard.id %}" >{{ freeboard.filename|truncatechars:25 }}</a>
+        <div class="col-md-5 offset-md-7 text-lg-end" style="font-size: 0.85rem; padding: 0 30px;">
+            <span>첨부파일 :&nbsp;
+                <a href="{% url 'freeboard:freeboard_download' freeboard.id %}" >{{ freeboard.filename|truncatechars:25 }}</a>
+            </span>
         </div>
-        {% endif %}
-        <div>
+        {% endif %}                
+        
+        <div style="padding: 30px 30px 10px; font-size: 0.95rem;min-height: 410px;">
             {{ freeboard.content | safe }}
+        </div> 
+    </div> 
+
+    <div class="row" style="border-top: 1px solid #cfcfcf; padding-top: 20px;">
+        <div class="col-md-12  text-lg-end">
+            {% if freeboard_auth %}
+            <button class="custom-btn" id="detail_btn" onclick="location.href='/freeboard/{{ freeboard.id }}/edit/'">수정</button>
+            <button class="custom-btn" id="detail_btn" data-toggle="modal" data-target="#delete_modal">삭제</button>
+            <!-- <button class="btn btn-md btn-dark" onclick="location.href='/freeboard/{{ freeboard.id }}/delete/'">삭제</button> -->
+            <button class="custom-btn" id="detail_btn" onclick="location.href='/freeboard/'">목록으로</button>
+            {% else %}
+            <button class="custom-btn" id="detail_btn" onclick="location.href='/freeboard/'">목록으로</button>
+            {% endif %}
         </div>
     </div>
 </div>
-
-<div>
-    <button onclick="location.href='/freeboard/'">목록으로</button>
-    <div>
-        {% if freeboard_auth%}
-        <button class="btn btn-sm" onclick="location.href='/freeboard/{{ freeboard.id }}/edit/'">수정</button>
-        <button class="btn btn-sm" data-toggle="modal" data-target="#delete_modal">삭제</button>
-        {% endif %}
-    </div>
-</div>
-
 <!-- Modal -->
 <div id="delete_modal" aria-hidden="true" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
