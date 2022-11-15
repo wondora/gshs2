@@ -1,17 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="row" style="padding: 0px 10px 7px;">
-        <div class="col-md-8 text-lg-start">
-            <h5>Freeboard</h5>
+<div class="row" style="padding: 0px 10px 7px;">        
+    <div class="col-4 text-lg-start">
+        <div class="dropdown" style="padding-top:3px; padding-right:8px;">
+            <a class="dropdown-toggle mr-2" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false" style="font-size: 0.97rem; font-weight: bold; color:#495057;">
+                분류별로 보기</a>
+            <div class="dropdown-menu dropdown-menu-right category-list" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'freeboard:all_list' %}">전체보기</a>
+                <a class="dropdown-item" href="{% url 'freeboard:freeboard_list' %}">자유만 보기</a>
+                <a class="dropdown-item" href="{% url 'freeboard:gshs_list' %}">GHSH만 보기</a>
+                <a class="dropdown-item" href="{% url 'freeboard:linux_list' %}">리눅스만 보기</a>
+                <a class="dropdown-item" href="{% url 'freeboard:window_list' %}">윈도우만 보기</a>
+            </div>
         </div>
-        {% if user.is_authenticated %}
-        <div class="col-md-4 text-lg-end">
-            <a href="{% url 'freeboard:freeboard_write' %}" title="글쓰기">
-                <i style="font-size: 38px; color:#3892d4;" class="fas fa-plus-square"></i>
-            </a>
-        </div>
-        {% endif %}  
+    </div>
+    {% if user.is_authenticated %}
+    <div class="col-8 text-lg-end">
+        <span style="font-size: 1rem; font-weight: bold">FREEBOARD</span >
+    </div>
+    {% endif %}  
 </div>
 
 <div>
@@ -23,8 +32,6 @@
                 <th class="regdate">등록일</th>
                 <th class="hit">조회수</th>
             </tr>
-            {% if q %}
-            {% else %}
             {% if freeboard_fixed %}
             {% for freeboard in freeboard_fixed %}
             <tr class="text-center" style="background-color: #495057; color:whitesmoke;cursor: pointer;" onclick="location.href='/freeboard/{{ freeboard.id }}/'">                
@@ -35,15 +42,32 @@
             </tr>
             {% endfor %}
             {% endif %}
-            {% endif %}
         </thead>
         <tbody>
             {% if freeboard_list %}
             {% for freeboard in freeboard_list %}
             <tr class="text-center" style="cursor: pointer;" onclick="location.href='/freeboard/{{ freeboard.id }}/'">                
-                <td class="title">{{ freeboard.title|truncatechars:20 }}</td>
+                <td class="title" style="text-align: left;">
+                {% if freeboard.category == '자유' %}
+                <span class="badge badge-secondary">{{ freeboard.category }}</span>&nbsp;
+                {% elif freeboard.category == 'GSHS' %}
+                <span class="badge badge-dark">{{ freeboard.category }}</span>&nbsp;
+                {% elif freeboard.category == 'LINUX' %}
+                <span class="badge badge-info">{{ freeboard.category }}</span>&nbsp;
+                {% elif freeboard.category == 'WINDOW' %}
+                <span class="badge badge-warning">{{ freeboard.category }}</span>&nbsp;
+                {% endif %}    
+                    {{ freeboard.title|truncatechars:20 }}
+                {% if freeboard.comments %}
+                    &nbsp;<span style="color:gray;">[{{ freeboard.comments }}]</span>
+                {% endif %}
+                </td>
                 <td class="writer">{{ freeboard.writer.username }}</td>
-                <td class="regdate">{{ freeboard.registered_date|date:'Y. m. d' }}</td>
+                {% if freeboard.created_string == False %}
+                    <td class="regdate">{{ freeboard.registered_date|date:'m월 d일' }}</td>
+                    {% else %}
+                    <td class="regdate">{{ freeboard.created_string }}</td>
+                {% endif %}
                 <td class="hit">{{ freeboard.hits }}</td>
             </tr>
             {% endfor %}
@@ -66,41 +90,50 @@
     </table>
 </div>
 
-<div>
-{% if is_paginated %}
-    <ul class="pagination  justify-content-center">
-        {% if page_obj.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}"
-                tabindex="-1">이전</a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1">이전</a>
-        </li>
-        {% endif %}
+<div class="row">
+    <div class="offset-2 col-8" >
+    {% if is_paginated %}
+        <ul class="pagination  justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page_obj.previous_page_number }}"
+                    tabindex="-1">이전</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">이전</a>
+            </li>
+            {% endif %}
 
-        {% for page in page_range %}
-        <li class="page-item {% if page == page_obj.number %} active {% endif %}">
-            <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">{{ page }}</a>
-        </li>
-        {% endfor %}
+            {% for page in page_range %}
+            <li class="page-item {% if page == page_obj.number %} active {% endif %}">
+                <a class="page-link" href="?type={{ type }}&q={{ q }}&page={{ page }}">{{ page }}</a>
+            </li>
+            {% endfor %}
 
-        {% if page_obj.has_next %}
-        <li class="page-item">
-            <a class="page-link"
-                href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" href="#">다음</a>
-        </li>
-        {% endif %}
-    </ul>
-{% endif %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link"
+                    href="?type={{ type }}&q={{ q }}&page={{ page_obj.next_page_number }}">다음</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#">다음</a>
+            </li>
+            {% endif %}
+        </ul>
+    {% endif %}
+    </div>
+    {% if user.is_authenticated %}
+        <div class="col-2 text-lg-end">
+            <a href="{% url 'freeboard:freeboard_write' %}" title="글쓰기">
+                <i style="font-size: 38px; color:#3892d4;" class="fas fa-plus-square"></i>
+            </a>
+        </div>
+    {% endif %}    
 </div>
 <div class="row">
-    <div class="col-md-8 offset-md-4">
+    <div class="col-6 offset-md-4">
         <form style="display: flex;" action="" method="GET">  
             <select style="width: 5.7rem; font-size: 0.85rem;" class="form-select form-select-sm" name="type">
                 <option value="all">전체</option>
@@ -111,8 +144,7 @@
             </select>   
             <input type="text" name="q" value="{{ q }}" class="form-control form-control-sm"
                 style="width: 13rem; font-size: 0.85rem;" placeholder="검색어를 입력해주세요."> 
-            <button style="font-size: 0.85rem;" class="custom-btn" type="submit" id="search_btn">검색</button>
+            <button style="font-size: 0.85rem;" class="custom-btn custom-btn-secondary" type="submit" id="search_btn">검색</button>
         </form>
     </div>
-</div>
 {% endblock %}

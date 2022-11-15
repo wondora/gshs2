@@ -15,6 +15,12 @@ class FreeboardWriteForm(forms.ModelForm):
         self.fields['content'].widget.attrs.update({
             'style': 'background-color: #eee;padding: 30px;'
         })
+        self.fields['category'].label = '분류'
+        self.fields['category'].widget.attrs.update({
+            'class': 'form-select form-select-sm',
+            'style': "width: 8%; float:left; margin-right:1%; background-color:#eee; margin-bottom: 10px;"
+        })
+
     class Meta:
         model = Freeboard
-        fields = ['title', 'content', 'top_fixed', 'upload_files']
+        fields = ['category','title', 'content', 'top_fixed', 'upload_files']

@@ -27,6 +27,10 @@ def InfogigiList(request, gigigubun):
 
     if gigigubun == 'notebook' or gigigubun == 'desktop':            
         infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, user__is_active =True, jaego=False, notuse=False).order_by('-buyproduct__buydate')
+    elif gigigubun == 'jaego':
+        infogigis = Gigiinfo.objects.all().filter(jaego=True, notuse=False).order_by('-buyproduct__buydate')
+    elif gigigubun == 'notuse':    
+        infogigis = Gigiinfo.objects.all().filter(jaego=False, notuse=True).order_by('-buyproduct__buydate')
     else:
         infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, jaego=False, notuse=False).order_by('-buyproduct__buydate')
            

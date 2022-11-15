@@ -44,6 +44,7 @@
                 <div class="form-group">
                     <div">
                         <!-- <label for="form_title" class="control-label">{{ form.title.label }}</label> -->
+                        {{ form.category }}
                         {{ form.title }}
                     </div>
                 </div>
@@ -67,12 +68,12 @@
             <div class="col-12 text-lg-end">
                 <label>
                     {{ form.top_fixed }}
-                    <span style="padding-bottom: 25px; color:#495057; font-weight: bold;">상단에 표시하기</span>
+                    <span style="padding-bottom: 25px; padding-right: 10px; color:#495057; font-weight: bold;">상단에 표시하기</span>
                 </label>
                 {% if edit %}
-                <button type="submit" id="write" class="custom-btn">{{ edit }}</button>
+                <button type="submit" id="write" class="custom-btn custom-btn-secondary">{{ edit }}</button>
                 {% else %}
-                <button type="submit" id="write" class="custom-btn">작성하기</button>
+                <button type="submit" id="write" class="custom-btn custom-btn-secondary">작성하기</button>
                 {% endif %}
                 <input type="checkbox" id="fileChangeCheck" name="fileChange" style="display: none;">
             </div>

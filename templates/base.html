@@ -44,11 +44,11 @@
                     <li class="nav-item mx-0 mx-lg-1 dropdown">
                         <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">JOBS</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'freeboard:freeboard_list' %}">freeboard</a></li>
+                            <li><a class="dropdown-item" href="{% url 'freeboard:all_list' %}">freeboard</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">stock</a></li>
+                            <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='jaego' %}">stock</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">unusable</a></li>                        
+                            <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='notuse' %}">unusable</a></li>                        
                         </ul>
                     </li>
                     <li class="nav-item mx-0 mx-lg-1 dropdown">
@@ -62,12 +62,11 @@
                         </ul>
                     </li>
                     {% if user.is_authenticated %}
-                        <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'login:logout' %}"><i class="fa-solid fa-power-off"></i></a></li>
+                        <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'login:logout' %}" title="{{ request.user.username }}님 반갑습니다."><i class="fa-solid fa-power-off"></i></a></li>
                     {% else %}
-                        <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'login:login' %}"><i class="fa-regular fa-user"></i></a></li>
-                    {% endif %}
-                    
-                    <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-3 px-0 px-lg-3 rounded"  href="{% url 'login:csregister' %}">가입</a></li>
+                        <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'login:login' %}" title="로그인 하세요."><i class="fa-regular fa-user"></i></a></li>
+                    {% endif %}                    
+                    <li class="nav-item mx-0 mx-lg-1 ps-5" style="display: none;"><a class="nav-link py-3 px-0 px-lg-3 rounded"  href="{% url 'login:csregister' %}">가입</a></li>
                 </ul>
             </div>
         </div>

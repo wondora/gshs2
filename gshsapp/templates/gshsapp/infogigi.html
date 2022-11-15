@@ -28,14 +28,14 @@
         <th scope="col">#</th>
         <th scope="col">구매일</th>
         <th scope="col">구분</th>
-        {% if gigigubun == 'notebook' or gigigubun == 'desktop' %}
+        {% if gigigubun != 'printer' %}
           <th scope="col">성명</th>
         {% endif %}  
         <th scope="col">위치</th>
         <th scope="col">제조사</th>
         <th scope="col">모델명</th>
         <th scope="col">IP</th>
-        {% if gigigubun == 'printer' %}
+        {% if gigigubun == 'printer' or gigigubun == 'notuse' or gigigubun == 'jaego' %}
           <th scope="col">색상</th>
         {% endif %}
         <th scope="col">비고</th>    
@@ -48,28 +48,35 @@
         <th scope="row">{{ forloop.counter }}</th>
         <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
         <td>{{ gigi.buyproduct.gubun }}</td>
-        {% if gigigubun == 'notebook' or gigigubun == 'desktop' %}
+        {% if gigigubun != 'printer' %}
           <td>{{ gigi.user.name }}</td>
         {% endif %}        
         <td>{{ gigi.location }}</td>        
         <td>{{ gigi.buyproduct.company }}</td>
         <td>{{ gigi.buyproduct.model }}</td>
         <td>{{ gigi.ip }}</td>
-        {% if gigigubun == 'printer' %}
+        {% if gigigubun == 'printer' or gigigubun == 'notuse' or gigigubun == 'jaego' %}
           <td>{{ gigi.color }}</td>
         {% endif %}
         <td>{{ gigi.bigo }}</td>
+        
         <td>
-          <a href="{% url 'gshsapp:gigi_update' gigi.id %} ">
-            <span class="gitamenu badge bg-secondary">수정</span>
-          </a>
-          <a href="{% url 'gshsapp:gigi_change' gigi.id %} ">
-            <span class="gitamenu badge bg-secondary">교체</span>
-          </a>
-          <a href="{% url 'gshsapp:gigi_suri' gigi.id %} ">
-            <span class="gitamenu badge bg-secondary">수리</span>
-          </a>   
-          <span class="gigidelete gitamenu badge bg-danger" data-url="{% url 'gshsapp:gigi_delete' gigi.id %}">삭제</span>
+          {% if gigigubun == 'notuse'%}
+            <span class="gitamenu badge bg-danger">불용기기</span>
+          {% elif gigigubun == 'jaego'%}
+            <span class="gitamenu badge bg-success">재고기기</span>
+          {% else %}
+            <a href="{% url 'gshsapp:gigi_update' gigi.id %} ">
+              <span class="gitamenu badge bg-secondary">수정</span>
+            </a>
+            <a href="{% url 'gshsapp:gigi_change' gigi.id %} ">
+              <span class="gitamenu badge bg-secondary">교체</span>
+            </a>
+            <a href="{% url 'gshsapp:gigi_suri' gigi.id %} ">
+              <span class="gitamenu badge bg-secondary">수리</span>
+            </a>   
+            <span class="gigidelete gitamenu badge bg-danger" data-url="{% url 'gshsapp:gigi_delete' gigi.id %}">삭제</span>
+          {% endif %}
         </td>
       </tr>
       {% endfor %}

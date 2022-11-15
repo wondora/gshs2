@@ -2,7 +2,7 @@ import urllib
 from django.views.generic import ListView
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from .models import Freeboard
+from .models import Freeboard, Comment
 from django.contrib import messages
 from django.db.models import Q
 from login.decorators import *
@@ -10,9 +10,12 @@ from .forms import FreeboardWriteForm
 import os
 from django.http import HttpResponse, Http404
 import mimetypes
+import json
+from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 
 
-class FreeboardListView(ListView):
+class AllListView(ListView):
     model = Freeboard
     paginate_by = 10
     template_name = 'freeboard/freeboard_list.html'  #DEFAULT : <app_label>/<model_name>_list.html
@@ -71,10 +74,118 @@ class FreeboardListView(ListView):
         return freeboard_list
 
 
+# 카테고리 자유만 보기
+class FreeListView(AllListView):
+    def get_queryset(self):
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '')
+        freeboard_list = Freeboard.objects.filter(category='자유').order_by('-id')
+        
+        if search_keyword :
+            if len(search_keyword) > 1 :
+                if search_type == 'all':
+                    search_freeboard_list = freeboard_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
+                elif search_type == 'title_content':
+                    search_freeboard_list = freeboard_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword))
+                elif search_type == 'title':
+                    search_freeboard_list = freeboard_list.filter(title__icontains=search_keyword)    
+                elif search_type == 'content':
+                    search_freeboard_list = freeboard_list.filter(content__icontains=search_keyword)    
+                elif search_type == 'writer':
+                    search_freeboard_list = freeboard_list.filter(writer__user_id__icontains=search_keyword)
+
+                return search_freeboard_list
+            else:
+                messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
+        return freeboard_list
+
+
+# 카테고리 GHSH만 보기
+class GshsListView(AllListView):
+    def get_queryset(self):
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '')
+        freeboard_list = Freeboard.objects.filter(category='GSHS').order_by('-id')
+
+        if search_keyword :
+            if len(search_keyword) > 1 :
+                if search_type == 'all':
+                    search_freeboard_list = freeboard_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
+                elif search_type == 'title_content':
+                    search_freeboard_list = freeboard_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword))
+                elif search_type == 'title':
+                    search_freeboard_list = freeboard_list.filter(title__icontains=search_keyword)    
+                elif search_type == 'content':
+                    search_freeboard_list = freeboard_list.filter(content__icontains=search_keyword)    
+                elif search_type == 'writer':
+                    search_freeboard_list = freeboard_list.filter(writer__user_id__icontains=search_keyword)
+        
+                return search_freeboard_list
+            else:
+                messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
+        return freeboard_list
+
+
+# 카테고리 LINUX만 보기
+class LinuxListView(AllListView):
+    def get_queryset(self):
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '')
+        freeboard_list = Freeboard.objects.filter(category='LINUX').order_by('-id')
+
+        if search_keyword :
+            if len(search_keyword) > 1 :
+                if search_type == 'all':
+                    search_freeboard_list = freeboard_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
+                elif search_type == 'title_content':
+                    search_freeboard_list = freeboard_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword))
+                elif search_type == 'title':
+                    search_freeboard_list = freeboard_list.filter(title__icontains=search_keyword)    
+                elif search_type == 'content':
+                    search_freeboard_list = freeboard_list.filter(content__icontains=search_keyword)    
+                elif search_type == 'writer':
+                    search_freeboard_list = freeboard_list.filter(writer__user_id__icontains=search_keyword)
+                    
+                return search_freeboard_list
+            else:
+                messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
+        return freeboard_list
+
+
+# 카테고리 WINDOW만 보기
+class WindowListView(AllListView):
+    def get_queryset(self):
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '')
+        freeboard_list = Freeboard.objects.filter(category='WINDOW').order_by('-id')
+
+        if search_keyword :
+            if len(search_keyword) > 1 :
+                if search_type == 'all':
+                    search_freeboard_list = freeboard_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
+                elif search_type == 'title_content':
+                    search_freeboard_list = freeboard_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword))
+                elif search_type == 'title':
+                    search_freeboard_list = freeboard_list.filter(title__icontains=search_keyword)    
+                elif search_type == 'content':
+                    search_freeboard_list = freeboard_list.filter(content__icontains=search_keyword)    
+                elif search_type == 'writer':
+                    search_freeboard_list = freeboard_list.filter(writer__user_id__icontains=search_keyword)
+                    
+                return search_freeboard_list
+            else:
+                messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
+        return freeboard_list
+
+
 def freeboard_detail_view(request, pk):
     freeboard = get_object_or_404(Freeboard, pk=pk)   
     session_cookie = request.session.get('username', False)
     cookie_name = F'freeboard_hits:{session_cookie}'
+    comment = Comment.objects.filter(post=pk).order_by('created')
+    comment_count = comment.count()
+    comment_count = comment.exclude(deleted=True).count()
+    reply = comment.exclude(reply='0')
 
     if request.user == freeboard.writer:
         freeboard_auth = True
@@ -84,6 +195,9 @@ def freeboard_detail_view(request, pk):
     context = {
         'freeboard': freeboard,
         'freeboard_auth': freeboard_auth,
+        'comments': comment,
+        'comment_count': comment_count,
+        'replys': reply,
     }
 
     response = render(request, 'freeboard/freeboard_detail.html', context)
@@ -120,7 +234,7 @@ def freeboard_write_view(request):
                 if 'upload_files' in request.FILES.keys():
                     freeboard.filename = request.FILES['upload_files'].name                    
             freeboard.save()
-            return redirect('freeboard:freeboard_list')
+            return redirect('freeboard:all_list')
     else:
         form = FreeboardWriteForm()
 
@@ -191,3 +305,43 @@ def freeboard_download_view(request, pk):
             response['Content-Disposition'] = 'attachment;filename*=UTF-8\'\'%s' % quote_file_url
             return response
         raise Http404
+
+
+@login_message_required
+def comment_write_view(request, pk):
+    post = get_object_or_404(Freeboard, id=pk)
+    writer = request.POST.get('writer')
+    content = request.POST.get('content')
+    if content:
+        comment = Comment.objects.create(post=post, content=content, writer=request.user)
+        comment_count = Comment.objects.filter(post=pk).exclude(deleted=True).count()
+        post.comments = comment_count
+        post.save()
+        data = {
+            'writer': writer,
+            'content': content,
+            'created': '방금 전',
+            'comment_id': comment.id
+        }
+        if request.user == post.writer:
+            data['self_comment'] = '(글쓴이)'
+        
+        return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")
+
+
+@login_message_required
+def comment_delete_view(request, pk):
+    post = get_object_or_404(Freeboard, id=pk)
+    comment_id = request.POST.get('comment_id')
+    target_comment = Comment.objects.get(pk = comment_id)
+
+    if request.user == target_comment.writer:
+        target_comment.deleted = True
+        target_comment.save()
+        comment_count = Comment.objects.filter(post=pk).exclude(deleted=True).count()
+        post.comments = comment_count
+        post.save()
+        data = {
+            'comment_id': comment_id,
+        }
+        return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = "application/json")

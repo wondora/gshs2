@@ -272,9 +272,8 @@ margin-right: 5px;
 margin-right: 0;
 }
 
-.custom-btn {
-    background-color: rgb(75, 75, 75);
-    border: 1px solid rgb(57, 57, 57);
+.custom-btn {    
+    border: 0.5px solid rgb(57, 57, 57);
     letter-spacing:2px;
     color: #fff;
     font-size: 0.9rem;
@@ -284,8 +283,53 @@ margin-right: 0;
 }
 
 .custom-btn:hover {
-    background-color:  rgb(217, 217, 217);
+    background-color:  rgb(235, 234, 234);
     border: 1px solid rgb(57, 57, 57);
     color:rgb(75, 75, 75);
     transition: all 0.4s;  
+}
+
+.custom-btn-yellow {
+    background-color:#ffc107;
+}
+
+.custom-btn-success {
+    background-color: #46c188;
+}
+
+.custom-btn-secondary {
+    background-color: #6c757d;
+}
+
+#hide_more_button, #show_more_button {
+    font-size: 0.9rem;
+}
+
+.category-list > a {
+    font-size: 0.85rem;
+}
+
+.badge-secondary {
+    color: #fff;
+    background-color: #6c757d;
+}
+
+.badge-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
+
+.badge-info {
+    color: #fff;
+    background-color: #17a2b8;
+}
+
+.badge-warning {
+    color: #212529;
+    background-color: #ffc107;
+}
+
+.badge-dark {
+    color: #fff;
+    background-color: #343a40;
 }
