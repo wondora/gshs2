@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'gshsapp',
     'login',
     'freeboard',
+    'memo',
     'django.contrib.humanize',
 ]
 
@@ -140,7 +141,7 @@ USE_TZ = False
 
 LOGIN_URL = 'login/'          # 로그인 URL
 # LOGIN_REDIRECT_URL = '/'  # 로그인 후 URL
-LOGOUT_REDIRECT_URL = '/'            # 로그아웃 후 URL
+# LOGOUT_REDIRECT_URL = '/'            # 로그아웃 후 URL
 AUTH_USER_MODEL = 'login.User'# 커스텀 인증 모델
 
 # Static files (CSS, JavaScript, Images)

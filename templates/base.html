@@ -19,40 +19,42 @@
 
     <link rel="stylesheet" href="{% static 'css/gshs.css' %}" type="text/css">
 </head>
-<body>    
+<body> 
     <!-- Navigation-->
-    <nav class="navbar navbar-dark navbar-expand-lg shadow fixed-top" id="mainNav">
+    <nav class="navbar navbar-dark navbar-expand-lg shadow fixed-top py-3" id="mainNav">
         <div class="container">
-                <i class="fa-solid fa-explosion"></i><a class="navbar-brand" href="{% url 'gshsapp:home' %}">Hello GSHS</a>
+                <i class="fa-solid fa-explosion"></i><a class="navbar-brand" href="{% url 'freeboard:all_list' %}">Hello GSHS</a>
             <button class="navbar-toggler text-uppercase font-weight-bold bg-success text-white rounded" type="button" data-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 Menu
                 <i class="fas fa-bars"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item mx-0 mx-lg-1 dropdown">
-                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">INFODS</a>
+                    <li class="nav-item mx-0 dropdown">
+                        <a class="nav-link dropdown-toggle py-2 px-0 px-lg-3 rounded" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">BM</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'memo:memo' %}">todo</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'freeboard:all_list' %}">freeboard</a></li>                            
+                        </ul>
+                    </li>
+                    <li class="nav-item mx-0 dropdown">
+                        <a class="nav-link dropdown-toggle py-2 px-0 px-lg-3 rounded" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">INFODS</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='notebook' %}">notebook</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='desktop' %}">desktop</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='printer' %}">printer</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'gshsapp:gigi_buseo' buseogubun='교육정보부'%}">BUSEO</a></li>
-                    <li class="nav-item mx-0 mx-lg-1 dropdown">
-                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">JOBS</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'freeboard:all_list' %}">freeboard</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='jaego' %}">stock</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='notuse' %}">unusable</a></li>                        
+                            <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='notuse' %}">unusable</a></li> 
                         </ul>
                     </li>
-                    <li class="nav-item mx-0 mx-lg-1 dropdown">
-                        <a class="nav-link dropdown-toggle py-3 px-0 px-lg-3 rounded" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">EXCEL</a>
+                    <li class="nav-item mx-0"><a class="nav-link py-2 px-0 px-lg-3 rounded" href="{% url 'gshsapp:gigi_buseo' buseogubun='교육정보부'%}">BUSEO</a></li>
+                    <li class="nav-item mx-0 dropdown">
+                        <a class="nav-link dropdown-toggle py-2 px-0 px-lg-3 rounded" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">EXCEL</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'gshsapp:excelExport' gubun='notebook' %}">notebook</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -62,11 +64,11 @@
                         </ul>
                     </li>
                     {% if user.is_authenticated %}
-                        <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'login:logout' %}" title="{{ request.user.username }}님 반갑습니다."><i class="fa-solid fa-power-off"></i></a></li>
+                        <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-2 px-0 px-lg-3 rounded" href="{% url 'login:logout' %}" title="{{ request.user.username }}님 반갑습니다."><i class="fa-solid fa-power-off"></i></a></li>
                     {% else %}
-                        <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{% url 'login:login' %}" title="로그인 하세요."><i class="fa-regular fa-user"></i></a></li>
+                        <li class="nav-item mx-0 mx-lg-1 ps-5"><a class="nav-link py-2 px-0 px-lg-3 rounded" href="{% url 'login:login' %}" title="로그인 하세요."><i class="fa-regular fa-user"></i></a></li>
                     {% endif %}                    
-                    <li class="nav-item mx-0 mx-lg-1 ps-5" style="display: none;"><a class="nav-link py-3 px-0 px-lg-3 rounded"  href="{% url 'login:csregister' %}">가입</a></li>
+                    <li class="nav-item mx-0 mx-lg-1 ps-5" style="display: none;"><a class="nav-link py-2 px-0 px-lg-3 rounded"  href="{% url 'login:csregister' %}">가입</a></li>
                 </ul>
             </div>
         </div>

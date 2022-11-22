@@ -23,6 +23,10 @@ a {
     text-decoration: none;
 }
 
+ul.navbar-nav li.dropdown:hover > ul.dropdown-menu { 
+    display:block; margin:0; 
+}
+
 nav {
     background-color: rgb(251, 251, 251);
 }

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row">
+    <div class="offset-1 col-md-9 mb-2">
+        <h5>&nbsp;M E M O </h5>
+    </div>
+    <div class="offset-1 col-md-9">
+        <form action="{% url 'memo:memo' %}" method="post">
+            {% csrf_token %}
+            <div class="input-group input-group-sm mb-3">
+                <input type="text" name="q" class="form-control" placeholder="찾아 주세요.">
+                <div class="input-group-append" id="button-addon4">
+                <button type="submit" class="btn btn-outline-secondary btn-sm">찾기</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-2" style="text-align: left; padding-left: 0;">
+        <span style="cursor: pointer;" data-toggle="modal" data-target="#memo_modal"><i style="font-size: 38px; color: #6c757d" class="fas fa-plus-square"></i></span>
+    </div>
+    <div class="offset-1 col-md-10">
+        <table class="table table-responsive-sm">
+            <!-- <thead>
+              <tr>
+                <th scope="col">memo</th>
+                <th scope="col" style="width: 20%; text-align: center;">action</th>
+              </tr>
+            </thead> -->
+            <tbody>
+              {% for memo in memos %}  
+              <tr>
+                <td>{{ memo.title }}</td>
+                <td style="width: 20%; text-align: center;">
+                    <a href="{% url 'memo:delete_memo' memo.id %}" style="font-size: 0.7rem; padding: 4px 8px;" type="button" class="btn btn-outline-danger">삭제</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="memo_modal" aria-hidden="true" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">메모하기</h6>
+                <button type="button" class="close btn btn-outline-secondary btn-sm" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'memo:create_memo' %}" method="POST">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <input class="form-control" type="text" name="memo" id="memo">                    
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">작성하기</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal">취소하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+$('#memo_modal').on('shown.bs.modal', function(){
+    $("#memo").focus();	
+});
+</script>
+{% endblock %}

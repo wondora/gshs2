@@ -15,13 +15,13 @@ def login_view(request):
         if user is not None:
             request.session['username'] = username
             login(request, user)
-            return redirect("gshsapp:home")
+            return redirect("freeboard:all_list")
 
     return render(request, "login/login.html")
 
 def logout_view(request):
     logout(request)
-    return redirect("login:login")
+    return redirect("freeboard:all_list")
 
 
 class CsRegisterView(CreateView):

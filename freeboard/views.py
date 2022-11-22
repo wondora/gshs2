@@ -11,7 +11,6 @@ import os
 from django.http import HttpResponse, Http404
 import mimetypes
 import json
-from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 
 
