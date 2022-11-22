@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="row">
-    <div class="offset-1 col-md-9 mb-2">
+    <div class="offset-5 col-md-6 mb-2">
         <h5>&nbsp;M E M O </h5>
     </div>
     <div class="offset-1 col-md-9">
@@ -16,7 +16,7 @@
             </div>
         </form>
     </div>
-    <div class="col-md-2" style="text-align: left; padding-left: 0;">
+    <div class="col-md-1" style="text-align: left; padding-left: 0;">
         <span style="cursor: pointer;" data-toggle="modal" data-target="#memo_modal"><i style="font-size: 38px; color: #6c757d" class="fas fa-plus-square"></i></span>
     </div>
     <div class="offset-1 col-md-10">
@@ -31,8 +31,8 @@
               {% for memo in memos %}  
               <tr>
                 <td>{{ memo.title }}</td>
-                <td style="width: 20%; text-align: center;">
-                    <a href="{% url 'memo:delete_memo' memo.id %}" style="font-size: 0.7rem; padding: 4px 8px;" type="button" class="btn btn-outline-danger">삭제</a>
+                <td style="width: 20%; text-align: right;">
+                    <a href="#" data-toggle="modal" data-id="{{memo.id}}" data-target="#DelModal" style="font-size: 0.7rem; padding: 4px 8px;" type="button" class="del-memo btn btn-outline-danger">삭제</a>
                 </td>
               </tr>
               {% endfor %}
@@ -68,5 +68,42 @@
 $('#memo_modal').on('shown.bs.modal', function(){
     $("#memo").focus();	
 });
+</script>
+
+<!--- 삭제 모달 -->
+<div id="DelModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">삭제하기</h5>
+          <button type="button" class="close btn btn-outline-secondary btn-sm" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+       <div class="modal-body">
+          <p>진짜로 내용을 삭제하시겠습니까?</p>
+          <input type="hidden" name="hiddenValue" id="hiddenValue" value="" />
+       </div>       
+       <div class="modal-footer">
+          <button onclick="DelModal()" type="button" class="btn btn-warning btn-sm">삭제하기</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">취소하기</button>
+       </div>
+      </div>
+    </div>
+</div>
+
+<script>
+$(function () {
+    $(".del-memo").click(function () {
+        var memo_id = $(this).data('id');
+        $(".modal-body #hiddenValue").val(memo_id);
+    })
+});    
+
+function DelModal() {
+    let memo_id = document.getElementById("hiddenValue").value;
+    location.replace("/memo/delete/"+ memo_id);
+}
+ 
 </script>
 {% endblock %}
