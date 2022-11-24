@@ -337,3 +337,11 @@ margin-right: 0;
     color: #fff;
     background-color: #343a40;
 }
+
+a.buseo-gubun {
+    color: #343a40;
+}
+
+a.buseo-gubun:hover {
+    color: whitesmoke;
+}

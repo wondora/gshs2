@@ -10,9 +10,9 @@
               <h6>부서별</h6>  
             </div>
             <div class="card-body">
-                <ul>
+                <ul style="margin-bottom: 0;">
                 {% for buseo in buseos %}
-                    <li>{{ buseo.hosil }}</li>
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' buseo.hosil %}"> {{ buseo.hosil }}</a></li>
                 {% endfor %}
                 </ul>            
             </div>
