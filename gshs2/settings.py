@@ -54,7 +54,7 @@ SECRET_KEY = read_secret('DJANGO_SECRET_KEY')
 
 DEBUG = False  # True면 로컬(개발)환경
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
