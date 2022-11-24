@@ -97,7 +97,7 @@ DATABASES = {
         'NAME': 'django',                  
         'USER': 'wondora',                          
         'PASSWORD': '3895',                  
-        'HOST': 'gshs_mariadb',                     
+        'HOST': 'mariadb',                     
         'PORT': '3306',                          
     }
 }
