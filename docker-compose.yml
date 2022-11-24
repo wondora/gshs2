@@ -14,7 +14,7 @@ services:
       - 80:80
 
   django-gunicorn:
-    image: gshs_django_image:2
+    image: gshs_django_image:1
     networks:
       - network
     volumes:
@@ -35,7 +35,7 @@ services:
       - MYSQL_ROOT_PASSWORD
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD
-      MYSQL_DATABASE: djnago
+      MYSQL_DATABASE: django
       MYSQL_USER: wondora
       MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
 
