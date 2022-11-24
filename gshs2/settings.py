@@ -111,7 +111,7 @@ DATABASES = {
     'default' : {
         'ENGINE': 'django.db.backends.mysql',    
         'NAME': 'django',                  
-        'USER': 'wondora',                          
+        'USER': 'root',                          
         'PASSWORD': '3895',                  
         'HOST': 'mariadb',                     
         'PORT': '3306',                          

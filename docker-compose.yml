@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   nginx:
-    image: nginx:1.20
+    image: nginx:1.19.5
     networks:
       - network
     depends_on:
@@ -14,7 +14,7 @@ services:
       - 80:80
 
   django-gunicorn:
-    image: gshs_django_image:1
+    image: gshs_django_image:2
     networks:
       - network
     volumes:
@@ -36,7 +36,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD
       MYSQL_DATABASE: djnago
-      MYSQL_USER: wondora
+      MYSQL_USER: root
       MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
 
 networks:
