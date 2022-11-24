@@ -91,13 +91,18 @@ WSGI_APPLICATION = 'gshs2.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-DATABASES = dbsettings.DATABASES
+DATABASES = {
+    'default' : {
+        'ENGINE': 'django.db.backends.mysql',    
+        'NAME': 'django',                  
+        'USER': 'wondora',                          
+        'PASSWORD': '3895',                  
+        'HOST': 'gshs_mariadb',                     
+        'PORT': '3306',                          
+    }
+}
+
+# DATABASES = dbsettings.DATABASES
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
