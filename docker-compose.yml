@@ -36,7 +36,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD
       MYSQL_DATABASE: djnago
-      MYSQL_USER: root
+      MYSQL_USER: wondora
       MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD
 
 networks:
