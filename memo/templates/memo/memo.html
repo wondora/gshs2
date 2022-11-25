@@ -8,16 +8,16 @@
     <div class="offset-1 col-md-9">
         <form action="{% url 'memo:memo' %}" method="post">
             {% csrf_token %}
-            <div class="input-group input-group-sm mb-3">
+            <div class="input-group mb-3">
                 <input type="text" name="q" class="form-control" placeholder="찾아 주세요.">
                 <div class="input-group-append" id="button-addon4">
-                <button type="submit" class="btn btn-outline-secondary btn-sm">찾기</button>
+                <button type="submit" class="btn btn-outline-secondary">찾기</button>
                 </div>
             </div>
         </form>
     </div>
     <div class="col-md-1" style="text-align: left; padding-left: 0;">
-        <span style="cursor: pointer;" data-toggle="modal" data-target="#memo_modal"><i style="font-size: 38px; color: #6c757d" class="fas fa-plus-square"></i></span>
+        <span style="cursor: pointer;" data-toggle="modal" data-target="#memo_modal"><i style="font-size: 40px; color: #6c757d" class="fas fa-plus-square"></i></span>
     </div>
     <div class="offset-1 col-md-10">
         <table class="table table-responsive-sm">

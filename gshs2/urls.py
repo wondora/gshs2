@@ -10,7 +10,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('memo.urls')),
+    path('', include('freeboard.urls')),
     path('gigi/', include('gshsapp.urls')),
     path('auth/', include('login.urls')),
     path('freeboard/', include('freeboard.urls')),
