@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'freeboard',
     'memo',
     'django.contrib.humanize',
+    'import_export',
 ]
 
 MIDDLEWARE = [

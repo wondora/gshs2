@@ -1,4 +1,5 @@
 from django.contrib import admin
+from import_export.admin import ExportActionModelAdmin, ImportExportMixin, ImportMixin
 from .models import *
 
 class Repair_PhotoInline(admin.TabularInline):
@@ -20,12 +21,12 @@ class ReplacementAdmin(admin.ModelAdmin):
 admin.site.register(Replacement, ReplacementAdmin)
 
 
-class BuyproductAdmin(admin.ModelAdmin):
+class BuyproductAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = ['id', 'buydate', 'company', 'model', 'bigo']
 
 admin.site.register(Buyproduct, BuyproductAdmin)
 
-class LocationAdmin(admin.ModelAdmin):
+class LocationAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = ['id', 'building', 'hosil', 'locationgubun', 'bigo']
 admin.site.register(Location, LocationAdmin)
 
@@ -33,7 +34,7 @@ class GigiinfoAdmin(admin.ModelAdmin):
     list_display = ['id', 'buyproduct', 'location', 'user', 'ip', 'color', 'jaego', 'notuse', 'bigo']
 admin.site.register(Gigiinfo, GigiinfoAdmin)
 
-class GubunAdmin(admin.ModelAdmin):
+class GubunAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = ['id', 'tablename', 'gubun']
 admin.site.register(Gubun, GubunAdmin)
 
