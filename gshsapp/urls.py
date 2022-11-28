@@ -5,7 +5,7 @@ app_name = 'gshsapp'
 
 urlpatterns = [
     path('<str:gigigubun>/', views.InfogigiList, name='gigi_gubun'),
-    path('create/<int:pk>/', views.InfogigiCV.as_view(), name='gigi_create'),
+    path('create/<str:gigigubun>/', views.InfogigiCV.as_view(), name='gigi_create'),
     path('delete/<int:pk>/', views.InfogigiDel, name='gigi_delete'),
     path('update/<int:pk>/', views.InfogigiUV.as_view(), name='gigi_update'),
     path('change/<int:pk>/', views.InfogigiChange, name='gigi_change'),

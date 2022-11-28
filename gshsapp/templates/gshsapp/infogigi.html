@@ -3,7 +3,7 @@
 
 <div class="row">
   <div class="col-md-4">
-    <form method="GET" action="{% url 'gshsapp:gigi_gubun' gigigubun.pk %}">
+    <form method="GET" action="{% url 'gshsapp:gigi_gubun' gigigubun=gigigubun %}">
     {% csrf_token %}
       <div class="input-group">      
         <input type="search" name="q" value="{{ q }}" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
@@ -15,7 +15,7 @@
   </div> 
   <div class="col-md-1  align-self-end me-auto"><h6>{{ page_obj.paginator.count }}</h6></div> 
   <div class="col-md-1 text-center">
-    <a href="{% url 'gshsapp:gigi_create' gigigubun.pk %}">
+    <a href="{% url 'gshsapp:gigi_create' gigigubun=gigigubun %}">
       <i style="font-size: 38px; color:#3892d4;" class="fas fa-plus-square"></i>
     </a>
   </div>    
