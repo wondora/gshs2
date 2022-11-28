@@ -51,7 +51,9 @@ def InfogigiList(request, gigigubun):
 class InfogigiCV(CreateView):
     model = Gigiinfo
     template_name = 'gshsapp/create.html'
-    form_class = GigiinfoForm
+    
+    def get_form(self, form_class=None):
+        form_class = GigiinfoForm(gubun_id=self.request.GET.get('gigigubun',False))
 
     def get_success_url(self):
         return reverse('gshsapp:gigi_gubun', kwargs={'gigigubun': self.object.buyproduct.gubun.gubun})

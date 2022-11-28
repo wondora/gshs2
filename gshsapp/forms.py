@@ -6,8 +6,7 @@ class GigiinfoForm(forms.ModelForm):
     jaego = forms.CheckboxInput()
     notuse = forms.CheckboxInput()
 
-    def __init__(self, *args, **kwargs):
-        gigi_gubun = kwargs.pop('gigigubun')
+    def __init__(self, gubun_id, *args, **kwargs):
         super().__init__(*args, **kwargs)  
 
         if self.instance.pk:
@@ -15,8 +14,8 @@ class GigiinfoForm(forms.ModelForm):
             gubun = Gubun.objects.get(gubun=gigigubun.buyproduct.gubun.gubun)
             self.fields['buyproduct']=forms.ModelChoiceField(queryset=gubun.buyproduct.all())
 
-        if gigi_gubun:
-            gubun = Gubun.objects.get(gubun=gigi_gubun)
+        if gubun_id:
+            gubun = Gubun.objects.get(gubun=gubun_id)
             self.fields['buyproduct']=forms.ModelChoiceField(queryset=gubun.buyproduct.all())
 
         self.fields['location']=forms.ModelChoiceField(queryset=Location.objects.all())
