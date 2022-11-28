@@ -36,7 +36,7 @@ def InfogigiList(request, gigigubun):
            
         
     gigis = infogigis.filter(Q(user__name__icontains=query) | Q(buyproduct__model__icontains=query) | Q(location__hosil__icontains=query))
-    context['gigigubun'] = gigigubun 
+    context['gigigubun'] = gigis.order_by('pk').first()
     context['q'] = query
     page = request.GET.get('page', '1')  # 페이지    
     paginator = Paginator(gigis, 10)  # 페이지당 10개씩 보여주기    

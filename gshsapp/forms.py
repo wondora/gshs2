@@ -8,15 +8,10 @@ class GigiinfoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)  
-        gigi_gubun = kwargs.pop('gigigubun')
 
         if self.instance.pk:
             gigigubun = Gigiinfo.objects.get(pk=self.instance.pk)
             gubun = Gubun.objects.get(gubun=gigigubun.buyproduct.gubun.gubun)
-            self.fields['buyproduct']=forms.ModelChoiceField(queryset=gubun.buyproduct.all())
-            
-        elif gigi_gubun:
-            gubun = Gubun.objects.get(gubun=gigi_gubun)
             self.fields['buyproduct']=forms.ModelChoiceField(queryset=gubun.buyproduct.all())
 
         self.fields['location']=forms.ModelChoiceField(queryset=Location.objects.all())
