@@ -3,16 +3,17 @@ from .models import *
 
 
 class GigiinfoForm(forms.ModelForm):   
-    # ip = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'})) 
     jaego = forms.CheckboxInput()
     notuse = forms.CheckboxInput()
-    # bigo = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control'}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        
         if self.instance.pk:
             gigigubun = Gigiinfo.objects.get(pk=self.instance.pk)
             gubun = Gubun.objects.get(gubun=gigigubun.buyproduct.gubun.gubun)
+            self.fields['buyproduct']=forms.ModelChoiceField(queryset=gubun.buyproduct.all())
+        elif self.instance.gigigubun:
+            gubun = Gubun.objects.get(gubun=self.instance.gigigubun)
             self.fields['buyproduct']=forms.ModelChoiceField(queryset=gubun.buyproduct.all())
 
         self.fields['location']=forms.ModelChoiceField(queryset=Location.objects.all())
