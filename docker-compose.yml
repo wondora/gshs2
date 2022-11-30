@@ -14,7 +14,7 @@ services:
       - 80:80
 
   django-gunicorn:
-    image: gshs_django_image:2
+    image: gshs_django_image:1
     networks:
       - network
     volumes:

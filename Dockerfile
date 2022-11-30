@@ -2,7 +2,7 @@ FROM python:3.10.4
 
 WORKDIR /home/
 
-RUN echo "testing122424"
+RUN echo "testing45435"
 
 RUN git clone https://github.com/wondora/gshs2.git
 
