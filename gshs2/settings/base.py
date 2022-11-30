@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     'memo',
     'django.contrib.humanize',
     'import_export',
-    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
