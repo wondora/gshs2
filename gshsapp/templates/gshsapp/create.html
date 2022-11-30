@@ -2,7 +2,9 @@
 {% block content %}
 
 <div class="box_shadow">
-    <div class="gigi-update1">작성하기</div>
+    <div class="gigi-update1">
+        <span>작성하기</span><a href="javascript:history.back();" style="text-decoration: none;color:white;">back</a>
+    </div>
     <div class="gigi-update2">
         <form method="POST" action="">
             {% csrf_token %}

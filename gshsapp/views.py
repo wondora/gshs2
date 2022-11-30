@@ -55,8 +55,8 @@ class InfogigiCV(CreateView):
         kwargs = super().get_form_kwargs(*args, **kwargs)
         kwargs['gigi_gubun'] = self.kwargs['gigigubun']
         return kwargs
-        
-    def get_success_url(self):
+   
+    def get_success_url(self):        
         return reverse('gshsapp:gigi_gubun', kwargs={'gigigubun': self.object.buyproduct.gubun.gubun})
    
 
