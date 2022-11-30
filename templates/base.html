@@ -42,6 +42,8 @@
                     <li class="nav-item mx-0 dropdown">
                         <a class="nav-link dropdown-toggle py-2 px-0 px-lg-3 rounded" href="#"  role="button" data-toggle="dropdown" aria-expanded="false">INFODS</a>
                         <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='all' %}">all</a></li>
+                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='notebook' %}">notebook</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'gshsapp:gigi_gubun' gigigubun='desktop' %}">desktop</a></li>

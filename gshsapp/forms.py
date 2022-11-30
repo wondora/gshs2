@@ -16,8 +16,11 @@ class GigiinfoForm(forms.ModelForm):
             self.fields['buyproduct']=forms.ModelChoiceField(queryset=gubun.buyproduct.all())
 
         elif self.gigi_gubun:
-            gubun = Gubun.objects.get(gubun=self.gigi_gubun)
-            self.fields['buyproduct']=forms.ModelChoiceField(queryset=gubun.buyproduct.all())
+            if self.gigi_gubun == 'all':
+                gubun = Gubun.objects.get(gubun=self.gigi_gubun)
+                self.fields['buyproduct']=forms.ModelChoiceField(queryset=gubun.buyproduct.all())
+            else:
+                self.fields['buyproduct']=forms.ModelChoiceField(queryset=Buyproduct.objects.all())
 
         self.fields['location']=forms.ModelChoiceField(queryset=Location.objects.all())
         self.fields['user']=forms.ModelChoiceField(required=False, queryset=User.objects.all())

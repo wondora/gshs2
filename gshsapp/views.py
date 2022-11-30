@@ -21,7 +21,9 @@ def InfogigiList(request, gigigubun):
     context={}
     query = request.GET.get('q','') 
 
-    if gigigubun == 'notebook' or gigigubun == 'desktop':            
+    if gigigubun == 'all':            
+        infogigis = Gigiinfo.objects.all().exclude(user__is_active =False).filter(jaego=False, notuse=False).order_by('-buyproduct__buydate')
+    elif gigigubun == 'notebook' or gigigubun == 'desktop':            
         infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, user__is_active =True, jaego=False, notuse=False).order_by('-buyproduct__buydate')
     elif gigigubun == 'jaego':
         infogigis = Gigiinfo.objects.all().filter(jaego=True, notuse=False).order_by('-buyproduct__buydate')
@@ -170,7 +172,7 @@ def InfogigiBuseo(request, buseogubun):
         changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date]).annotate(changeTotal = F('count') *  F('cost'))
         changeTotalCost = changes.aggregate(Sum('changeTotal'))
 
-        members = buseo_name.gigiinfo.filter(Q(user__is_active =True) | Q(jaego=False) & Q(notuse=False))    
+        members = buseo_name.gigiinfo.exclude(user__is_active =False).filter(jaego=False, notuse=False)    
 
         return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
 
