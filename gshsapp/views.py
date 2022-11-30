@@ -17,10 +17,6 @@ from login.decorators import *
 from django.utils.decorators import method_decorator
 
 
-def home(request):
-    return render(request, 'gshsapp/home.html')
-
-
 def InfogigiList(request, gigigubun):    
     context={}
     query = request.GET.get('q','') 
@@ -306,6 +302,7 @@ def buseoCRUdelete(request, pk):
         repairs.delete()  
 
     return JsonResponse({'data':True}, status=200)    
+
 
 # 엑셀 보내기
 @login_message_required

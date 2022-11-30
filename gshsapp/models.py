@@ -9,6 +9,7 @@ class Gubun(models.Model):
     GUBUN = (
         ('Buyproduct', '구매Table'),
         ('Replacement', '교체Table'),        
+        ('Repair', '수리Table'),        
     )
     tablename = models.CharField(max_length=20, default='', choices=GUBUN)
     gubun = models.CharField(max_length=50)
@@ -89,7 +90,7 @@ class Gigiinfo(models.Model):
 
 class Repair(models.Model):
     date = models.DateField(default=timezone.now)
-    gigiinfo = models.ForeignKey(Gigiinfo, on_delete=models.CASCADE, related_name='repair')
+    gigiinfo = models.ForeignKey(Gigiinfo, null=True, blank=True, on_delete=models.CASCADE, related_name='repair')
     problem = models.CharField(max_length=50)
     result = models.CharField(max_length=50)
     cost = models.PositiveIntegerField(default=0)
@@ -111,7 +112,7 @@ class Repair(models.Model):
 
 class Replacement(models.Model):
     date = models.DateField(default=timezone.now)
-    gigiinfo = models.ForeignKey(Gigiinfo, on_delete=models.CASCADE, related_name='replacement')
+    gigiinfo = models.ForeignKey(Gigiinfo, null=True, blank=True, on_delete=models.CASCADE, related_name='replacement')
     gubun = models.ForeignKey(Gubun, on_delete=models.CASCADE, related_name='replacement')
     count = models.PositiveSmallIntegerField(default=1)
     cost = models.PositiveIntegerField(default=0)

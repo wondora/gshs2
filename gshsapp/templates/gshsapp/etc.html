@@ -7,104 +7,111 @@
     <div class="col-md-2">
         <div class="card box_shadow">
             <div class="card-header bg-secondary text-light text-center">
-              <h6>부서</h6>  
+              <h6>SRC</h6>  
             </div>
             <div class="card-body">
                 <ul style="margin-bottom: 0;">
-                {% for buseo in buseos %}
-                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' buseo.hosil %}"> {{ buseo.hosil }}</a></li>
+                {% for etc in etcs %}
+                    {% if etc.building == "SRC" %}
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_etc' etc.hosil %}"> {{ etc.hosil }} / {{ etc.locationgubun }} </a></li>
+                    {% endif %}
+                {% endfor %}
+                </ul>            
+            </div>
+            <div class="card-header bg-secondary text-light text-center">
+                <h6>본관</h6>  
+              </div>
+              <div class="card-body">
+                  <ul style="margin-bottom: 0;">
+                  {% for etc in etcs %}
+                    {% if etc.building == "본관" %}
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_etc' etc.hosil %}"> {{ etc.hosil }} / {{ etc.locationgubun }}</a></li>
+                    {% endif %}
+                  {% endfor %}
+                  </ul>            
+              </div>
+              <div class="card-header bg-secondary text-light text-center">
+                <h6>학습관</h6>  
+              </div>
+              <div class="card-body">
+                  <ul style="margin-bottom: 0;">
+                  {% for etc in etcs %}
+                    {% if etc.building == "학습관" %}
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_etc' etc.hosil %}"> {{ etc.hosil }} / {{ etc.locationgubun }}</a></li>
+                    {% endif %}
+                  {% endfor %}
+                  </ul>            
+              </div>
+              <div class="card-header bg-secondary text-light text-center">
+                <h6>우정2관</h6>  
+              </div>
+              <div class="card-body">
+                <ul style="margin-bottom: 0;">
+                {% for etc in etcs %}
+                    {% if etc.building == "우정2관" %}
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_etc' etc.hosil %}"> {{ etc.hosil }} / {{ etc.locationgubun }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                </ul>            
+            </div>
+            <div class="card-header bg-secondary text-light text-center">
+                <h6>급식소</h6>  
+              </div>
+            <div class="card-body">
+                <ul style="margin-bottom: 0;">
+                {% for etc in etcs %}
+                    {% if etc.building == "급식소" %}
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_etc' etc.hosil %}"> {{ etc.hosil }} / {{ etc.locationgubun }}</a></li>
+                    {% endif %}
                 {% endfor %}
                 </ul>            
             </div>
         </div>       
     </div>
     
-    <div class="col-md-10">    
-      <div>
-        <span style="padding-left: 20px;">🙄 부원들 </span>
-      </div>  
-      <table class="table text-center mt-2">
-          <thead class="table-secondary">
-            <tr>
-              <th scope="col">구매일</th>
-              <th scope="col">구분</th>
-              <th scope="col">성명</th>
-              <th scope="col">제조사</th>
-              <th scope="col">모델명</th>
-              <th scope="col">IP</th>
-              <th scope="col">비고</th>                    
-              <th scope="col"></th>                    
-            </tr>
-          </thead>
-          <tbody id="buwonInsert">
-            {% for gigi in members %}
-            {% if gigi.user %}
-            <tr>
-              <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
-              <td>{{ gigi.buyproduct.gubun }}</td>
-              <td>{{ gigi.user }}</td>       
-              <td>{{ gigi.buyproduct.company }}</td>
-              <td>{{ gigi.buyproduct.model }}</td>
-              <td>{{ gigi.ip }}</td>
-              <td>{{ gigi.bigo }}</td>                
-              <td><span class="buwon-update gitamenu badge bg-dark" data-buseo="{{buseogubun}}" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}">수정</span></td>                
-            </tr>
-            {% endif %}
-            {% endfor %}
-          </tbody>
-        </table>
-        
-        <div class="mt-5">
-          <span style="padding-left: 20px;">🦉 정보기자재 </span>
+    <div class="col-md-10"> 
+        <div class="mt-1">
+        <span style="padding-left: 20px;">🦉 정보기자재 </span>
+        <a href="{% url 'gshsapp:gigi_etc_create' etcgubun %}" >🦉 + </a>
+
         </div>
         <table class="table text-center mt-2">
-          <thead class="table-secondary">
-            <tr>
-              <th scope="col">구매일</th>
-              <th scope="col">구분</th>
-              <th scope="col">제조사</th>
-              <th scope="col">모델명</th>
-              <th scope="col">색상</th>
-              <th scope="col">IP</th>
-              <th scope="col">비고</th>                    
-              <th scope="col"></th>                    
-            </tr>
-          </thead>
-          <tbody id="gigiInsert">
-            {% for gigi in members %}
-            {% if not gigi.user %}
-            <tr>
-              <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
-              <td>{{ gigi.buyproduct.gubun }}</td>        
-              <td>{{ gigi.buyproduct.company }}</td>
-              <td>{{ gigi.buyproduct.model }}</td>
-              <td>{{ gigi.color }}</td>
-              <td>{{ gigi.ip }}</td>
-              <td>{{ gigi.bigo }}</td>
-              <td>
-                <span class="buseogigi-update gitamenu badge bg-dark" data-buseo="{{buseogubun}}" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}">수정</span>
-              </td>                                
-            </tr>
-            {% endif %}
-            {% endfor %}
-          </tbody> 
+            <thead class="table-secondary">
+                <tr>
+                <th scope="col">구매일</th>
+                <th scope="col">구분</th>
+                <th scope="col">제조사</th>
+                <th scope="col">모델명</th>
+                <th scope="col">색상</th>
+                <th scope="col">IP</th>
+                <th scope="col">비고</th>                    
+                <th scope="col"></th>                    
+                </tr>
+            </thead>
+            <tbody id="gigiInsert">
+                {% for gigi in members %}
+                {% if not gigi.user %}
+                <tr>
+                <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
+                <td>{{ gigi.buyproduct.gubun }}</td>        
+                <td>{{ gigi.buyproduct.company }}</td>
+                <td>{{ gigi.buyproduct.model }}</td>
+                <td>{{ gigi.color }}</td>
+                <td>{{ gigi.ip }}</td>
+                <td>{{ gigi.bigo }}</td>
+                <td><span class="buseogigi-update gitamenu badge bg-dark" data-buseo="{{buseogubun}}" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}">수정</span></td>                                
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody> 
         </table>
         <br><br><hr>
 
         <div class="mt-5 row">
-          <div class="col-md-5 pt-1"><span style="padding-left: 20px;">🐷 소모품교체 </span></div>
-          <div class="ms-auto col-md-3" id="changeSelect">
-            <select class="form-select form-select-sm change_year" data-buseo="{{buseogubun}}" data-gubun="change" aria-label=".form-select-sm">
-              <option selected>연도를 선택하세요.</option>
-              <option value=2022>2022년도</option>
-              <option value=2023>2023년도</option>
-              <option value=2024>2024년도</option>
-              <option value=2025>2025년도</option>
-              <option value=2026>2026년도</option>
-              <option value=2027>2027년도</option>
-              <option value=2028>2028년도</option>
-            </select>
-          </div>          
+            <div class="col-md-5 pt-1">
+                <span style="padding-left: 20px;">🐷 소모품교체 </span>
+                <a href="{% url 'gshsapp:gigi_etc_change_create' etcgubun %}" >🦉 + </a>
+            </div>                  
         </div>
 
         <table class="table text-center mt-2">
@@ -139,13 +146,13 @@
                 {% if gubunchange %}                
                   보기
                 {% endif %}
-              </td>  
+              </td>
               <td class="buseo_CR_update" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}">
                 <span class="gitamenu badge bg-dark">수정</sapn>
                 </td>             
               <td class="buseo_CR_delete" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}">
                 <span class="gitamenu badge bg-danger">삭제</sapn>
-              </td>             
+              </td>   
             </tr>
                         
             <tr class="photoshows">
@@ -175,19 +182,7 @@
         </table> 
 
         <div class="mt-5 row">
-          <div class="col-md-5 pt-1"><span style="padding-left: 20px;">🦊 소모품수리 </span></div>
-          <div class="ms-auto col-md-3" id="repairSelect">
-            <select class="form-select form-select-sm change_year" data-buseo="{{buseogubun}}" data-gubun="repair" aria-label=".form-select-sm">
-              <option selected>연도를 선택하세요.</option>
-              <option value=2022>2022년도</option>
-              <option value=2023>2023년도</option>
-              <option value=2024>2024년도</option>
-              <option value=2025>2025년도</option>
-              <option value=2026>2026년도</option>
-              <option value=2027>2027년도</option>
-              <option value=2028>2028년도</option>
-            </select>
-          </div>          
+          <div class="col-md-5 pt-1"><span style="padding-left: 20px;">🦊 소모품수리 </span></div>                
         </div>
 
         <table class="table text-center mt-2">
@@ -223,12 +218,8 @@
                  보기
                 {% endif %}
               </td>   
-              <td class="buseo_CR_update" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}">
-                <span class="gitamenu badge bg-dark">수정</sapn>
-              </td>             
-              <td class="buseo_CR_delete" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}">
-                <span class="gitamenu badge bg-danger">삭제</sapn>
-              </td>             
+              <td class="buseo_CR_update" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}" title="수정하기">🐼</td>             
+              <td class="buseo_CR_delete" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}" title="삭제하기">👹</td>             
             </tr>
             
             <tr class="photoshows">
@@ -390,7 +381,6 @@
         var form = $("#buseocrform")[0];
         let formData = new FormData(form);  
         formData.append("crgubun", crgubun);
-        // formData.append("fileObj2", $("#img-2")[0].files[0]);
           $.ajax({
           url: form2.attr("action"),
           data: formData,
@@ -438,42 +428,6 @@
         }
     });
 
-// 외부영역 클릭시 닫기
-    // $(document).mouseup(function (e){
-    //   var LayerPopup = $("#modal");
-    //   if(LayerPopup.has(e.target).length === 0){
-    //     $("#modal").css("display", "none");
-    //   }
-    // });
-    
-    // 연도 변경 및 교체 수리 저장
-  var yearAndBupum = function() {
-    buseoyear = $(this).val();
-    buseogubun = $(this).data('buseo');
-    gubun = $(this).data('gubun');
-    $.ajax({
-          url: "{% url 'gshsapp:gigi_buseo' buseogubun %}",
-          data: {"buseoyear":buseoyear, "buseogubun":buseogubun, "gubun":gubun},
-          type: 'get',
-          dataType: 'json',
-          success: function (data) {
-            if (data.gubun == "change") {
-              $("#changes_list").html(data.html_buseo);
-              const lb = lightbox();  
-            } else {
-              $("#repairs_list").html(data.html_buseo);
-              const lb = lightbox();
-            }
-          },
-            error:function(request, status, error){
-              alert("error:"+error)
-            // alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-          }
-    });
-  };
-
-  $("#changeSelect").on("change", ".change_year", yearAndBupum)
-  $("#repairSelect").on("change", ".change_year", yearAndBupum)
 
    // 사진수정
   $(':checkbox').on('change', function(){
