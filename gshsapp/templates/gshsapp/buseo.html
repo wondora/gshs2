@@ -10,17 +10,83 @@
               <h6>부서</h6>  
             </div>
             <div class="card-body">
-                <ul style="margin-bottom: 0;">
+                <ul style="margin-bottom: 0;">                
                 {% for buseo in buseos %}
-                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' buseo.hosil %}"> {{ buseo.hosil }}</a></li>
+                  {% if buseo.locationgubun == '부서' %}  
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' buseo.hosil %}" title="{{ gita.bigo }}">{{buseo.hosil }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                </ul>            
+            </div>
+            <div class="card-header bg-secondary text-light text-center">
+              <h6>본관</h6>  
+            </div>
+            <div class="card-body">
+                <ul style="margin-bottom: 0;">                
+                {% for gita in gitas %}
+                  {% if gita.building == '본관' %}  
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' gita.hosil %}" title="{{ gita.bigo }}"> {{ gita.hosil}} / {{gita.locationgubun }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                </ul>            
+            </div>
+            <div class="card-header bg-secondary text-light text-center">
+              <h6>SRC</h6>  
+            </div>
+            <div class="card-body">
+                <ul style="margin-bottom: 0;">                
+                {% for gita in gitas %}
+                  {% if gita.building == 'SRC' %}  
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' gita.hosil %}" title="{{ gita.bigo }}"> {{ gita.hosil}} / {{gita.locationgubun }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                </ul>            
+            </div>
+            <div class="card-header bg-secondary text-light text-center">
+              <h6>학습관</h6>  
+            </div>
+            <div class="card-body">
+                <ul style="margin-bottom: 0;">                
+                {% for gita in gitas %}
+                  {% if gita.building == '학습관' %}  
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' gita.hosil %}" title="{{ gita.bigo }}"> {{ gita.hosil}} / {{gita.locationgubun }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                </ul>            
+            </div>
+            <div class="card-header bg-secondary text-light text-center">
+              <h6>급식소</h6>  
+            </div>
+            <div class="card-body">
+                <ul style="margin-bottom: 0;">                
+                {% for gita in gitas %}
+                  {% if gita.building == '급식소' %}  
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' gita.hosil %}" title="{{ gita.bigo }}"> {{ gita.hosil}} / {{gita.locationgubun }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                </ul>            
+            </div>
+            <div class="card-header bg-secondary text-light text-center">
+              <h6>우정2관</h6>  
+            </div>
+            <div class="card-body">
+                <ul style="margin-bottom: 0;">                
+                {% for gita in gitas %}
+                  {% if gita.building == '우정2관' %}  
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' gita.hosil %}" title="{{ gita.bigo }}"> {{ gita.hosil}} / {{gita.locationgubun }}</a></li>
+                  {% endif %}
                 {% endfor %}
                 </ul>            
             </div>
         </div>       
     </div>
     
-    <div class="col-md-10">    
+    <div class="col-md-10"> 
       <div>
+        <span style="padding-left: 20px;" class="badge bg-primary">{{ building }} : {{ buseogubun }}</span>
+      </div>   
+      <hr>
+      <div style="margin-top: 30px;">
         <span style="padding-left: 20px;">🙄 부원들 </span>
       </div>  
       <table class="table text-center mt-2">
@@ -256,7 +322,6 @@
           </tbody> 
         </table>        
     </div>
-</div>
 
 <div id="modal" class="modal-overlay">
   <div class="modal-window">

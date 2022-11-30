@@ -4,6 +4,7 @@ from . import views
 app_name = 'gshsapp'
 
 urlpatterns = [
+    path('', views.home, name='home'),
     path('<str:gigigubun>/', views.InfogigiList, name='gigi_gubun'),
     path('create/<str:gigigubun>/', views.InfogigiCV.as_view(), name='gigi_create'),
     path('delete/<int:pk>/', views.InfogigiDel, name='gigi_delete'),

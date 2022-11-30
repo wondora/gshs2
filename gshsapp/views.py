@@ -17,6 +17,9 @@ from login.decorators import *
 from django.utils.decorators import method_decorator
 
 
+def home(request):
+    return render(request, 'gshsapp/home.html')
+    
 def InfogigiList(request, gigigubun):    
     context={}
     query = request.GET.get('q','') 
@@ -24,7 +27,7 @@ def InfogigiList(request, gigigubun):
     if gigigubun == 'all':            
         infogigis = Gigiinfo.objects.all().exclude(user__is_active =False).filter(jaego=False, notuse=False).order_by('-buyproduct__buydate')
     elif gigigubun == 'notebook' or gigigubun == 'desktop':            
-        infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, user__is_active =True, jaego=False, notuse=False).order_by('-buyproduct__buydate')
+        infogigis = Gigiinfo.objects.all().exclude(user__is_active =False).filter(buyproduct__gubun__gubun=gigigubun, jaego=False, notuse=False).order_by('-buyproduct__buydate')
     elif gigigubun == 'jaego':
         infogigis = Gigiinfo.objects.all().filter(jaego=True, notuse=False).order_by('-buyproduct__buydate')
     elif gigigubun == 'notuse':    
@@ -160,7 +163,9 @@ def InfogigiBuseo(request, buseogubun):
         return JsonResponse(data)
     else:
         buseos = Location.objects.filter(locationgubun='부서')
+        gitas = Location.objects.exclude(locationgubun='부서')
         buseo_name = Location.objects.get(hosil=buseogubun)
+        building = buseo_name.building
 
         a_date = str(datetime.datetime.today().year) +"-3-1"
         start_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
@@ -174,7 +179,7 @@ def InfogigiBuseo(request, buseogubun):
 
         members = buseo_name.gigiinfo.exclude(user__is_active =False).filter(jaego=False, notuse=False)    
 
-        return render(request, 'gshsapp/buseo.html', {'buseos':buseos, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
+        return render(request, 'gshsapp/buseo.html', {'buseos':buseos,'building':building, 'gitas':gitas, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
 
 # 부서 부원 및 기기 ajax
 @login_message_required

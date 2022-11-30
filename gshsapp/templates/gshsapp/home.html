@@ -1,4 +1,81 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1>Hello World!</h1>
+{% load static %}
+<div class="row">    
+    <div class="col-md-2">
+        <div class="card box_shadow">
+            <div class="card-header bg-secondary text-light text-center">
+              <h6>학교 실별 배치도</h6>  
+            </div>
+            <div class="card-body">
+                <ul style="margin-bottom: 0;">                
+                    <li><a class="buseo-gubun" href="#src">SRC</a></li>
+                    <li><a class="buseo-gubun" href="#본관">본관</a></li>
+                    <li><a class="buseo-gubun" href="#학술정보관">학술정보관</a></li>
+                    <li><a class="buseo-gubun" href="#자치관">자치관</a></li>
+                    <li><a class="buseo-gubun" href="#창조관">창조관</a></li>
+                    <li><a class="buseo-gubun" href="#급식소">급식소</a></li>
+                    <li><a class="buseo-gubun" href="#아름관">아름관</a></li>
+                    <li><a class="buseo-gubun" href="#체육관">체육관</a></li>
+                    <li><a class="buseo-gubun" href="#학습관">학습관</a></li>
+                    <li><a class="buseo-gubun" href="#우정1관">우정1관</a></li>
+                    <li><a class="buseo-gubun" href="#우정2관">우정2관</a></li>
+                </ul>            
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <a id="back-to-top"><i class="fa-solid fa-arrow-up"></i></a>
+        <div id="src">
+            <img src="{% static 'img/SRC.png' %}"></a>
+        </div> 
+        <div id="본관">
+            <img src="{% static 'img/본관.png' %}"></a>
+        </div> 
+        <div id="학술정보관">
+            <img src="{% static 'img/학술정보관.png' %}"></a>
+        </div>
+        <div id="자치관">
+            <img src="{% static 'img/자치관.png' %}"></a>
+        </div>
+        <div id="창조관">
+            <img src="{% static 'img/창조관.png' %}"></a>
+        </div>
+        <div id="급식소">
+            <img src="{% static 'img/급식소.png' %}"></a>
+        </div>
+        <div id="아름관">
+            <img src="{% static 'img/아름관.png' %}"></a>
+        </div>
+        <div id="체육관">
+            <img src="{% static 'img/체육관.png' %}"></a>
+        </div>
+        <div id="학습관">
+            <img src="{% static 'img/학습관.png' %}"></a>
+        </div>
+        <div id="우정1관">
+            <img src="{% static 'img/우정1관.png' %}"></a>
+        </div>
+        <div id="우정2관">
+            <img src="{% static 'img/우정2관.png' %}"></a>
+        </div>        
+    </div>
+</div>
+<script>
+$(function(){   
+    $('#back-to-top').on('click',function(e){
+        e.preventDefault();
+        $('html,body').animate({scrollTop:0},600);
+    });
+    
+    $(window).scroll(function() {
+        if ($(document).scrollTop() > 100) {
+        $('#back-to-top').addClass('show');
+        } else {
+        $('#back-to-top').removeClass('show');
+        }
+    });
+});   
+
+</script>
 {% endblock %}
