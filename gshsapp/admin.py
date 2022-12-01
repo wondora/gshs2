@@ -22,17 +22,20 @@ admin.site.register(Replacement, ReplacementAdmin)
 
 
 class BuyproductAdmin(ImportExportMixin, admin.ModelAdmin):
-    list_display = ['id', 'buydate', 'company', 'model', 'bigo']
+    list_display = ['id', 'company', 'model', 'bigo']
 
 admin.site.register(Buyproduct, BuyproductAdmin)
+
 
 class LocationAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = ['id', 'building', 'hosil', 'locationgubun', 'bigo']
 admin.site.register(Location, LocationAdmin)
 
+
 class GigiinfoAdmin(admin.ModelAdmin):
-    list_display = ['id', 'buyproduct', 'location', 'user', 'ip', 'color', 'jaego', 'notuse', 'bigo']
+    list_display = ['id', 'date','buyproduct', 'location', 'user', 'ip', 'color', 'jaego', 'notuse', 'bigo']
 admin.site.register(Gigiinfo, GigiinfoAdmin)
+
 
 class GubunAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = ['id', 'tablename', 'gubun']

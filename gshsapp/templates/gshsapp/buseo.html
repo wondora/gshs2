@@ -106,7 +106,7 @@
             {% for gigi in members %}
             {% if gigi.user %}
             <tr>
-              <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
+              <td>{{ gigi.date|date:"Y-m-d" }}</td>
               <td>{{ gigi.buyproduct.gubun }}</td>
               <td>{{ gigi.user }}</td>       
               <td>{{ gigi.buyproduct.company }}</td>
@@ -140,7 +140,7 @@
             {% for gigi in members %}
             {% if not gigi.user %}
             <tr>
-              <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
+              <td>{{ gigi.date|date:"Y-m-d" }}</td>
               <td>{{ gigi.buyproduct.gubun }}</td>        
               <td>{{ gigi.buyproduct.company }}</td>
               <td>{{ gigi.buyproduct.model }}</td>

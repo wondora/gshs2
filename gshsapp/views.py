@@ -25,15 +25,15 @@ def InfogigiList(request, gigigubun):
     query = request.GET.get('q','') 
 
     if gigigubun == 'all':            
-        infogigis = Gigiinfo.objects.all().exclude(user__is_active =False).filter(jaego=False, notuse=False).order_by('-buyproduct__buydate')
+        infogigis = Gigiinfo.objects.all().exclude(user__is_active =False).filter(jaego=False, notuse=False).order_by('-date')
     elif gigigubun == 'notebook' or gigigubun == 'desktop':            
-        infogigis = Gigiinfo.objects.all().exclude(user__is_active =False).filter(buyproduct__gubun__gubun=gigigubun, jaego=False, notuse=False).order_by('-buyproduct__buydate')
+        infogigis = Gigiinfo.objects.all().exclude(user__is_active =False).filter(buyproduct__gubun__gubun=gigigubun, jaego=False, notuse=False).order_by('-date')
     elif gigigubun == 'jaego':
-        infogigis = Gigiinfo.objects.all().filter(jaego=True, notuse=False).order_by('-buyproduct__buydate')
+        infogigis = Gigiinfo.objects.all().filter(jaego=True, notuse=False).order_by('-date')
     elif gigigubun == 'notuse':    
-        infogigis = Gigiinfo.objects.all().filter(jaego=False, notuse=True).order_by('-buyproduct__buydate')
+        infogigis = Gigiinfo.objects.all().filter(jaego=False, notuse=True).order_by('-date')
     else:
-        infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, jaego=False, notuse=False).order_by('-buyproduct__buydate')
+        infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, jaego=False, notuse=False).order_by('-date')
            
         
     gigis = infogigis.filter(Q(user__name__icontains=query) | Q(buyproduct__model__icontains=query) | Q(location__hosil__icontains=query))
@@ -334,10 +334,10 @@ def excelExport(request, gubun):
     #데이터 베이스에서 유저 정보를 불러온다
     if gubun == 'notebook' or gubun == 'desktop': 
         infogigis = Gigiinfo.objects.filter(buyproduct__gubun__gubun=gubun, user__is_active =True, jaego=False, notuse=False)\
-            .order_by('-buyproduct__buydate').values_list('buyproduct__buydate','user__name','location__building','location__hosil','buyproduct__company', 'buyproduct__model', 'ip','bigo')
+            .order_by('-date').values_list('date','user__name','location__building','location__hosil','buyproduct__company', 'buyproduct__model', 'ip','bigo')
     else:
         infogigis = Gigiinfo.objects.filter(buyproduct__gubun__gubun=gubun, jaego=False, notuse=False)\
-            .order_by('-buyproduct__buydate').values_list('buyproduct__buydate','location__building','location__hosil','buyproduct__company', 'buyproduct__model', 'ip','color', 'bigo')
+            .order_by('-date').values_list('date','location__building','location__hosil','buyproduct__company', 'buyproduct__model', 'ip','color', 'bigo')
     
     #유저정보를 한줄씩 작성한다.
     for row in infogigis:

@@ -20,8 +20,7 @@ class Gubun(models.Model):
     class Meta:
         db_table = "gubun"
 
-class Buyproduct(models.Model):    
-    buydate = models.DateField(default=timezone.now)
+class Buyproduct(models.Model):  
     gubun = models.ForeignKey(Gubun, on_delete=models.CASCADE, related_name='buyproduct')
     company = models.CharField(max_length=20)
     model = models.CharField(max_length=30)    
@@ -77,6 +76,7 @@ class Gigiinfo(models.Model):
         ('블랙','블랙'),
         ('컬러','컬러'),
     )
+    date = models.DateField(default=timezone.now)
     buyproduct = models.ForeignKey(Buyproduct, on_delete=models.CASCADE, related_name='gigiinfo')
     location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='gigiinfo')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='gigiinfo', null=True, blank=True)

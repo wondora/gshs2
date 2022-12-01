@@ -2,7 +2,8 @@ from django import forms
 from .models import *
 
 
-class GigiinfoForm(forms.ModelForm):   
+class GigiinfoForm(forms.ModelForm): 
+    date = forms.CharField(widget=forms.DateInput(attrs={'type':'date'}))  
     jaego = forms.CheckboxInput()
     notuse = forms.CheckboxInput()
 

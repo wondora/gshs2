@@ -2,6 +2,10 @@
 <form method="POST" action="{% url 'gshsapp:gigi_buseo_update' form.instance.pk %}" id="form">
     {% csrf_token %}
     <div class="row mb-2">
+        <label class="col-form-label col-md-2" for="id_date">날짜</label>
+        <div class="col-md-10">{{ form.date }}</div>
+    </div>
+    <div class="row mb-2">
         <label class="col-form-label col-md-2" for="id_buyproduct">구매물품</label>
         <div class="col-md-10">{{ form.buyproduct }}</div>
     </div>   

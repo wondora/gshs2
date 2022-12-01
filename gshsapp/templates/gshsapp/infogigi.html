@@ -42,7 +42,7 @@
       {% for gigi in page_obj %}
       <tr>
         <th scope="row">{{ forloop.counter }}</th>
-        <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
+        <td>{{ gigi.date|date:"Y-m-d" }}</td>
         <td>{{ gigi.buyproduct.gubun }}</td>
         <td>{{ gigi.user}}</td>
         <td>{{ gigi.location }}</td>        

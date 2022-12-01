@@ -1,7 +1,7 @@
 {% for gigi in members %}
     {% if gigi.user %}
     <tr>
-        <td>{{ gigi.buyproduct.buydate|date:"Y-m-d" }}</td>
+        <td>{{ gigi.date|date:"Y-m-d" }}</td>
         <td>{{ gigi.buyproduct.gubun }}</td>     
         <td>{{ gigi.user.name }}</td>  
         <td>{{ gigi.buyproduct.company }}</td>
