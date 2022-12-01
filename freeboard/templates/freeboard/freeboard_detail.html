@@ -37,9 +37,9 @@
             <button class="custom-btn custom-btn-secondary" id="detail_btn" onclick="location.href='/freeboard/{{ freeboard.id }}/edit/'">수정</button>
             <button class="custom-btn custom-btn-secondary" id="detail_btn" data-toggle="modal" data-target="#delete_modal">삭제</button>
             <!-- <button class="btn btn-md btn-dark" onclick="location.href='/freeboard/{{ freeboard.id }}/delete/'">삭제</button> -->
-            <button class="custom-btn custom-btn-secondary" id="detail_btn" onclick="location.href='/freeboard/'">목록으로</button>
+            <button class="custom-btn custom-btn-secondary" id="detail_btn" onclick="location.href='/freeboard/list/'">목록으로</button>
             {% else %}
-            <button class="custom-btn custom-btn-secondary" id="detail_btn" onclick="location.href='/freeboard/'">목록으로</button>
+            <button class="custom-btn custom-btn-secondary" id="detail_btn" onclick="location.href='/freeboard/list/'">목록으로</button>
             {% endif %}
         </div>
     </div>
