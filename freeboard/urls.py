@@ -4,7 +4,7 @@ from . import views
 app_name = 'freeboard'
 
 urlpatterns = [
-    path('', views.AllListView.as_view(), name='all_list'),
+    path('list/', views.AllListView.as_view(), name='all_list'),
     path('free/', views.FreeListView.as_view(), name='freeboard_list'),
     path('gshs/', views.GshsListView.as_view(), name='gshs_list'),
     path('linux/', views.LinuxListView.as_view(), name='linux_list'),
