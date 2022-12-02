@@ -14,7 +14,7 @@ class GigiinfoForm(forms.ModelForm):
         if self.instance.pk:
             gigigubun = Gigiinfo.objects.get(id=self.instance.pk)
             gubun = Gubun.objects.get(gubun=gigigubun.buyproduct.gubun.gubun)
-            self.fields['buyproduct']=forms.ModelChoiceField(queryset=gubun.buyproduct.all())
+            self.fields['buyproduct']=forms.ModelChoiceField(queryset=gubun.buyproduct.all().order_by('company'))
 
         elif self.gigi_gubun:
             if self.gigi_gubun != 'all':
@@ -23,8 +23,8 @@ class GigiinfoForm(forms.ModelForm):
             else:
                 self.fields['buyproduct']=forms.ModelChoiceField(queryset=Buyproduct.objects.all())
 
-        self.fields['location']=forms.ModelChoiceField(queryset=Location.objects.all())
-        self.fields['user']=forms.ModelChoiceField(required=False, queryset=User.objects.all())
+        self.fields['location']=forms.ModelChoiceField(queryset=Location.objects.all().order_by('building'))
+        self.fields['user']=forms.ModelChoiceField(required=False, queryset=User.objects.all().order_by('name'))
     
     class Meta:
         model = Gigiinfo
@@ -48,7 +48,7 @@ class BuseoChangeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['gubun']=forms.ModelChoiceField(queryset=Gubun.objects.filter(tablename='Replacement'))
+        self.fields['gubun']=forms.ModelChoiceField(queryset=Gubun.objects.exclude(tablename='Buyproduct'))
         
     class Meta:
         model = Replacement
