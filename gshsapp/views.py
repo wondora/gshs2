@@ -323,7 +323,7 @@ def excelExport(request, gubun):
     col_names = ['구매일', '성명', '건물', '부서(호실)', '제조사', '모델명', 'IP', '비고']
     pcol_names = ['구매일', '건물', '부서(호실)', '제조사', '모델명', 'IP', '색상','비고']
     
-    if gubun == 'printer':
+    if gubun == 'printer' or gubun == 'tv' or gubun == 'project':
         colNames = pcol_names
     else:
         colNames = col_names
@@ -333,10 +333,10 @@ def excelExport(request, gubun):
     
     #데이터 베이스에서 유저 정보를 불러온다
     if gubun == 'notebook' or gubun == 'desktop': 
-        infogigis = Gigiinfo.objects.filter(buyproduct__gubun__gubun=gubun, user__is_active =True, jaego=False, notuse=False)\
+        infogigis = Gigiinfo.objects.exclude(user__is_active =False).filter(buyproduct__gubun__gubun=gubun, jaego=False, notuse=False)\
             .order_by('date').values_list('date','user__name','location__building','location__hosil','buyproduct__company', 'buyproduct__model', 'ip','bigo')
     else:
-        infogigis = Gigiinfo.objects.filter(buyproduct__gubun__gubun=gubun, jaego=False, notuse=False)\
+        infogigis = Gigiinfo.objects.exclude(user__is_active =False).filter(buyproduct__gubun__gubun=gubun, jaego=False, notuse=False)\
             .order_by('date').values_list('date','location__building','location__hosil','buyproduct__company', 'buyproduct__model', 'ip','color', 'bigo')
     
     #유저정보를 한줄씩 작성한다.

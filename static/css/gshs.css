@@ -1,13 +1,5 @@
-@font-face {
-    font-family: 'Leorio';
-    src:url('../static/fonts/Leorio.woff') format('woff');
-}
-
-@font-face {
-    font-family: 'NotoSansKR-Regular';
-    src:url('../static/fonts/NotoSansKR-Regular.woff') format('otf');
-} 
-
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400&family=Lobster&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&family=Inconsolata:wght@300&family=Lobster&family=Permanent+Marker&family=Zen+Dots&display=swap');
 html, body {
     -ms-overflow-style: none;
     background-color: #eee;
@@ -32,10 +24,10 @@ nav {
 }
 
 .navbar-brand {
-    color: #495057;
-    font-size: 1.4rem;
+    font-family: 'Zen Dots', cursive;
+    color: #323232;
+    font-size: 1.5rem;
     margin-left: 15px;
-    font-weight: 500;
     letter-spacing: 1px;
     word-spacing: 2px;
 }
@@ -55,9 +47,9 @@ nav {
 }
 
 .nav-item a {
+    font-family: 'Inconsolata', monospace;
     color:#495057;
-    font-size: 1.1rem;
-    font-weight: 400;
+    font-size: 1.2rem;
 }
 
 .nav-item a:hover {
