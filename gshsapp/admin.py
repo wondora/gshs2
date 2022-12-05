@@ -22,7 +22,7 @@ admin.site.register(Replacement, ReplacementAdmin)
 
 
 class BuyproductAdmin(ImportExportMixin, admin.ModelAdmin):
-    list_display = ['id', 'company', 'model', 'bigo']
+    list_display = ['id', 'gubun', 'company', 'model', 'bigo']
 
 admin.site.register(Buyproduct, BuyproductAdmin)
 

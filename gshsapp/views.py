@@ -36,7 +36,7 @@ def InfogigiList(request, gigigubun):
         infogigis = Gigiinfo.objects.all().filter(buyproduct__gubun__gubun=gigigubun, jaego=False, notuse=False).order_by('date')
            
         
-    gigis = infogigis.filter(Q(user__name__icontains=query) | Q(buyproduct__model__icontains=query) | Q(location__hosil__icontains=query))
+    gigis = infogigis.filter(Q(user__name__icontains=query) | Q(buyproduct__model__icontains=query) | Q(location__hosil__icontains=query) | Q(ip__icontains=query))
     context['gigigubun'] = gigigubun 
     context['q'] = query
     page = request.GET.get('page', '1')  # 페이지    
