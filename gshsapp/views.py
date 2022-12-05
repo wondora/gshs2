@@ -174,7 +174,6 @@ def InfogigiBuseo(request, buseogubun):
         buseos = Location.objects.filter(locationgubun='부서')
         gitas = Location.objects.exclude(locationgubun='부서')
         buseo_name = Location.objects.get(hosil=buseogubun)
-        building = buseo_name.building
 
         a_date = str(datetime.datetime.today().year) +"-3-1"
         start_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
@@ -188,7 +187,7 @@ def InfogigiBuseo(request, buseogubun):
 
         members = buseo_name.gigiinfo.exclude(user__is_active =False).filter(jaego=False, notuse=False)    
 
-        return render(request, 'gshsapp/buseo.html', {'buseos':buseos,'building':building, 'gitas':gitas, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
+        return render(request, 'gshsapp/buseo.html', {'buseo_name':buseo_name, 'buseos':buseos, 'gitas':gitas, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
 
 # 부서 부원 및 기기 ajax
 @login_message_required
