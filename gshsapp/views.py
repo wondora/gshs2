@@ -95,7 +95,8 @@ def InfogigiChange(request, pk):
     gigiinfo2 = get_object_or_404(Gigiinfo, pk=pk)    
     ImageFormSet = modelformset_factory(Change_Photo, form=Change_PhotoForm, extra=3)
     
-    if request.method == 'POST':
+    if request.method == 'POST':        
+        next = request.POST["next"]
         changeform = InfogigiChangeForm(request.POST)
         formset = ImageFormSet(request.POST, request.FILES, queryset=Change_Photo.objects.none())
         
@@ -105,14 +106,19 @@ def InfogigiChange(request, pk):
                 if form:
                     image = form['image']
                     photo = Change_Photo(replacement=change, image=image) 
-                    photo.save()   
-            
-            return redirect('gshsapp:gigi_gubun', gigiinfo2.buyproduct.gubun.gubun)
+                    photo.save()               
+            # return redirect('gshsapp:gigi_gubun', gigiinfo2.buyproduct.gubun.gubun)
+            return redirect(next)
     else:
+        next = request.GET['next']
         changeform = InfogigiChangeForm(initial={'gigiinfo':gigiinfo2})
         formset = ImageFormSet(queryset=Change_Photo.objects.none())
         
-    return render(request, 'gshsapp/snipet/infogigi_gigichange.html', {'form': changeform, 'formset': formset})
+    return render(request, 'gshsapp/snipet/infogigi_gigichange.html', {'form': changeform, 'formset': formset, 'next': next})
+
+
+def buseoChangecreate(request, pk):
+    pass
 
 
 @login_message_required
@@ -120,6 +126,7 @@ def InfogigiSuri(request, pk):
     gigiinfo2 = get_object_or_404(Gigiinfo, pk=pk)
    
     if request.method == 'POST':
+        next = request.POST["next"]
         suriform = InfogigiSuriForm(request.POST)
        
         if suriform.is_valid():
@@ -131,11 +138,13 @@ def InfogigiSuri(request, pk):
                 repair_Photo.image = img
                 repair_Photo.save()
 
-            return redirect('gshsapp:gigi_gubun', gigiinfo2.buyproduct.gubun.gubun)
+            return redirect(next)
+            # return redirect('gshsapp:gigi_gubun', gigiinfo2.buyproduct.gubun.gubun)
     else:
+        next = request.GET["next"]
         form = InfogigiSuriForm(initial={'gigiinfo':gigiinfo2}) 
        
-    return render(request, 'gshsapp/snipet/infogigi_gigisuri.html', {'form': form})
+    return render(request, 'gshsapp/snipet/infogigi_gigisuri.html', {'form': form, 'next': next})
 
 # 부서전체 로딩 및 연도 선택시 뷰
 def InfogigiBuseo(request, buseogubun):

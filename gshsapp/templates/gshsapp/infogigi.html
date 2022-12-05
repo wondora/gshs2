@@ -61,10 +61,10 @@
             <a href="{% url 'gshsapp:gigi_update' gigi.id %} ">
               <span class="gitamenu badge bg-secondary">수정</span>
             </a>
-            <a href="{% url 'gshsapp:gigi_change' gigi.id %} ">
+            <a href="{% url 'gshsapp:gigi_change' gigi.id %}?next={{request.path}} ">
               <span class="gitamenu badge bg-secondary">교체</span>
             </a>
-            <a href="{% url 'gshsapp:gigi_suri' gigi.id %} ">
+            <a href="{% url 'gshsapp:gigi_suri' gigi.id %}?next={{request.path}} ">
               <span class="gitamenu badge bg-secondary">수리</span>
             </a>   
             <span class="gigidelete gitamenu badge bg-danger" data-url="{% url 'gshsapp:gigi_delete' gigi.id %}">삭제</span>

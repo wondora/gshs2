@@ -11,7 +11,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('gshsapp.urls')),
-    path('gigi/', include('gshsapp.urls')),
+    # path('gigi/', include('gshsapp.urls')),
     path('auth/', include('login.urls')),
     path('freeboard/', include('freeboard.urls')),
     path('memo/', include('memo.urls')),

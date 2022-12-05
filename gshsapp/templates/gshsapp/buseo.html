@@ -114,7 +114,15 @@
               <td>{{ gigi.buyproduct.model }}</td>
               <td>{{ gigi.ip }}</td>
               <td>{{ gigi.bigo }}</td>                
-              <td><span class="buwon-update gitamenu badge bg-dark" data-buseo="{{buseogubun}}" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}">수정</span></td>                
+              <td>
+                <span class="buwon-update gitamenu badge bg-dark" data-buseo="{{buseogubun}}" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}">수정</span>
+                <a href="{% url 'gshsapp:gigi_change' gigi.id %}?next={{request.path}} ">
+                  <span class="gitamenu badge bg-secondary">교체</span>
+                </a>
+                <a href="{% url 'gshsapp:gigi_suri' gigi.id %}?next={{request.path}} ">
+                  <span class="gitamenu badge bg-secondary">수리</span>
+                </a>
+              </td>                
             </tr>
             {% endif %}
             {% endfor %}
@@ -150,7 +158,13 @@
               <td>{{ gigi.bigo }}</td>
               <td>
                 <span class="buseogigi-update gitamenu badge bg-dark" data-buseo="{{buseogubun}}" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}">수정</span>
-              </td>                                
+                <a href="{% url 'gshsapp:gigi_change' gigi.id %}?next={{request.path}} ">
+                  <span class="gitamenu badge bg-secondary">교체</span>
+                </a>
+                <a href="{% url 'gshsapp:gigi_suri' gigi.id %}?next={{request.path}} ">
+                  <span class="gitamenu badge bg-secondary">수리</span>
+                </a>
+              </td>                         
             </tr>
             {% endif %}
             {% endfor %}
@@ -171,7 +185,7 @@
               <option value=2027>2027년도</option>
               <option value=2028>2028년도</option>
             </select>
-          </div>          
+          </div>    
         </div>
 
         <table class="table text-center mt-2">
@@ -206,10 +220,10 @@
                 {% if gubunchange %}                
                   보기
                 {% endif %}
-              </td>  
+              </td>
               <td class="buseo_CR_update" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}">
                 <span class="gitamenu badge bg-dark">수정</sapn>
-                </td>             
+              </td>             
               <td class="buseo_CR_delete" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}">
                 <span class="gitamenu badge bg-danger">삭제</sapn>
               </td>             
