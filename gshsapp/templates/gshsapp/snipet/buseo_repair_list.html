@@ -6,19 +6,53 @@
             <td>{{ gigi.gigiinfo.user }}</td>       
             <td>{{ gigi.gigiinfo.buyproduct.company }}</td>
             <td>{{ gigi.gigiinfo.buyproduct.model }}</td>
-            <td title="{{gigi.problem}}">{{ gigi.problem|truncatechars:7 }}</td>
-            <td title="{{gigi.result}}">{{ gigi.result|truncatechars:5 }}</td>
+            <td>{{ gigi.problem|truncatechars:7 }}</td>
+            <td>{{ gigi.result|truncatechars:5 }}</td>
             <td>&#8361;{{ gigi.cost|intcomma }}</td>
             <td title="{{gigi.bigo}}">{{ gigi.bigo|truncatechars:5 }}</td>    
             <td class="gigi-repair" style="font-weight: bold;font-size: 0.8rem; padding-top: 10px; color:#d63384;">
                 {% if gubunrepair %}                
                   보기
                 {% endif %}
-            </td>   
-            <td class="buseo_CR_update" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}" title="수정하기">🐼</td>                 
-            <td class="buseo_CR_delete" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}" title="삭제하기" onclick="return confirm('정말로 삭제 하시겠습니까 ?');">👹</td>             
+            </td> 
+            <td style="cursor: pointer;" data-toggle="modal" data-target="#suri_modal">
+                <span class="gitamenu badge bg-dark">내용</sapn>
+            </td> 
+            <td class="buseo_CR_update" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}">
+                <span class="gitamenu badge bg-dark">수정</sapn>
+            </td>
+            <td class="buseo_CR_delete" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}">
+                <span class="gitamenu badge bg-danger">삭제</sapn>
+            </td>    
         </tr>
         
+        <!-- 모달 -->
+        <div id="suri_modal" aria-hidden="true" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-muted">{{ gigi.date|date:"Y-m-d" }}&nbsp;&nbsp;({{ gigi.gigiinfo.buyproduct.company }}/{{ gigi.gigiinfo.buyproduct.model }})</h5>
+                        <button type="button" class="close btn btn-outline-dark" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                          <h6>원인</h6>
+                          <p >{{gigi.problem }}</p>
+                          <hr>
+                          <h6>결과</h6>
+                          <p>{{ gigi.result }}</p>
+                          <hr>
+                          <h6>비고</h6>
+                          <p>{{ gigi.bigo}}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <tr class="photoshows">
             <td colspan="11" style="max-width: 900px;">
                 <ul class="gallery">  
