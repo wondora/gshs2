@@ -352,7 +352,7 @@ a.buseo-gubun:hover {
     border-radius: 4px;
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    left: 27%;
     transition: background-color .3s, 
       opacity .5s, visibility .5s;
     opacity: 0;

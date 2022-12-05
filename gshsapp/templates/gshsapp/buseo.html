@@ -43,6 +43,18 @@
                 </ul>            
             </div>
             <div class="card-header bg-secondary text-light text-center">
+              <h6>학술정보관</h6>  
+            </div>
+            <div class="card-body">
+                <ul style="margin-bottom: 0;">                
+                {% for gita in gitas %}
+                  {% if gita.building == '학술정보관' %}  
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' gita.hosil %}" title="{{ gita.bigo }}"> {{ gita.hosil}} / {{gita.locationgubun }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                </ul>            
+            </div>
+            <div class="card-header bg-secondary text-light text-center">
               <h6>학습관</h6>  
             </div>
             <div class="card-body">
@@ -67,12 +79,60 @@
                 </ul>            
             </div>
             <div class="card-header bg-secondary text-light text-center">
+              <h6>아름관</h6>  
+            </div>
+            <div class="card-body">
+                <ul style="margin-bottom: 0;">                
+                {% for gita in gitas %}
+                  {% if gita.building == '아름관' %}  
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' gita.hosil %}" title="{{ gita.bigo }}"> {{ gita.hosil}} / {{gita.locationgubun }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                </ul>            
+            </div>
+            <div class="card-header bg-secondary text-light text-center">
+              <h6>우정1관</h6>  
+            </div>
+            <div class="card-body">
+                <ul style="margin-bottom: 0;">                
+                {% for gita in gitas %}
+                  {% if gita.building == '우정1관' %}  
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' gita.hosil %}" title="{{ gita.bigo }}"> {{ gita.hosil}} / {{gita.locationgubun }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                </ul>            
+            </div>
+            <div class="card-header bg-secondary text-light text-center">
               <h6>우정2관</h6>  
             </div>
             <div class="card-body">
                 <ul style="margin-bottom: 0;">                
                 {% for gita in gitas %}
                   {% if gita.building == '우정2관' %}  
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' gita.hosil %}" title="{{ gita.bigo }}"> {{ gita.hosil}} / {{gita.locationgubun }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                </ul>            
+            </div>
+            <div class="card-header bg-secondary text-light text-center">
+              <h6>창조관</h6>  
+            </div>
+            <div class="card-body">
+                <ul style="margin-bottom: 0;">                
+                {% for gita in gitas %}
+                  {% if gita.building == '창조관' %}  
+                    <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' gita.hosil %}" title="{{ gita.bigo }}"> {{ gita.hosil}} / {{gita.locationgubun }}</a></li>
+                  {% endif %}
+                {% endfor %}
+                </ul>            
+            </div>
+            <div class="card-header bg-secondary text-light text-center">
+              <h6>자치관</h6>  
+            </div>
+            <div class="card-body">
+                <ul style="margin-bottom: 0;">                
+                {% for gita in gitas %}
+                  {% if gita.building == '자치관' %}  
                     <li><a class="buseo-gubun" href="{% url 'gshsapp:gigi_buseo' gita.hosil %}" title="{{ gita.bigo }}"> {{ gita.hosil}} / {{gita.locationgubun }}</a></li>
                   {% endif %}
                 {% endfor %}
