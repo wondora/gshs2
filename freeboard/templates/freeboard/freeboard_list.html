@@ -36,7 +36,7 @@
             {% if freeboard_fixed %}
             {% for freeboard in freeboard_fixed %}
             <tr class="text-center" style="background-color: #495057; color:whitesmoke;cursor: pointer;" onclick="location.href='/freeboard/{{ freeboard.id }}/'">                
-                <td class="title">{{ freeboard.title|truncatechars:90 }}</td>
+                <td class="title">{{ freeboard.title|truncatechars:65}}</td>
                 <td class="writer">{{ freeboard.writer.username }}</td>
                 <td class="regdate">{{ freeboard.registered_date|date:'Y. m. d' }}</td>
                 <td class="hit">{{ freeboard.hits }}</td>
@@ -60,7 +60,7 @@
                 {% elif freeboard.category == 'CODE' %}
                 <span class="badge badge-warning">{{ freeboard.category }}</span>&nbsp;
                 {% endif %}    
-                    {{ freeboard.title|truncatechars:20 }}
+                    {{ freeboard.title|truncatechars:65 }}
                 {% if freeboard.comments %}
                     &nbsp;<span style="color:gray;">[{{ freeboard.comments }}]</span>
                 {% endif %}
