@@ -17,10 +17,10 @@ def create_memo(request):
     content = request.POST['memo']  
     new_memo = Memo(title=content)
     new_memo.save()
-    return redirect('/memo')
+    return redirect('/memo/list')
 
 @login_message_required
 def delete_memo(request, pk):
     memo = Memo.objects.get(id=pk)
     memo.delete()
-    return redirect('/memo')
+    return redirect('/memo/list')

@@ -30,10 +30,12 @@
             <tbody>
               {% for memo in memos %}  
               <tr>
+                <td style="width: 3%;"></td>
                 <td>{{ memo.title }}</td>
-                <td style="width: 20%; text-align: right;">
+                <td style="width: 10%; text-align: right;">
                     <a href="#" data-toggle="modal" data-id="{{memo.id}}" data-target="#DelModal" style="font-size: 0.7rem; padding: 4px 8px;" type="button" class="del-memo btn btn-outline-danger">삭제</a>
                 </td>
+                <td style="width: 5%;"></td>
               </tr>
               {% endfor %}
             </tbody>
