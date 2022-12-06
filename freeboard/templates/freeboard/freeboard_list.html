@@ -36,7 +36,7 @@
             {% if freeboard_fixed %}
             {% for freeboard in freeboard_fixed %}
             <tr class="text-center" style="background-color: #495057; color:whitesmoke;cursor: pointer;" onclick="location.href='/freeboard/{{ freeboard.id }}/'">                
-                <td class="title">{{ freeboard.title|truncatechars:30 }}</td>
+                <td class="title">{{ freeboard.title|truncatechars:90 }}</td>
                 <td class="writer">{{ freeboard.writer.username }}</td>
                 <td class="regdate">{{ freeboard.registered_date|date:'Y. m. d' }}</td>
                 <td class="hit">{{ freeboard.hits }}</td>
