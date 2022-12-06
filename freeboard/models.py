@@ -16,6 +16,7 @@ CATEGORY_CHOICES = (
     ("GSHS", "학교"),
     ("LINUX", "리눅스"),
     ("WINDOW", "윈도우"),
+    ("CODE", "프로그램"),
 )
 
 class Freeboard(models.Model):
@@ -72,7 +73,7 @@ class Comment(models.Model):
 
     class Meta:
         db_table = 'comment'
-        verbose_name = '자유게시판 댓글'
+        verbose_name = '게시판 댓글'
         verbose_name_plural = 'comments'
 
     @property

@@ -177,6 +177,32 @@ class WindowListView(AllListView):
         return freeboard_list
 
 
+# 카테고리 WINDOW만 보기
+class CodeListView(AllListView):
+    def get_queryset(self):
+        search_keyword = self.request.GET.get('q', '')
+        search_type = self.request.GET.get('type', '')
+        freeboard_list = Freeboard.objects.filter(category='CODE').order_by('-id')
+
+        if search_keyword :
+            if len(search_keyword) > 1 :
+                if search_type == 'all':
+                    search_freeboard_list = freeboard_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword) | Q (writer__user_id__icontains=search_keyword))
+                elif search_type == 'title_content':
+                    search_freeboard_list = freeboard_list.filter(Q (title__icontains=search_keyword) | Q (content__icontains=search_keyword))
+                elif search_type == 'title':
+                    search_freeboard_list = freeboard_list.filter(title__icontains=search_keyword)    
+                elif search_type == 'content':
+                    search_freeboard_list = freeboard_list.filter(content__icontains=search_keyword)    
+                elif search_type == 'writer':
+                    search_freeboard_list = freeboard_list.filter(writer__user_id__icontains=search_keyword)
+                    
+                return search_freeboard_list
+            else:
+                messages.error(self.request, '검색어는 2글자 이상 입력해주세요.')
+        return freeboard_list
+
+
 def freeboard_detail_view(request, pk):
     freeboard = get_object_or_404(Freeboard, pk=pk)   
     session_cookie = request.session.get('username', False)

@@ -13,6 +13,7 @@
                 <a class="dropdown-item" href="{% url 'freeboard:gshs_list' %}">GHSH만 보기</a>
                 <a class="dropdown-item" href="{% url 'freeboard:linux_list' %}">리눅스만 보기</a>
                 <a class="dropdown-item" href="{% url 'freeboard:window_list' %}">윈도우만 보기</a>
+                <a class="dropdown-item" href="{% url 'freeboard:code_list' %}">프로그램만 보기</a>
             </div>
         </div>
     </div>
@@ -55,6 +56,8 @@
                 {% elif freeboard.category == 'LINUX' %}
                 <span class="badge badge-info">{{ freeboard.category }}</span>&nbsp;
                 {% elif freeboard.category == 'WINDOW' %}
+                <span class="badge badge-warning">{{ freeboard.category }}</span>&nbsp;
+                {% elif freeboard.category == 'CODE' %}
                 <span class="badge badge-warning">{{ freeboard.category }}</span>&nbsp;
                 {% endif %}    
                     {{ freeboard.title|truncatechars:20 }}

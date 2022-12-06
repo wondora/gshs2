@@ -9,6 +9,7 @@ urlpatterns = [
     path('gshs/', views.GshsListView.as_view(), name='gshs_list'),
     path('linux/', views.LinuxListView.as_view(), name='linux_list'),
     path('window/', views.WindowListView.as_view(), name='window_list'),
+    path('window/', views.CodeListView.as_view(), name='code_list'),
 
     path('<int:pk>/', views.freeboard_detail_view, name='freeboard_detail'),
     path('write/', views.freeboard_write_view, name='freeboard_write'),
