@@ -7,8 +7,16 @@
         <td>{{ gigi.buyproduct.company }}</td>
         <td>{{ gigi.buyproduct.model }}</td>
         <td>{{ gigi.ip }}</td>
-        <td>{{ gigi.bigo }}</td>                
-        <td><span class="buwon-update" data-buseo="{{buseogubun}}" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}" title="수정하기">🐓</span></td>                
+        <td>{{ gigi.bigo }}</td>  
+        <td>
+            <span class="buwon-update gitamenu badge bg-dark" data-buseo="{{buseogubun}}" type="button" data-url="{% url 'gshsapp:gigi_buseo_update' pk=gigi.id %}">수정</span>
+            <a href="{% url 'gshsapp:gigi_change' gigi.id %}?next={{request.path}} ">
+              <span class="gitamenu badge bg-secondary">교체</span>
+            </a>
+            <a href="{% url 'gshsapp:gigi_suri' gigi.id %}?next={{request.path}} ">
+              <span class="gitamenu badge bg-secondary">수리</span>
+            </a>
+        </td>              
     </tr>   
     {% endif %} 
 {% endfor %}

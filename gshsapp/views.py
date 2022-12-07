@@ -209,7 +209,6 @@ def InfogigiBuseoUpdate(request, pk):
                 data['buwon'] = True              
                 data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_buwon_list.html', {'members':members, 'buseogubun':buseogubun})            
             else:
-                print(form.instance.user)
                 data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_gigi_list.html', {'members':members, 'buseogubun':buseogubun})            
         else:
             data['form_is_valid'] = False

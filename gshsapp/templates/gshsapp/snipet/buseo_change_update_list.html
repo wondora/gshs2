@@ -14,8 +14,12 @@
               보기
             {% endif %}
         </td>
-        <td class="buseo_CR_update" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}" title="수정하기">🐼</td>              
-        <td class="buseo_CR_delete" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}" title="삭제하기" onclick="return confirm('정말로 삭제 하시겠습니까 ?');">👹</td>             
+        <td class="buseo_CR_update" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}">
+            <span class="gitamenu badge bg-dark">수정</sapn>
+        </td>             
+        <td class="buseo_CR_delete" data-gubun="change" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_delete' gigi.id %}">
+            <span class="gitamenu badge bg-danger">삭제</sapn>
+        </td>
     </tr>
     
     <tr class="photoshows">
