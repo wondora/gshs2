@@ -4,7 +4,7 @@
 {% load static %}
 
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-2"><a id="back-to-top"><i class="fa-solid fa-arrow-up"></i></a>
         <div class="card box_shadow">
             <div class="card-header bg-secondary text-light text-center">
               <h6>부서</h6>  
@@ -139,10 +139,9 @@
                 </ul>            
             </div>
         </div>       
-    </div>
+    </div>    
     
-    <div class="col-md-10"> 
-      <a id="back-to-top"><i class="fa-solid fa-arrow-up"></i></a>
+    <div class="col-md-10">       
       <div>
         <span style="padding-left: 20px;" class="badge bg-primary">{{ buseo_name.building }} : {{ buseo_name.hosil }} / {{ buseo_name.locationgubun }} / {% if buseo_name.bigo != None %} {{ buseo_name.bigo }} {% endif %}</span>
       </div>   

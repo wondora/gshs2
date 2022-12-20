@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
-<div class="row">    
+<div class="row">    <a id="back-to-top"><i class="fa-solid fa-arrow-up"></i></a>
     <div class="col-md-2">
         <div class="card box_shadow">
             <div class="card-header bg-secondary text-light text-center">
@@ -24,8 +24,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-10">
-        <a id="back-to-top"><i class="fa-solid fa-arrow-up"></i></a>
+    <div class="col-md-10">        
         <div id="src">
             <img src="{% static 'img/SRC.png' %}"></a>
         </div> 
@@ -61,6 +60,7 @@
         </div>        
     </div>
 </div>
+
 <script>
 $(function(){   
     $('#back-to-top').on('click',function(e){
