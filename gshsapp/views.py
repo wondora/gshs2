@@ -148,16 +148,17 @@ def InfogigiSuri(request, pk):
 
 # 부서전체 로딩 및 연도 선택시 뷰
 def InfogigiBuseo(request, buseogubun):
-    gubun = request.GET.get('gubun',False)    
+    gubun = request.GET.get('gubun',False)
+
     if gubun:
         data = {}
         data['gubun'] = gubun
         changeyear = request.GET.get('buseoyear','')
         buseogubun = request.GET.get('buseogubun','')        
 
-        a_date = changeyear +"-3-1"
-        start_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
-        end_date = start_date+ datetime.timedelta(days=364)  
+        a_date = str(datetime.datetime.today().year) +"-2-28"
+        end_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
+        start_date = end_date+ datetime.timedelta(days=-364)   
         
         
         if gubun == 'change':
@@ -173,11 +174,12 @@ def InfogigiBuseo(request, buseogubun):
     else:
         buseos = Location.objects.filter(locationgubun='부서')
         gitas = Location.objects.exclude(locationgubun='부서')
+        building_gubun = gitas.values_list('building', flat=True).distinct().order_by('building')
         buseo_name = Location.objects.get(hosil=buseogubun)
-
-        a_date = str(datetime.datetime.today().year) +"-3-1"
-        start_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
-        end_date = start_date+ datetime.timedelta(days=364)  
+        print(building_gubun)
+        a_date = str(datetime.datetime.today().year) +"-2-28"
+        end_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
+        start_date = end_date+ datetime.timedelta(days=-364) 
         
         repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date])
         repairTotalCost = repairs.aggregate(Sum('cost'))
@@ -187,7 +189,7 @@ def InfogigiBuseo(request, buseogubun):
 
         members = buseo_name.gigiinfo.exclude(user__is_active =False).filter(jaego=False, notuse=False)    
 
-        return render(request, 'gshsapp/buseo.html', {'buseo_name':buseo_name, 'buseos':buseos, 'gitas':gitas, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
+        return render(request, 'gshsapp/buseo.html', {'buseo_name':buseo_name, 'building_gubun':building_gubun, 'buseos':buseos, 'gitas':gitas, 'members':members, 'changes':changes,'repairs':repairs, 'buseogubun':buseogubun, 'repairTotalCost':repairTotalCost, 'changeTotalCost':changeTotalCost})
 
 # 부서 부원 및 기기 ajax
 @login_message_required
