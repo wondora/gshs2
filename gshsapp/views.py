@@ -148,25 +148,34 @@ def InfogigiSuri(request, pk):
 
 # 부서전체 로딩 및 연도 선택시 뷰
 def InfogigiBuseo(request, buseogubun):
-    gubun = request.GET.get('gubun',False)
+    gubun = request.GET.get('gubun',False)   
 
     if gubun:
         data = {}
-        data['gubun'] = gubun
-        changeyear = request.GET.get('buseoyear','')
-        buseogubun = request.GET.get('buseogubun','')        
+        data['gubun'] = gubun 
 
-        a_date = str(datetime.datetime.today().year) +"-2-28"
-        end_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
-        start_date = end_date+ datetime.timedelta(days=-364)   
-        
+        changeyear = request.GET.get('buseoyear','')
+        buseogubun = request.GET.get('buseogubun','')
+        # a_date = str(datetime.datetime.today().year) +"-2-28"
+        # end_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
+        # start_date = end_date+ datetime.timedelta(days=-364)   
+        start_date = changeyear + "-3-1"
+        end_date = str(int(changeyear) +1) + "-2-28"
         
         if gubun == 'change':
-            changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date]).annotate(changeTotal = F('count') *  F('cost'))
+            if changeyear == 0:
+                changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun).annotate(changeTotal = F('count') *  F('cost'))
+            else:
+                changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date]).annotate(changeTotal = F('count') *  F('cost'))
+
             changeTotalCost = changes.aggregate(Sum('changeTotal'))
             data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_change_list.html', {"changeyear":changeyear, "changes":changes, "changeTotalCost":changeTotalCost})
         else:
-            repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date])
+            if changeyear == 0:
+                repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun)
+            else:
+                repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date])
+
             repairTotalCost = repairs.aggregate(Sum('cost'))
             data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_repair_list.html', {"changeyear":changeyear, "repairs":repairs, "repairTotalCost":repairTotalCost})
     
@@ -175,16 +184,12 @@ def InfogigiBuseo(request, buseogubun):
         buseos = Location.objects.filter(locationgubun='부서')
         gitas = Location.objects.exclude(locationgubun='부서')
         building_gubun = gitas.values_list('building', flat=True).distinct().order_by('building')
-        buseo_name = Location.objects.get(hosil=buseogubun)
-        print(building_gubun)
-        a_date = str(datetime.datetime.today().year) +"-2-28"
-        end_date = datetime.datetime.strptime(a_date, '%Y-%m-%d').date()
-        start_date = end_date+ datetime.timedelta(days=-364) 
+        buseo_name = Location.objects.get(hosil=buseogubun)       
         
-        repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date])
-        repairTotalCost = repairs.aggregate(Sum('cost'))
-        
-        changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date]).annotate(changeTotal = F('count') *  F('cost'))
+        repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun)
+        changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun).annotate(changeTotal = F('count') *  F('cost'))
+
+        repairTotalCost = repairs.aggregate(Sum('cost'))        
         changeTotalCost = changes.aggregate(Sum('changeTotal'))
 
         members = buseo_name.gigiinfo.exclude(user__is_active =False).filter(jaego=False, notuse=False)    
