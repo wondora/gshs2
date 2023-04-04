@@ -163,15 +163,15 @@ def InfogigiBuseo(request, buseogubun):
         end_date = str(int(changeyear) +1) + "-2-28"
         
         if gubun == 'change':
-            if changeyear == 0:
+            if changeyear == '1971':
                 changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun).annotate(changeTotal = F('count') *  F('cost'))
             else:
                 changes = Replacement.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date]).annotate(changeTotal = F('count') *  F('cost'))
-
+                
             changeTotalCost = changes.aggregate(Sum('changeTotal'))
             data['html_buseo'] = render_to_string('gshsapp/snipet/buseo_change_list.html', {"changeyear":changeyear, "changes":changes, "changeTotalCost":changeTotalCost})
         else:
-            if changeyear == 0:
+            if changeyear == '1971':
                 repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun)
             else:
                 repairs = Repair.objects.filter(gigiinfo__location__hosil=buseogubun, date__range=[start_date, end_date])
