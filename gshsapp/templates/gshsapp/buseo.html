@@ -260,7 +260,7 @@
                  보기
                 {% endif %}
               </td>
-              <td style="cursor: pointer;" data-toggle="modal" data-target="#suri_modal">
+              <td style="cursor: pointer;" data-toggle="modal" data-target="#suri_modal{{ gigi.id}}">
                 <span class="gitamenu badge bg-dark">내용</sapn>
               </td>   
               <td class="buseo_CR_update" data-gubun="repair" style="cursor:pointer;" data-url="{% url 'gshsapp:buseo_CR_update' gigi.id %}">
@@ -271,7 +271,7 @@
               </td>             
             </tr>
             <!-- 모달 -->
-            <div id="suri_modal" aria-hidden="true" class="modal fade" tabindex="-1" role="dialog">
+            <div id="suri_modal{{ gigi.id}}" aria-hidden="true" class="modal fade" tabindex="-1" role="dialog">
               <div class="modal-dialog modal-dialog-centered" role="document">
                   <div class="modal-content">
                       <div class="modal-header">
@@ -281,13 +281,16 @@
                           </button>
                       </div>
                       <div class="modal-body">
-                            <h6>(문제)</h6>
+                            <h6>[ 문제 ]</h6>
                             <p >{{gigi.problem }}</p>
                             <hr>
-                            <h6>(해결)</h6>
+                            <h6>[ 해결 ]</h6>
                             <p>{{ gigi.result }}</p>
                             <hr>
-                            <h6>(비고)</h6>
+                            <h6>[ 수리금액 ]</h6>
+                            <p>&#8361; {{ gigi.cost|intcomma}} 원</p> 
+                            <hr>
+                            <h6>[ 비고 ]</h6>
                             <p>{{ gigi.bigo}}</p>
                       </div>
                       <div class="modal-footer">
